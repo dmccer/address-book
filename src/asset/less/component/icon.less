@@ -1,0 +1,282 @@
+@import '../global/site.variable';
+@import './icon-util.less';
+
+@keyframes loading {
+  from {
+    transform: rotateZ(0deg);
+  }
+
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+
+  & + span {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 3px;
+  }
+
+  &.icon-dot {
+    .dot(10px, @c_orange);
+  }
+
+  &.icon-del-dot {
+    .dot(25px, @c_orange);
+    border: 1px solid @white;
+    text-align: center;
+    line-height: 25px;
+
+    &:before {
+      display: inline-block;
+      vertical-align: middle;
+      content: '';
+      width: 10px;
+      height: 2px;
+      background-color: @white;
+    }
+  }
+
+  &.icon-plus {
+    .plus();
+  }
+
+  &.icon-minus {
+    .minus();
+  }
+
+  &.icon-spread {
+    display: inline-block;
+    vertical-align: middle;
+
+    .arrow(8px, 2px, -135deg, @c_grey);
+
+    &.white {
+      .arrow(8px, 2px, -135deg, @white);
+    }
+
+    &.teal {
+      .arrow(8px, 2px, -135deg, @c_teal);
+    }
+  }
+
+  &.icon-close {
+    display: inline-block;
+
+    &:before {
+      width: 40px;
+      height: 40px;
+      line-height: 35px;
+      border-radius: 40px;
+      text-align: center;
+      display: inline-block;
+      vertical-align: middle;
+      border: 2px solid @white;
+      content: 'x';
+      font-size: 1.8rem;
+      color: @white;
+    }
+  }
+
+  &.icon-loading {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-left: 2px solid @c_teal;
+    border-top: 2px solid @c_lightGrey;
+    border-bottom: 2px solid @c_lightGrey;
+    border-right: 2px solid @c_lightGrey;
+    border-radius: 40px;
+    animation-duration: .8s;
+    animation-name: loading;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-delay: 0;
+  }
+
+  &.icon-bell,
+  &.icon-edit,
+  &.icon-clock,
+  &.icon-praise,
+  &.icon-hot,
+  &.icon-photo,
+  &.icon-emoj,
+  &.icon-topic,
+  &.icon-address,
+  &.icon-ok,
+  &.icon-tel,
+  &.icon-lock,
+  &.icon-question,
+  &.icon-key,
+  &.icon-account,
+  &.icon-correct,
+  &.icon-del,
+  &.icon-ellipsis,
+  &.icon-avatar,
+  &.icon-quote,
+  &.icon-right {
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+
+    &.s30 {
+      width: 30px;
+      height: 30px;
+    }
+
+    &.s20 {
+      width: 20px;
+      height: 20px;
+    }
+
+    &.s15 {
+      width: 15px;
+      height: 15px;
+    }
+
+    &.s12 {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  &.icon-bell {
+    background-image: url('../../img/2x/bell-40@2x.png');
+  }
+
+  &.icon-edit {
+    &.on {
+      background-image: url('../../img/2x/edit-40@2x.png');
+    }
+
+    &.off {
+      background-image: url('../../img/2x/edit-30-off@2x.png');
+    }
+
+    &.disable {
+      background-image: url('../../img/2x/edit-20@2x.png');
+    }
+  }
+
+  &.icon-clock {
+    background-image: url('../../img/2x/clock-20@2x.png');
+  }
+
+  &.icon-praise {
+    &.on {
+      background-image: url('../../img/2x/praise-30-on@2x.png');
+    }
+
+    &.off {
+      background-image: url('../../img/2x/praise-30-off@2x.png');
+    }
+
+    &.disable {
+      background-image: url('../../img/2x/praise-20@2x.png');
+    }
+  }
+
+  &.icon-hot {
+    &.on {
+      background-image: url('../../img/2x/hot-30-on@2x.png');
+    }
+
+    &.off {
+      background-image: url('../../img/2x/hot-30-off@2x.png');
+    }
+
+  }
+
+  &.icon-photo {
+    &.on {
+      background-image: url('../../img/2x/photo-40-on@2x.png');
+    }
+
+    &.off {
+      background-image: url('../../img/2x/photo-40-off@2x.png');
+    }
+  }
+
+  &.icon-emoj {
+    &.on {
+      background-image: url('../../img/2x/emoj-40-on@2x.png');
+    }
+
+    &.off {
+      background-image: url('../../img/2x/emoj-40-off@2x.png');
+    }
+  }
+
+  &.icon-topic {
+    &.on {
+      background-image: url('../../img/2x/topic-40-on@2x.png');
+    }
+
+    &.off {
+      background-image: url('../../img/2x/topic-40-off@2x.png');
+    }
+
+    &.disable {
+      background-image: url('../../img/2x/topic-40-disable@2x.png');
+    }
+  }
+
+  &.icon-address {
+    background-image: url('../../img/2x/address-40@2x.png');
+  }
+
+  &.icon-ok {
+    background-image: url('../../img/2x/ok@2x.png');
+  }
+
+  &.icon-tel {
+    background-image: url('../../img/common/tel-30.png');
+  }
+
+  &.icon-lock {
+    background-image: url('../../img/common/lock-30.png');
+  }
+
+  &.icon-question {
+    background-image: url('../../img/common/question.png');
+  }
+
+  &.icon-key {
+    background-image: url('../../img/common/key-30.png');
+  }
+
+  &.icon-account {
+    background-image: url('../../img/common/account-30.png');
+  }
+
+  &.icon-correct {
+    background-image: url('../../img/2x/correct-30@2x.png');
+  }
+
+  &.icon-del {
+    background-image: url('../../img/2x/del-30@2x.png');
+  }
+
+  &.icon-quote {
+    background-image: url('../../img/2x/quote.png');
+  }
+
+  &.icon-ellipsis {
+    width: 26px;
+    height: 6px;
+    background-image: url('../../img/2x/ellipsis@2x.png');
+  }
+
+  &.icon-avatar {
+    width: 20px;
+    height: 23px;
+    background-image: url('../../img/2x/avatar@2x.png');
+  }
+
+  &.icon-right {
+    background-image: url('../../img/2x/right.png');
+  }
+}

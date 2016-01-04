@@ -1,0 +1,58 @@
+{
+  "name": "address-book",
+  "version": "0.0.1",
+  "description": "物流通讯录",
+  "main": "webpack.config.js",
+  "dest": "assets",
+  "dependencies": {
+    "babel-loader": "^6.2.0",
+    "babel-preset-react": "^6.3.13",
+    "babel-core": "^6.3.26",
+    "babel-preset-es2015": "^6.3.13",
+    "classnames": "^2.2.1",
+    "exports-loader": "^0.6.2",
+    "css-loader": "^0.23.1",
+    "file-loader": "^0.8.5",
+    "html-loader": "^0.4.0",
+    "imock": "^3.2.1",
+    "html-webpack-plugin": "^1.7.0",
+    "img-loader": "^1.2.2",
+    "less": "^2.5.3",
+    "less-plugin-autoprefix": "^1.5.1",
+    "less-plugin-clean-css": "^1.5.1",
+    "less-loader": "^2.2.2",
+    "normalize.css": "^3.0.3",
+    "querystring": "^0.2.0",
+    "lodash": "^3.10.1",
+    "react": "^0.14.5",
+    "source-map-loader": "^0.1.5",
+    "react-dom": "^0.14.5",
+    "react-hot-loader": "^1.3.0",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.9",
+    "zepto": "^1.1.6",
+    "url-loader": "^0.5.7",
+    "webpack-dev-server": "^1.14.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "npm install; cd ./node_modules/zepto; npm install; MODULES='zepto event ajax form ie fx' npm run dist; cd ../../",
+    "start": "rm -rf ./assets; NODE_ENV=production ./node_modules/.bin/webpack -p --config ./webpack.prd.config.js --progress --profile --colors",
+    "dev": "npm run prestart; ./node_modules/.bin/imock -j mock -w dist & ./node_modules/.bin/webpack-dev-server --hot --inline"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmccer/address-book.git"
+  },
+  "keywords": [
+    "物流",
+    "通讯录"
+  ],
+  "author": "Kane",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmccer/address-book/issues"
+  },
+  "homepage": "https://github.com/dmccer/address-book#readme"
+}

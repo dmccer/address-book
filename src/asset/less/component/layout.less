@@ -1,0 +1,22 @@
+@import '../global/site.variable';
+
+.row {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  & > * {
+    display: table-cell;
+    vertical-align: top;
+  }
+}
+
+.grid {
+ display: flex;
+ justify-content: center;
+
+ > * {
+   flex: 1;
+ }
+}
