@@ -3,7 +3,7 @@ import '../../less/global/global.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-export default TXL extends React.Component {
+export default class TXL extends React.Component {
   constructor() {
     super();
   }
@@ -17,4 +17,4 @@ export default TXL extends React.Component {
   }
 }
 
-ReactDOM.render(<TXL />, document.body);
+ReactDOM.render(<TXL />, document.querySelector('.page'));

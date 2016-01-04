@@ -25,7 +25,7 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
+    // new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.CommonsChunkPlugin('ved', 'ved.bundle.js'),
     new webpack.optimize.CommonsChunkPlugin('zepto', 'zepto.bundle.js'),
     new webpack.ProvidePlugin({
