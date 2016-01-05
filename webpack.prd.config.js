@@ -11,7 +11,7 @@ var pkg = require('./package.json');
 module.exports = {
   watch: true,
   entry: {
-    index: './src/asset/js/txl/index.js',
+    my: './src/asset/js/my/index.js',
     'lib-react': ['react', 'react-dom']
   },
   output: {
@@ -43,10 +43,10 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
     new HtmlWebpackPlugin({
-      title: '通讯录首页',
+      title: '我的 - 物流通讯录',
       template: './src/page/index.html',
       filename: 'index.html',
-      chunks: ['lib-react', 'zepto', 'index'],
+      chunks: ['lib-react', 'zepto', 'my'],
       inject: 'body'
     })
   ],
