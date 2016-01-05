@@ -11,9 +11,9 @@ export default class Header extends React.Component {
   render() {
     return (
       <header className="header row">
-        <section className="left"></section>
-        <section className="center"></section>
-        <section className="right"></section>
+        <section className="left">消息</section>
+        <section className="center">{this.props.title}</section>
+        <section className="right">+</section>
       </header>
     );
   }

@@ -16,7 +16,7 @@ export default class MyPage extends React.Component {
   render() {
     return (
       <section className="my">
-        <Header />
+        <Header title="我的" />
         <Nav />
       </section>
     );

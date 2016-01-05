@@ -1,4 +1,5 @@
 import '../../less/global/global.less';
+import '../../less/component/layout.less';
 import './index.less';
 
 import React from 'react';
@@ -14,7 +15,7 @@ export default class ScoreRule extends React.Component {
   render() {
     return (
       <section className="score-rule">
-        <Header />
+        <Header title="积分规则" />
         <h2 className="subtitle">积分规则</h2>
         <ul className="rule-list">
           <li>每日签到可获 3 积分 / 天</li>
@@ -103,3 +104,6 @@ export default class ScoreRule extends React.Component {
     );
   }
 }
+
+
+ReactDOM.render(<ScoreRule />, document.querySelector('.page'));
