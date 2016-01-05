@@ -5,7 +5,7 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Header from '../header/';
+import SubHeader from '../sub-header/';
 
 export default class ScoreRule extends React.Component {
   constructor() {
@@ -15,7 +15,7 @@ export default class ScoreRule extends React.Component {
   render() {
     return (
       <section className="score-rule">
-        <Header title="积分规则" />
+        <SubHeader title="积分规则" />
         <h2 className="subtitle">积分规则</h2>
         <ul className="rule-list">
           <li>每日签到可获 3 积分 / 天</li>
