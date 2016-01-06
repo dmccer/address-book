@@ -1,57 +1,67 @@
 @import '../global/site.variable';
 
-.form {
-  .control {
-    @padding: 10px;
-    margin-bottom: 10px;
-    position: relative;
-
-    textarea {
-      width: 100%;
-      padding: @padding;
-      border-color: @c_lightGrey;
-      border-radius: 5px;
-    }
-
-    input {
-      width: 100%;
-      border: 1px solid @c_lightGrey;
-      border-radius: 3px;
-      padding: @padding;
-    }
-
-    .char-count {
-      position: absolute;
-      bottom: @padding;
-      right: @padding;
-      color: @c_grey;
-    }
-  }
-}
+// .form {
+//   .control {
+//     @padding: 10px;
+//     margin-bottom: 10px;
+//     position: relative;
+//
+//     textarea {
+//       width: 100%;
+//       padding: @padding;
+//       border-color: @c_lightGrey;
+//       border-radius: 5px;
+//     }
+//
+//     input {
+//       width: 100%;
+//       border: 1px solid @c_lightGrey;
+//       border-radius: 3px;
+//       padding: @padding;
+//     }
+//
+//     .char-count {
+//       position: absolute;
+//       bottom: @padding;
+//       right: @padding;
+//       color: @c_grey;
+//     }
+//   }
+// }
 
 .btn {
-  @padding: 5px 15px;
+  @padding: 10px 15px;
   @borderRadius: 3px;
 
   display: inline-block;
-  padding: @padding;
+  // padding: @padding;
+  height: 44px;
+  line-height: 44px;
+  padding: 0;
   border-radius: @borderRadius;
   background-color: none;
   border: none;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
+  outline: none;
 
   &.block {
     display: block;
     width: 100%;
   }
 
-  &.teal {
-    background-color: @c_teal;
+  &.red {
+    background-color: @c_red;
     color: @white;
   }
 
+  &.line {
+    border: 2px solid @c_blue_3;
+    background-color: @white;
+    color: @c_blue_3;
+  }
+
   &:disabled {
-    background-color: @c_lightBlack;
+    background-color: @lightGrey;
     color: @white;
   }
 }

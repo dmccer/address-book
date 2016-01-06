@@ -72,15 +72,13 @@
 
 
 /*--- Custom Colors ---*/
-@c_teal             : #17BB92;
-@c_orange           : #EEA931;
-@c_purple           : #9D7CB3;
-@c_lightGreen       : #B2EBDD;
-@c_black            : #505050;
-@c_lightBlack       : #969696;
-@c_grey             : #C8C8C8;
-@c_lightGrey        : #E6E6E6;
-/* darkWhite */
+@c_blue_1         : #2e3349;
+@c_blue_2         : #343850;
+@c_blue_3         : #585b75;
+@c_yellow         : #c2b279;
+@c_green          : #6ba596;
+@c_black          : #343850;
+@c_red            : #ee7b64;
 
 
 /*-------------------

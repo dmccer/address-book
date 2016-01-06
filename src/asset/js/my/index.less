@@ -1,1 +1,63 @@
 @import '../../less/global/site.variable';
+
+.my {
+  .avatar {
+    position: relative;
+    background-color: @c_blue_2;
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+    > a {
+      display: block;
+      width: 140px;
+      height: 140px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 140px;
+      border: 10px solid #8c8fa0;
+      overflow: hidden;
+      background-color: #f2f2f2;
+    }
+  }
+
+  .vip-score {
+    background-color: #f2f2f2;
+
+    li {
+      text-align: center;
+      color: @c_black;
+      height: 30px;
+      line-height: 30px;
+
+      span, b {
+        display: inline-block;
+        font-size: 1.2rem;
+      }
+
+      span {
+        margin-right: 10px;
+      }
+
+
+      &.vip {
+        b {
+          color: @c_yellow;
+        }
+      }
+
+      &.score a {
+        color: @c_green;
+      }
+    }
+  }
+
+  .btns {
+    padding-top: 64px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 30px;
+    > .btn {
+      margin-bottom: 10px;
+    }
+  }
+}
