@@ -21,7 +21,10 @@ export default class MyPage extends React.Component {
         <Header title="我的" />
         <section className="my">
           <div className="avatar">
-            <a href="#"></a>
+            <a href="#" style={{
+              backgroundImage: 'url("http://imgsize.ph.126.net/?imgurl=http://img0.ph.126.net/DumDJ-ZwuOleqNA40O14ew==/6631345942143875871.jpg_230x230x1x95.jpg")',
+              backgroundSize: 'contain'
+            }}></a>
           </div>
           <ul className="vip-score grid">
             <li className="vip">
