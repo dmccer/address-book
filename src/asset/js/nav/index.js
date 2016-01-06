@@ -11,15 +11,15 @@ export default class Nav extends React.Component {
     return (
       <section className="nav row">
         <div className="menu">
-          <i className="icon icon-biz-card"></i>
+          <i className="icon s22 icon-biz-card"></i>
           <span>名片</span>
         </div>
         <div className="menu">
-          <i className="icon icon-biz-card"></i>
+          <i className="icon s22 icon-address-book"></i>
           <span>通讯录</span>
         </div>
-        <div className="menu">
-          <i className="icon icon-biz-card"></i>
+        <div className="menu on">
+          <i className="icon s22 icon-account"></i>
           <span>我的</span>
         </div>
       </section>

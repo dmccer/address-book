@@ -1,5 +1,9 @@
 @import '../../less/global/site.variable';
 
+body {
+  background-color: #eef0f3;
+}
+
 .my {
   .avatar {
     position: relative;
@@ -21,13 +25,18 @@
   }
 
   .vip-score {
-    background-color: #f2f2f2;
+    background-color: #e6e5e5;
+    padding-top: 6px;
+    padding-bottom: 6px;
 
     li {
       text-align: center;
       color: @c_black;
-      height: 30px;
-      line-height: 30px;
+      border-right: 1px solid #cfcfcf;
+
+      &:last-child {
+        border-right: none;
+      }
 
       span, b {
         display: inline-block;
@@ -56,8 +65,14 @@
     padding-left: 15px;
     padding-right: 15px;
     padding-bottom: 30px;
+    background-color: #eef0f3;
+
     > .btn {
       margin-bottom: 10px;
+    }
+
+    .line {
+      background-color: #eef0f3;
     }
   }
 }

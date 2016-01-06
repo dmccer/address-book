@@ -11,9 +11,9 @@ export default class Header extends React.Component {
   render() {
     return (
       <header className="header row">
-        <section className="left">消息</section>
+        <section className="left"><i className="icon icon-mail"></i></section>
         <section className="center">{this.props.title}</section>
-        <section className="right">+</section>
+        <section className="right"><i className="icon s20 icon-plus"></i></section>
       </header>
     );
   }

@@ -22,11 +22,11 @@
   }
 
   &.icon-dot {
-    .dot(10px, @c_orange);
+    .dot(10px, @orange);
   }
 
   &.icon-del-dot {
-    .dot(25px, @c_orange);
+    .dot(25px, @orange);
     border: 1px solid @white;
     text-align: center;
     line-height: 25px;
@@ -53,14 +53,10 @@
     display: inline-block;
     vertical-align: middle;
 
-    .arrow(8px, 2px, -135deg, @c_grey);
+    .arrow(8px, 2px, -135deg, @grey);
 
     &.white {
       .arrow(8px, 2px, -135deg, @white);
-    }
-
-    &.teal {
-      .arrow(8px, 2px, -135deg, @c_teal);
     }
   }
 
@@ -86,10 +82,10 @@
     display: inline-block;
     width: 40px;
     height: 40px;
-    border-left: 2px solid @c_teal;
-    border-top: 2px solid @c_lightGrey;
-    border-bottom: 2px solid @c_lightGrey;
-    border-right: 2px solid @c_lightGrey;
+    border-left: 2px solid @c_blue_1;
+    border-top: 2px solid @lightGrey;
+    border-bottom: 2px solid @lightGrey;
+    border-right: 2px solid @lightGrey;
     border-radius: 40px;
     animation-duration: .8s;
     animation-name: loading;
@@ -98,185 +94,54 @@
     animation-delay: 0;
   }
 
-  &.icon-bell,
-  &.icon-edit,
-  &.icon-clock,
-  &.icon-praise,
-  &.icon-hot,
-  &.icon-photo,
-  &.icon-emoj,
-  &.icon-topic,
-  &.icon-address,
-  &.icon-ok,
-  &.icon-tel,
-  &.icon-lock,
-  &.icon-question,
-  &.icon-key,
-  &.icon-account,
-  &.icon-correct,
-  &.icon-del,
-  &.icon-ellipsis,
-  &.icon-avatar,
-  &.icon-quote,
-  &.icon-right {
+  &.icon-mail,
+  &.icon-plus,
+  &.icon-biz-card,
+  &.icon-address-book,
+  &.icon-account {
     background-size: 100% 100%;
     background-repeat: no-repeat;
-
-    &.s30 {
-      width: 30px;
-      height: 30px;
-    }
-
-    &.s20 {
-      width: 20px;
-      height: 20px;
-    }
-
-    &.s15 {
-      width: 15px;
-      height: 15px;
-    }
-
-    &.s12 {
-      width: 12px;
-      height: 12px;
-    }
   }
 
-  &.icon-bell {
-    background-image: url('../../img/2x/bell-40@2x.png');
+  &.s30 {
+    width: 30px;
+    height: 30px;
   }
 
-  &.icon-edit {
-    &.on {
-      background-image: url('../../img/2x/edit-40@2x.png');
-    }
-
-    &.off {
-      background-image: url('../../img/2x/edit-30-off@2x.png');
-    }
-
-    &.disable {
-      background-image: url('../../img/2x/edit-20@2x.png');
-    }
-  }
-
-  &.icon-clock {
-    background-image: url('../../img/2x/clock-20@2x.png');
-  }
-
-  &.icon-praise {
-    &.on {
-      background-image: url('../../img/2x/praise-30-on@2x.png');
-    }
-
-    &.off {
-      background-image: url('../../img/2x/praise-30-off@2x.png');
-    }
-
-    &.disable {
-      background-image: url('../../img/2x/praise-20@2x.png');
-    }
-  }
-
-  &.icon-hot {
-    &.on {
-      background-image: url('../../img/2x/hot-30-on@2x.png');
-    }
-
-    &.off {
-      background-image: url('../../img/2x/hot-30-off@2x.png');
-    }
-
-  }
-
-  &.icon-photo {
-    &.on {
-      background-image: url('../../img/2x/photo-40-on@2x.png');
-    }
-
-    &.off {
-      background-image: url('../../img/2x/photo-40-off@2x.png');
-    }
-  }
-
-  &.icon-emoj {
-    &.on {
-      background-image: url('../../img/2x/emoj-40-on@2x.png');
-    }
-
-    &.off {
-      background-image: url('../../img/2x/emoj-40-off@2x.png');
-    }
-  }
-
-  &.icon-topic {
-    &.on {
-      background-image: url('../../img/2x/topic-40-on@2x.png');
-    }
-
-    &.off {
-      background-image: url('../../img/2x/topic-40-off@2x.png');
-    }
-
-    &.disable {
-      background-image: url('../../img/2x/topic-40-disable@2x.png');
-    }
-  }
-
-  &.icon-address {
-    background-image: url('../../img/2x/address-40@2x.png');
-  }
-
-  &.icon-ok {
-    background-image: url('../../img/2x/ok@2x.png');
-  }
-
-  &.icon-tel {
-    background-image: url('../../img/common/tel-30.png');
-  }
-
-  &.icon-lock {
-    background-image: url('../../img/common/lock-30.png');
-  }
-
-  &.icon-question {
-    background-image: url('../../img/common/question.png');
-  }
-
-  &.icon-key {
-    background-image: url('../../img/common/key-30.png');
-  }
-
-  &.icon-account {
-    background-image: url('../../img/common/account-30.png');
-  }
-
-  &.icon-correct {
-    background-image: url('../../img/2x/correct-30@2x.png');
-  }
-
-  &.icon-del {
-    background-image: url('../../img/2x/del-30@2x.png');
-  }
-
-  &.icon-quote {
-    background-image: url('../../img/2x/quote.png');
-  }
-
-  &.icon-ellipsis {
-    width: 26px;
-    height: 6px;
-    background-image: url('../../img/2x/ellipsis@2x.png');
-  }
-
-  &.icon-avatar {
+  &.s20 {
     width: 20px;
-    height: 23px;
-    background-image: url('../../img/2x/avatar@2x.png');
+    height: 20px;
   }
 
-  &.icon-right {
-    background-image: url('../../img/2x/right.png');
+  &.s22 {
+    width: 22px;
+    height: 22px;
+  }
+
+  &.s15 {
+    width: 15px;
+    height: 15px;
+  }
+
+  &.s12 {
+    width: 12px;
+    height: 12px;
+  }
+  &.icon-plus {
+    background-image: url('../../img/nav_more@3x.png');
+  }
+  &.icon-mail {
+    width: 22px;
+    height: 18px;
+    background-image: url('../../img/nav_mail@3x.png');
+  }
+  &.icon-biz-card {
+    background-image: url('../../img/tab_card@3x.png');
+  }
+  &.icon-address-book {
+    background-image: url('../../img/tab_address@3x.png');
+  }
+  &.icon-account {
+    background-image: url('../../img/tab_my_pre@3x.png');
   }
 }
