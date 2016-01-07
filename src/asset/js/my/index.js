@@ -6,9 +6,12 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Promise from 'promise';
 
 import Header from '../header/';
 import Nav from '../nav/';
+import Loading from '../loading/';
+import Popover from '../popover/';
 
 export default class MyPage extends React.Component {
   constructor() {
@@ -19,12 +22,34 @@ export default class MyPage extends React.Component {
     }
   }
 
+  /**
+   * 处理点击签到
+   * @param  {ClickEvent} e 点击事件
+   * @return
+   */
   handleSignin(e) {
     e.preventDefault();
     e.stopPropagation();
 
-    this.setState({
-      signinable: false
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/api/signin',
+        type: 'POST',
+        success: resolve.bind(this),
+        error: reject.bind(this)
+      });
+    }).then((res) => {
+      this.setState({
+        signinable: false
+      });
+
+      this.refs.popover.success('签到成功');
+    }).catch((xhr) => {
+      console.log(xhr)
+    }).done(() => {
+      this.refs.loading.close();
     })
   }
 
@@ -53,8 +78,10 @@ export default class MyPage extends React.Component {
             <button className="btn block red" type="button" disabled={!this.state.signinable} onClick={this.handleSignin.bind(this)}>签到</button>
             <button className="btn block line" type="button">退出账号</button>
           </div>
+          <Popover ref="popover" />
         </section>
         <Nav />
+        <Loading ref="loading" />
       </section>
     );
   }

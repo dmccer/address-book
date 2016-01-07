@@ -11,6 +11,11 @@
   }
 }
 
+.size(@size) {
+  width: @size;
+  height: @size;
+}
+
 .icon {
   display: inline-block;
   vertical-align: middle;
@@ -98,35 +103,37 @@
   &.icon-plus,
   &.icon-biz-card,
   &.icon-address-book,
-  &.icon-account {
+  &.icon-account,
+  &.icon-success,
+  &.icon-error {
     background-size: 100% 100%;
     background-repeat: no-repeat;
   }
 
+  &.s32 {
+    .size(32px);
+  }
+
   &.s30 {
-    width: 30px;
-    height: 30px;
+    .size(30px);
   }
 
   &.s20 {
-    width: 20px;
-    height: 20px;
+    .size(20px);
   }
 
   &.s22 {
-    width: 22px;
-    height: 22px;
+    .size(22px);
   }
 
   &.s15 {
-    width: 15px;
-    height: 15px;
+    .size(15px);
   }
 
   &.s12 {
-    width: 12px;
-    height: 12px;
+    .size(12px);
   }
+
   &.icon-plus {
     background-image: url('../../img/nav_more@3x.png');
   }
@@ -143,5 +150,8 @@
   }
   &.icon-account {
     background-image: url('../../img/tab_my_pre@3x.png');
+  }
+  &.icon-success {
+    background-image: url('../../img/smile@3x.png');
   }
 }

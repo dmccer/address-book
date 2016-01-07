@@ -117,7 +117,7 @@ module.exports = {
     hot: true,
     inline: true,
     proxy: {
-      '/api*': {
+      '/api/*': {
         target: 'http://localhost:3000',
         secure: false
       }
