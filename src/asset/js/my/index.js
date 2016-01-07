@@ -13,6 +13,19 @@ import Nav from '../nav/';
 export default class MyPage extends React.Component {
   constructor() {
     super();
+
+    this.state = {
+      signinable: true
+    }
+  }
+
+  handleSignin(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.setState({
+      signinable: false
+    })
   }
 
   render() {
@@ -37,7 +50,7 @@ export default class MyPage extends React.Component {
             </li>
           </ul>
           <div className="btns">
-            <button className="btn block red" type="button">签到</button>
+            <button className="btn block red" type="button" disabled={!this.state.signinable} onClick={this.handleSignin.bind(this)}>签到</button>
             <button className="btn block line" type="button">退出账号</button>
           </div>
         </section>

@@ -81,6 +81,7 @@
 @c_red            : #ee7b64;
 @c_lightGrey      : #eef0f3;
 @c_grey           : #dddada;
+@c_lightGrey_1    : #c5c5c8;
 @c_lightPurple    : #797c91;
 
 
