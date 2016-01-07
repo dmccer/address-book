@@ -4,7 +4,6 @@ import '../../less/component/form.less';
 import '../../less/component/icon.less';
 import './index.less';
 
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 

@@ -105,7 +105,9 @@
   &.icon-address-book,
   &.icon-account,
   &.icon-success,
-  &.icon-error {
+  &.icon-error,
+  &.icon-phone,
+  &.icon-key {
     background-size: 100% 100%;
     background-repeat: no-repeat;
   }
@@ -153,5 +155,15 @@
   }
   &.icon-success {
     background-image: url('../../img/smile@3x.png');
+  }
+  &.icon-phone, &.icon-key {
+    width: 8px;
+    height: 14px;
+  }
+  &.icon-phone {
+    background-image: url('../../img/list_phone@3x.png');
+  }
+  &.icon-key {
+    background-image: url('../../img/list_key@3x.png');
   }
 }
