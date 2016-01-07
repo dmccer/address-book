@@ -1,5 +1,6 @@
 import '../../less/global/global.less';
 import '../../less/component/layout.less';
+import '../../less/component/icon.less';
 import './index.less';
 
 import React from 'react';
