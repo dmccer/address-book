@@ -79,6 +79,9 @@
 @c_green          : #6ba596;
 @c_black          : #343850;
 @c_red            : #ee7b64;
+@c_lightGrey      : #eef0f3;
+@c_grey           : #dddada;
+@c_lightPurple    : #797c91;
 
 
 /*-------------------

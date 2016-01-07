@@ -1,33 +1,45 @@
 @import '../global/site.variable';
+@import '../../less/global/util.less';
 
-// .form {
-//   .control {
-//     @padding: 10px;
-//     margin-bottom: 10px;
-//     position: relative;
-//
-//     textarea {
-//       width: 100%;
-//       padding: @padding;
-//       border-color: @c_lightGrey;
-//       border-radius: 5px;
-//     }
-//
-//     input {
-//       width: 100%;
-//       border: 1px solid @c_lightGrey;
-//       border-radius: 3px;
-//       padding: @padding;
-//     }
-//
-//     .char-count {
-//       position: absolute;
-//       bottom: @padding;
-//       right: @padding;
-//       color: @c_grey;
-//     }
-//   }
-// }
+.form {
+  padding: 30px 15px;
+
+  .field {
+    @radius: 3px;
+    @bgColor: @white;
+    // placeholder color
+    @phColor: @c_grey;
+    @padding: 13px;
+    @inputH: 44px;
+    @marginBottom: 5px;
+    @fontSize: 16 / 12rem;
+
+    .input_placeholder(@phColor);
+    .textarea_placeholder(@phColor);
+
+    position: relative;
+    margin-bottom: @marginBottom;
+
+    .icon {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translate(0, -50%);
+    }
+
+    .control {
+      width: 100%;
+      border-radius: @radius;
+      background-color: @bgColor;
+      border: none;
+      font-size: @fontSize;
+    }
+
+    input, textarea {
+      padding: @padding;
+    }
+  }
+}
 
 .btn {
   @padding: 10px 15px;
@@ -51,6 +63,16 @@
 
   &.red {
     background-color: @c_red;
+    color: @white;
+  }
+
+  &.purple {
+    background-color: @c_lightPurple;
+    color: @white;
+  }
+
+  &.blue {
+    background-color: @c_blue_1;
     color: @white;
   }
 

@@ -10,6 +10,7 @@ module.exports = {
   entry: {
     'score-rule': './src/asset/js/score-rule/index.js',
     my: './src/asset/js/my/index.js',
+    login: './src/asset/js/login/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -41,17 +42,24 @@ module.exports = {
       }
     }),
     new HtmlWebpackPlugin({
-      title: '我的 - 物流通讯录',
+      title: '我的 - 货运通讯录',
       template: './src/page/index.html',
       filename: 'index.html',
       chunks: ['ved', 'lib-react', 'zepto', 'my'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
-      title: '积分规则 - 物流通讯录',
+      title: '积分规则 - 货运通讯录',
       template: './src/page/index.html',
       filename: 'score-rule.html',
       chunks: ['ved', 'lib-react', 'zepto', 'score-rule'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '登录 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'login.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'login'],
       inject: 'body'
     })
   ],
