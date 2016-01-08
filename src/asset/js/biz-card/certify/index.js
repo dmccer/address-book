@@ -20,6 +20,12 @@ export default class BizCardCertifyPage extends React.Component {
 
         <div className="biz-card-certify">
           <div className="field">
+            <button type="button" className="btn block offBlue">名片及工牌 (上传成功)</button>
+          </div>
+          <div className="field">
+            <button type="button" className="btn block offBlue">身份证正面 (上传成功)</button>
+          </div>
+          <div className="field">
             <button type="button" className="btn line green">上传【名片及工牌】实物照片</button>
           </div>
           <div className="field">

@@ -75,6 +75,7 @@
 @c_blue_1         : #2e3349;
 @c_blue_2         : #343850;
 @c_blue_3         : #585b75;
+@c_lightBlue      : #5a5d76;
 @c_yellow         : #c2b279;
 @c_lightYellow    : #f5f1e1;
 @c_green          : #6ba596;
