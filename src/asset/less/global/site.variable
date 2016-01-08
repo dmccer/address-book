@@ -86,6 +86,7 @@
 @c_lightBlack_1   : #999999;
 @c_lightBlack_2   : #8c8fa0;
 @c_red            : #ee7b64;
+@c_red_1          : #d86870;
 @c_grey           : #dddada;
 @c_lightGrey      : #eef0f3;
 @c_lightGrey_1    : #c5c5c8;

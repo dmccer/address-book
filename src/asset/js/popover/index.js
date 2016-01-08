@@ -38,10 +38,9 @@ export default class Loading extends React.Component {
     this.show('error', msg, timeout);
   }
 
-
   render() {
     let popoverClassNames = cx('popover', this.state.on ? 'on' : '');
-    let iconClassNames = cx('icon s32', `icon-${this.state.type}`);
+    let iconClassNames = cx('icon s32', `icon-popover-${this.state.type}`);
 
     return this.state.on ? (
       <div className={popoverClassNames}>

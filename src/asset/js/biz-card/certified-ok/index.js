@@ -19,7 +19,7 @@ export default class BizCardCertifiedOKPage extends React.Component {
         <SubHeader title="名片认证" />
         <div className="biz-card-certified-ok">
           <div className="certified-ok-tip">
-            <i className="icon s32 icon-success"></i>
+            <i className="icon s32 icon-popover-success"></i>
             <p>恭喜您，认证成功！</p>
           </div>
           <p className="certified-ok-time">认证通过时间: 2015年12月12日 14:15:22</p>
