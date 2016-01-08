@@ -33,10 +33,10 @@ export default class Share extends React.Component {
       type: '', // 分享类型,music、video或link，不填默认为link
       dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
       success: function () {
-          // 用户确认分享后执行的回调函数
+        // 用户确认分享后执行的回调函数
       },
       cancel: function () {
-          // 用户取消分享后执行的回调函数
+        // 用户取消分享后执行的回调函数
       }
     });
   }
@@ -45,18 +45,56 @@ export default class Share extends React.Component {
     if (!this.props.wxReady) {
       return;
     }
+
+    wx.onMenuShareTimeline({
+      title: '', // 分享标题
+      link: '', // 分享链接
+      imgUrl: '', // 分享图标
+      success: function () {
+        // 用户确认分享后执行的回调函数
+      },
+      cancel: function () {
+        // 用户取消分享后执行的回调函数
+      }
+    });
   }
 
   shareToQQ() {
     if (!this.props.wxReady) {
       return;
     }
+
+    wx.onMenuShareQQ({
+      title: '', // 分享标题
+      desc: '', // 分享描述
+      link: '', // 分享链接
+      imgUrl: '', // 分享图标
+      success: function () {
+        // 用户确认分享后执行的回调函数
+      },
+      cancel: function () {
+        // 用户取消分享后执行的回调函数
+      }
+    });
   }
 
   shareToQzone() {
     if (!this.props.wxReady) {
       return;
     }
+
+    wx.onMenuShareQZone({
+      title: '', // 分享标题
+      desc: '', // 分享描述
+      link: '', // 分享链接
+      imgUrl: '', // 分享图标
+      success: function () {
+        // 用户确认分享后执行的回调函数
+      },
+      cancel: function () {
+        // 用户取消分享后执行的回调函数
+      }
+    });
   }
 
   close() {
@@ -77,19 +115,19 @@ export default class Share extends React.Component {
         <Mask type="black" click={this.handleMaskClick.bind(this)} />
         <ul className="share-list grid">
           <li onClick={this.shareToWeiXin.bind(this)}>
-            <i className="icon icon-weixin"></i>
+            <i className="icon s44 icon-weixin"></i>
             <span>微信</span>
           </li>
           <li onClick={this.shareToPengYouQuan.bind(this)}>
-            <i className="icon icon-pengyouquan"></i>
+            <i className="icon s44 icon-pengyouquan"></i>
             <span>朋友圈</span>
           </li>
           <li onClick={this.shareToQQ.bind(this)}>
-            <i className="icon icon-qq"></i>
+            <i className="icon s44 icon-qq"></i>
             <span>QQ</span>
           </li>
           <li onClick={this.shareToQzone.bind(this)}>
-            <i className="icon icon-qzone"></i>
+            <i className="icon s44 icon-qzone"></i>
             <span>QQ空间</span>
           </li>
         </ul>
