@@ -15,7 +15,7 @@ export default class BizCardCertifiedOKPage extends React.Component {
 
   render() {
     return (
-      <section className="biz-card-certified-ok-page">
+      <section className="biz-card-certified-ok-page mini-page">
         <SubHeader title="名片认证" />
         <div className="biz-card-certified-ok">
           <div className="certified-ok-tip">
