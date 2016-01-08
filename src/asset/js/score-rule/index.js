@@ -7,10 +7,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import SubHeader from '../sub-header/';
+import Share from '../share/';
 
 export default class ScoreRulePage extends React.Component {
   constructor() {
     super();
+  }
+
+  share() {
+    this.refs.share.show();
   }
 
   render() {
@@ -31,7 +36,7 @@ export default class ScoreRulePage extends React.Component {
             <li>
               <i className="icon s12 icon-li"></i>
               <p>
-                <a href="#">分享主名片</a>
+                <a href="#" onClick={this.share.bind(this)}>分享主名片</a>
                 <span>，可获得 1 积分，每天最多 10 积分</span>
               </p>
             </li>
@@ -118,7 +123,7 @@ export default class ScoreRulePage extends React.Component {
             </tbody>
           </table>
         </section>
-
+        <Share ref="share" />
       </section>
     );
   }

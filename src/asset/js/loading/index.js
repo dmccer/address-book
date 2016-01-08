@@ -4,6 +4,8 @@ import '../../less/component/icon.less';
 import React from 'react';
 import cx from 'classnames';
 
+import Mask from '../mask/';
+
 export default class Loading extends React.Component {
   constructor() {
     super();
@@ -46,7 +48,7 @@ export default class Loading extends React.Component {
 
     return this.state.on ? (
       <div className={loadingClassNames}>
-        <div className="mask"></div>
+        <Mask />
         <div className="loading-panel">
           <p className="loading-text">
             <i className="icon icon-loading"></i>
