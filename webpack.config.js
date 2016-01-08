@@ -14,6 +14,7 @@ module.exports = {
     'biz-card-certify': './src/asset/js/biz-card/certify/index.js',
     'biz-card-certified-ok': './src/asset/js/biz-card/certified-ok/index.js',
     'biz-card-certified-fail': './src/asset/js/biz-card/certified-fail/index.js',
+    'biz-card-certified': './src/asset/js/biz-card/certified/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -84,6 +85,13 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'biz-card-certified-fail.html',
       chunks: ['ved', 'lib-react', 'zepto', 'biz-card-certified-fail'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '名片认证申请已提交 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'biz-card-certified.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'biz-card-certified'],
       inject: 'body'
     })
   ],
