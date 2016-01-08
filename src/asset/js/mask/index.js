@@ -17,7 +17,7 @@ export default class Mask extends React.Component {
     let cxs = cx('mask', this.props.type || 'none');
 
     return (
-      <div className={cxs}></div>
+      <div className={cxs} onClick={this.props.click}></div>
     );
   }
 }

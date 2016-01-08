@@ -6,13 +6,34 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import WXVerify from '../wx-verify/';
 import SubHeader from '../sub-header/';
 import Share from '../share/';
 import Private from '../private/';
+import Config from '../config';
 
 export default class ScoreRulePage extends React.Component {
   constructor() {
     super();
+
+    this.state = {};
+  }
+
+  componentWillMount() {
+    WXVerify({
+      appId: Config.wxAppId,
+      url: Config.wxSignatureUrl,
+      jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone']
+    }, (err) => {
+      if (err) {
+        // 微信验证失败处理
+        return;
+      }
+
+      this.setState({
+        wxReady: true
+      });
+    });
   }
 
   share() {
