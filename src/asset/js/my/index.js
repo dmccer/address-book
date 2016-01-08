@@ -76,7 +76,7 @@ export default class MyPage extends React.Component {
           </ul>
           <div className="btns">
             <button className="btn block red" type="button" disabled={!this.state.signinable} onClick={this.handleSignin.bind(this)}>签到</button>
-            <button className="btn block line" type="button">退出账号</button>
+            <button className="btn line blue" type="button">退出账号</button>
           </div>
           <Popover ref="popover" />
         </section>

@@ -80,11 +80,15 @@
 @c_green          : #6ba596;
 @c_lightGreen     : #00ae8e;
 @c_lightGreen_1   : #75ae9f;
+@c_lightGreen_2   : #6da697;
 @c_black          : #343850;
+@c_lightBlack     : #666666;
+@c_lightBlack_1   : #999999;
 @c_red            : #ee7b64;
-@c_lightGrey      : #eef0f3;
 @c_grey           : #dddada;
+@c_lightGrey      : #eef0f3;
 @c_lightGrey_1    : #c5c5c8;
+@c_lightWhite     : #f6f6f6;
 @c_lightPurple    : #797c91;
 
 

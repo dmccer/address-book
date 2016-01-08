@@ -1,7 +1,8 @@
+import '../../less/component/layout.less';
+import '../../less/component/icon.less';
 import './index.less';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 export default class SubHeader extends React.Component {
   constructor() {

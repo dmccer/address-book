@@ -11,6 +11,7 @@ module.exports = {
     'score-rule': './src/asset/js/score-rule/index.js',
     my: './src/asset/js/my/index.js',
     login: './src/asset/js/login/index.js',
+    'biz-card-certify': './src/asset/js/biz-card/certify/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -60,6 +61,13 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'login.html',
       chunks: ['ved', 'lib-react', 'zepto', 'login'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '名片认证 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'biz-card-certify.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'biz-card-certify'],
       inject: 'body'
     })
   ],
