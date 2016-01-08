@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 
 import SubHeader from '../sub-header/';
 import Share from '../share/';
+import Private from '../private/';
 
 export default class ScoreRulePage extends React.Component {
   constructor() {
@@ -123,6 +124,7 @@ export default class ScoreRulePage extends React.Component {
             </tbody>
           </table>
         </section>
+        <Private />
         <Share ref="share" />
       </section>
     );
