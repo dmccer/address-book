@@ -1,0 +1,130 @@
+@import '../../../less/global/site.variable';
+
+body {
+  background-color: #eef0f3;
+}
+
+.divide {
+  border-bottom: 1px solid @c_lightGrey_4;
+}
+
+.fixed-holder {
+  height: 44px;
+}
+
+.search {
+  display: block;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 3px;
+  background-color: @white;
+  color: @c_lightGrey_3;
+  font-size: 14/12rem;
+  text-align: center;
+  margin-top: 10px;
+
+  span {
+    color: @c_lightGrey_3;
+  }
+}
+
+.ab-profile {
+  background-color: @c_blue_1;
+  color: @white;
+  padding: 0 43px 8px;
+
+  h2 {
+    font-size: 21/12rem;
+    margin-bottom: 8px;
+    text-align: center;
+    width: 8em;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .description {
+    font-size: 13/12rem;
+    line-height: 18px;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+
+  .creator {
+    text-align: center;
+  }
+}
+
+.menu {
+  li {
+    text-align: center;
+    font-size: 13/12rem;
+    color: @c_lightBlack_1;
+    height: 40px;
+    line-height: 40px;
+    background-color: @c_lightGrey_5;
+    border-right: 1px solid @lightGrey;
+
+    &.on {
+      border-bottom: 2px solid @c_blue_1;
+      color: @c_black_1;
+      background-color: @white;
+    }
+  }
+}
+
+.list {
+  li {
+    border-bottom: 1px solid @c_lightGrey_4;
+    background-color: @white;
+    padding: 10px 15px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.member-list {
+  margin-top: 10px;
+
+  li a {
+    display: block;
+    overflow: hidden;
+    color: @c_lightBlack_1;
+
+    .cover {
+      float: left;
+      width: 40px;
+      height: 40px;
+      margin-right: 8px;
+    }
+
+    .member-profile {
+      overflow: hidden;
+
+      h3 {
+        font-size: 16/12rem;
+        color: @lightBlack;
+        margin-bottom: 5px;
+        font-weight: normal;
+      }
+
+      > div {
+        overflow: hidden;
+      }
+    }
+  }
+}
+
+.btn.block.join-btn {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  border-radius: 0;
+  text-align: center;
+  background-color: rgba(46, 51, 73, .9);
+}

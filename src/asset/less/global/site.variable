@@ -83,6 +83,7 @@
 @c_lightGreen_1   : #75ae9f;
 @c_lightGreen_2   : #6da697;
 @c_black          : #343850;
+@c_black_1        : #525151;
 @c_lightBlack     : #666666;
 @c_lightBlack_1   : #999999;
 @c_lightBlack_2   : #8c8fa0;
@@ -95,6 +96,7 @@
 @c_lightGrey_2    : #e0e0e0;
 @c_lightGrey_3    : #e4e4e4;
 @c_lightGrey_4    : #e5e5e5;
+@c_lightGrey_5    : #e3e3e3;
 @c_lightWhite     : #f6f6f6;
 @c_lightPurple    : #797c91;
 

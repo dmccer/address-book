@@ -16,6 +16,7 @@ module.exports = {
     'biz-card-certified-fail': './src/asset/js/biz-card/certified-fail/index.js',
     'biz-card-certified': './src/asset/js/biz-card/certified/index.js',
     'address-book': './src/asset/js/address-book/home/index.js',
+    'address-book-detail': './src/asset/js/address-book/detail/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -96,10 +97,17 @@ module.exports = {
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
-      title: '名片认证申请已提交 - 货运通讯录',
+      title: '通讯录 - 货运通讯录',
       template: './src/page/index.html',
       filename: 'address-book.html',
       chunks: ['ved', 'lib-react', 'zepto', 'address-book'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '通讯录详情 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'address-book-detail.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'address-book-detail'],
       inject: 'body'
     })
   ],
