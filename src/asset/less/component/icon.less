@@ -95,6 +95,13 @@
     animation-delay: 0;
   }
 
+  &.icon-badge {
+    border-radius: 100%;
+    background-color: @c_red_1;
+    text-align: center;
+    line-height: 22px;
+  }
+
   &.icon-mail,
   &.icon-plus,
   &.icon-biz-card,
@@ -111,7 +118,8 @@
   &.icon-weixin,
   &.icon-pengyouquan,
   &.icon-qq,
-  &.icon-qzone {
+  &.icon-qzone,
+  &.icon-right-arrow {
     background-size: 100% 100%;
     background-repeat: no-repeat;
   }
@@ -136,6 +144,10 @@
     .size(22px);
   }
 
+  &.s16 {
+    .size(16px);
+  }
+
   &.s15 {
     .size(15px);
   }
@@ -155,15 +167,35 @@
     width: 22px;
     height: 18px;
     background-image: url('../../img/nav_mail@3x.png');
+
+    &.menu {
+      width: 30px;
+      height: 30px;
+      background-image: url('../../img/icon_xiaoxi@3x.png');
+      background-size: 100% auto;
+      background-position: center center;
+    }
   }
   &.icon-biz-card {
     background-image: url('../../img/tab_card@3x.png');
+
+    &.on {
+      background-image: url('../../img/tab_card_pre@3x.png');
+    }
   }
   &.icon-address-book {
     background-image: url('../../img/tab_address@3x.png');
+
+    &.on {
+      background-image: url('../../img/tab_address_pre@3x.png');
+    }
   }
   &.icon-account {
-    background-image: url('../../img/tab_my_pre@3x.png');
+    background-image: url('../../img/tab_my@3x.png');
+
+    &.on {
+      background-image: url('../../img/tab_my_pre@3x.png');
+    }
   }
   &.icon-popover-success {
     background-image: url('../../img/smile@3x.png');
@@ -185,6 +217,11 @@
     width: 16px;
     height: 22px;
     background-image: url('../../img/zuojiantou@3x.png');
+  }
+  &.icon-right-arrow {
+    width: 10px;
+    height: 17px;
+    background-image: url('../../img/icon-youjiantou@3x.png');
   }
   &.icon-more {
     background-image: url('../../img/gengduo@3x.png');
