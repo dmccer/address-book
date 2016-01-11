@@ -78,6 +78,7 @@
 @c_lightBlue      : #5a5d76;
 @c_yellow         : #c2b279;
 @c_lightYellow    : #f5f1e1;
+@c_lightYellow_1  : #acaf97;
 @c_green          : #6ba596;
 @c_lightGreen     : #00ae8e;
 @c_lightGreen_1   : #75ae9f;
@@ -88,6 +89,7 @@
 @c_lightBlack_1   : #999999;
 @c_lightBlack_2   : #8c8fa0;
 @c_lightBlack_3   : #8a8a8a;
+@c_lightBlack_4   : #727689;
 @c_red            : #ee7b64;
 @c_red_1          : #d86870;
 @c_grey           : #dddada;
@@ -97,7 +99,10 @@
 @c_lightGrey_3    : #e4e4e4;
 @c_lightGrey_4    : #e5e5e5;
 @c_lightGrey_5    : #e3e3e3;
+@c_lightGrey_6    : #d8d8d8;
+@c_lightGrey_7    : #c4c2c2;
 @c_lightWhite     : #f6f6f6;
+@c_lightWhite_1   : #f4f4f4;
 @c_lightPurple    : #797c91;
 
 

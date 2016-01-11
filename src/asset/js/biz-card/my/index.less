@@ -1,0 +1,94 @@
+@import '../../../less/global/site.variable';
+
+body {
+  background-color: @c_lightGrey;
+}
+
+.divide {
+  border-bottom: 1px solid @c_lightGrey_4;
+}
+
+.fixed-holder {
+  height: 65px;
+}
+
+.search {
+  display: block;
+  height: 28px;
+  line-height: 28px;
+  border-radius: 3px;
+  background-color: @c_lightWhite_1;
+  color: @c_lightGrey_6;
+  font-size: 15/12rem;
+  text-align: center;
+
+  span {
+    color: @c_lightGrey_3;
+  }
+}
+
+.list {
+  > a {
+    display: block;
+    border-bottom: 1px solid @c_lightGrey_4;
+    background-color: @white;
+    padding: 10px;
+    color: @c_lightBlack;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.biz-card-my {
+  padding: 10px 15px;
+
+  .add-btn {
+    display: block;
+    font-size: 16/12rem;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .menu {
+    li {
+      text-align: center;
+      font-size: 18/12rem;
+      color: @c_lightYellow_1;
+      height: 44px;
+      line-height: 44px;
+      box-sizing: border-box;
+      background-color: @c_lightBlack_2;
+
+      &.on {
+        border-bottom: 4px solid @c_lightBlack_4;
+        color: @c_blue_3;
+        background-color: @white;
+      }
+    }
+  }
+
+  .search-sec {
+    padding: 8px;
+    background-color: @white;
+  }
+
+  .ab-group-list {
+    font-size: 17/12rem;
+
+    .people-num {
+      color: @c_lightGrey_7;
+      text-align: right;
+      font-size: 15/12rem;
+    }
+
+    .icon-right-triangle {
+      margin-right: 10px;
+    }
+
+    .icon-manage {
+      margin-right: 8px;
+    }
+  }
+}

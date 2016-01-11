@@ -11,6 +11,7 @@ module.exports = {
     'score-rule': './src/asset/js/score-rule/index.js',
     my: './src/asset/js/my/index.js',
     login: './src/asset/js/login/index.js',
+    'my-biz-card': './src/asset/js/biz-card/my/index.js',
     'biz-card-certify': './src/asset/js/biz-card/certify/index.js',
     'biz-card-certified-ok': './src/asset/js/biz-card/certified-ok/index.js',
     'biz-card-certified-fail': './src/asset/js/biz-card/certified-fail/index.js',
@@ -108,6 +109,13 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'address-book-detail.html',
       chunks: ['ved', 'lib-react', 'zepto', 'address-book-detail'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '我的名片 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'my-biz-card.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'my-biz-card'],
       inject: 'body'
     })
   ],
