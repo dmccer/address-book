@@ -24,6 +24,19 @@ export default class BizCardMyPage extends React.Component {
             <i className="icon s12 icon-plus"></i>
             <span>新建名片</span>
           </a>
+          <div className="my-profile">
+            <div className="avatar" style={{
+              backgroundImage: 'url(http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/y05QWUvtxCFVc44Ozx-SCQ==/6631404216260167640.jpg_188x188x1.jpg)'
+            }}></div>
+            <div className="profile">
+              <p className="my">
+                <span>王晓华</span>
+                <span className="vip-level">VIP1</span>
+              </p>
+              <p className="intro">我是描述文字，我是描述文字</p>
+              <i className="icon icon-account-type-truck"></i>
+            </div>
+          </div>
           <ul className="menu grid">
             <li className="on">名片好友</li>
             <li>名片交换</li>
