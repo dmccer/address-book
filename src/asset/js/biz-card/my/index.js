@@ -43,7 +43,7 @@ export default class BizCardMyPage extends React.Component {
           </ul>
           <div className="search-sec">
             <a className="search">
-              <i className="icon icon-search"></i>
+              <i className="icon s14 icon-search"></i>
               <span>您共有 100 位好友可搜索</span>
             </a>
           </div>

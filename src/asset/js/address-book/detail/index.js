@@ -34,7 +34,7 @@ export default class ABDetailPage extends React.Component {
             <li>设置</li>
           </ul>
           <a className="search">
-            <i className="icon icon-search"></i>
+            <i className="icon s14 icon-search"></i>
             <span>通讯录共有 100 人</span>
           </a>
           <div className="divide"></div>

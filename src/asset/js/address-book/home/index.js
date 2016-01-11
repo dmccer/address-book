@@ -57,7 +57,7 @@ export default class ABPage extends React.Component {
         <Header title="通讯录" />
         <section className="ab">
           <a className="search">
-            <i className="icon icon-search"></i>
+            <i className="icon s14 icon-search"></i>
             <span>通讯录共有 100 人</span>
           </a>
           <div className="divide"></div>
