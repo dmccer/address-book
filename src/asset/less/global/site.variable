@@ -86,12 +86,15 @@
 @c_lightBlack     : #666666;
 @c_lightBlack_1   : #999999;
 @c_lightBlack_2   : #8c8fa0;
+@c_lightBlack_3   : #8a8a8a;
 @c_red            : #ee7b64;
 @c_red_1          : #d86870;
 @c_grey           : #dddada;
 @c_lightGrey      : #eef0f3;
 @c_lightGrey_1    : #c5c5c8;
 @c_lightGrey_2    : #e0e0e0;
+@c_lightGrey_3    : #e4e4e4;
+@c_lightGrey_4    : #e5e5e5;
 @c_lightWhite     : #f6f6f6;
 @c_lightPurple    : #797c91;
 
