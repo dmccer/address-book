@@ -71,7 +71,7 @@ export default class MyPage extends React.Component {
             </li>
             <li className="score">
               <span>您的积分:</span>
-              <b><a href="#">357</a></b>
+              <b><a href="./score-rule.html">357</a></b>
             </li>
           </ul>
           <div className="btns">
@@ -80,7 +80,7 @@ export default class MyPage extends React.Component {
           </div>
           <Popover ref="popover" />
         </section>
-        <Nav />
+        <Nav on="account" />
         <Loading ref="loading" />
       </section>
     );

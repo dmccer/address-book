@@ -1,6 +1,23 @@
 import './index.less';
 
 import React from 'react';
+import cx from 'classnames';
+
+const MENUS = [
+  {
+    id: 'biz-card',
+    name: '名片',
+    url: './my-biz-card.html'
+  }, {
+    id: 'address-book',
+    name: '通讯录',
+    url: './address-book.html'
+  }, {
+    id: 'account',
+    name: '我的',
+    url: './index.html'
+  }
+];
 
 export default class Nav extends React.Component {
   constructor() {
@@ -8,20 +25,24 @@ export default class Nav extends React.Component {
   }
 
   render() {
+    let menuList = MENUS.map((menu, index) => {
+      let on = menu.id === this.props.on ? 'on' : '';
+      let iconClassNames = cx('icon s22', `icon-${menu.id}`, on);
+      let menuClassNames = cx('menu', on);
+
+      return (
+        <div className={menuClassNames} key={'menu_' + index}>
+          <a href={menu.url}>
+            <i className={iconClassNames}></i>
+            <span>{menu.name}</span>
+          </a>
+        </div>
+      )
+    });
+
     return (
       <section className="nav row">
-        <div className="menu">
-          <i className="icon s22 icon-biz-card"></i>
-          <span>名片</span>
-        </div>
-        <div className="menu">
-          <i className="icon s22 icon-address-book"></i>
-          <span>通讯录</span>
-        </div>
-        <div className="menu on">
-          <i className="icon s22 icon-account"></i>
-          <span>我的</span>
-        </div>
+        {menuList}
       </section>
     );
   }

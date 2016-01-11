@@ -36,20 +36,28 @@ export default class More extends React.Component {
           </ul>
           <section className="nav row">
             <div className="menu">
-              <i className="icon s30 icon-biz-card"></i>
-              <span>名片</span>
+              <a href="./my-biz-card.html">
+                <i className="icon s30 icon-biz-card"></i>
+                <span>名片</span>
+              </a>
             </div>
             <div className="menu">
-              <i className="icon s30 icon-address-book"></i>
-              <span>通讯录</span>
+              <a href="./address-book.html">
+                <i className="icon s30 icon-address-book"></i>
+                <span>通讯录</span>
+              </a>
             </div>
             <div className="menu">
-              <i className="icon icon-mail menu"></i>
-              <span>消息</span>
+              <a href="./msg.html">
+                <i className="icon icon-mail menu"></i>
+                <span>消息</span>
+              </a>
             </div>
             <div className="menu">
-              <i className="icon s30 icon-account"></i>
-              <span>我的</span>
+              <a href="./index.html">
+                <i className="icon s30 icon-account"></i>
+                <span>我的</span>
+              </a>
             </div>
           </section>
         </section>

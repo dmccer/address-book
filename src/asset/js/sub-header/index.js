@@ -18,10 +18,14 @@ export default class SubHeader extends React.Component {
     });
   }
 
+  back() {
+    history.back();
+  }
+
   render() {
     return (
       <header className="header row">
-        <section className="left"><i className="icon icon-left-arrow"></i></section>
+        <section className="left" onClick={this.back.bind(this)}><i className="icon icon-left-arrow"></i></section>
         <section className="center">{this.props.title}</section>
         <section className="right" onClick={this.toggleMore.bind(this)}>
           <i className="icon s20 icon-more"></i>

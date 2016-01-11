@@ -64,7 +64,7 @@ export default class ABPage extends React.Component {
           <h2 className="subtitle">我发起的</h2>
           <ul className="list ab-list">
             <li>
-              <a href="#">
+              <a href="./address-book-detail.html">
                 <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
                 <div className="ab-profile">
                   <h3>通讯录名称</h3>
@@ -76,7 +76,7 @@ export default class ABPage extends React.Component {
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="./address-book-detail.html">
                 <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
                 <div className="ab-profile">
                   <h3>通讯录名称</h3>
@@ -91,7 +91,7 @@ export default class ABPage extends React.Component {
           <h2 className="subtitle">我加入的</h2>
           <ul className="list ab-list">
             <li>
-              <a href="#">
+              <a href="./address-book-detail.html">
                 <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
                 <div className="ab-profile">
                   <h3>通讯录名称</h3>
@@ -103,7 +103,7 @@ export default class ABPage extends React.Component {
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="./address-book-detail.html">
                 <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
                 <div className="ab-profile">
                   <h3>通讯录名称</h3>
@@ -118,7 +118,7 @@ export default class ABPage extends React.Component {
           <h2 className="subtitle">推荐通讯录</h2>
           <ul className="list ab-list">
             <li>
-              <a href="#">
+              <a href="./address-book-detail.html">
                 <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
                 <div className="ab-profile">
                   <h3>通讯录名称</h3>
@@ -130,7 +130,7 @@ export default class ABPage extends React.Component {
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="./address-book-detail.html">
                 <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
                 <div className="ab-profile">
                   <h3>通讯录名称</h3>
@@ -144,7 +144,7 @@ export default class ABPage extends React.Component {
           </ul>
         </section>
         <div className="fixed-holder"></div>
-        <Nav />
+        <Nav on="address-book" />
         <Loading ref="loading" />
       </section>
     );

@@ -97,7 +97,7 @@ export default class BizCardMyPage extends React.Component {
           </div>
           <div className="fixed-holder"></div>
         </div>
-        <Nav />
+        <Nav on="biz-card" />
       </section>
     );
   }
