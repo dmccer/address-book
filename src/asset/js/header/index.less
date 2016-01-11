@@ -19,4 +19,35 @@
     font-size: 1.75rem;
     color: #f6f6f6;
   }
+
+  .right {
+    position: relative;
+  }
+
+  .actions {
+    position: absolute;
+    top: 50px;
+    right: 15px;
+    width: 90px;
+    background-color: @c_blue_1;
+    z-index: 1;
+
+    li {
+      text-align: center;
+      border-bottom: 1px solid @black;
+      height: 40px;
+      line-height: 40px;
+
+      a {
+        display: block;
+        padding-left: 8px;
+        padding-right: 8px;
+        color: @white;
+      }
+
+      &:first-child {
+        border-top: 1px solid @black;
+      }
+    }
+  }
 }
