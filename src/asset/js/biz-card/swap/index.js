@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 
 import Header from '../../header/';
 import Nav from '../../nav/';
-import MyMiniCard from '../my-mini-card/';
+import MiniCard from '../mini-card/';
 
 export default class BizCardSwapPage extends React.Component {
   constructor() {
@@ -21,7 +21,7 @@ export default class BizCardSwapPage extends React.Component {
       <section className="biz-card-swap-page">
         <Header title="我的名片" />
         <div className="biz-card-swap">
-          <MyMiniCard />
+          <MiniCard />
           <ul className="menu grid">
             <li>名片好友</li>
             <li className="on">名片交换</li>

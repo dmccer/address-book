@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 
 import Header from '../../header/';
 import Nav from '../../nav/';
-import MyMiniCard from '../my-mini-card/';
+import MiniCard from '../mini-card/';
 
 export default class BizCardMyPage extends React.Component {
   constructor() {
@@ -25,7 +25,7 @@ export default class BizCardMyPage extends React.Component {
             <i className="icon s12 icon-plus"></i>
             <span>新建名片</span>
           </a>
-          <MyMiniCard />
+          <MiniCard />
           <ul className="menu grid">
             <li className="on">名片好友</li>
             <li>名片交换</li>

@@ -2,11 +2,11 @@ import './index.less';
 
 import React from 'react';
 
-export default class MyMiniCard extends React.Component {
+export default class MiniCard extends React.Component {
 	constructor() {
 		super();
 	}
-	
+
 	render() {
 		return (
 			<div className="my-profile">
