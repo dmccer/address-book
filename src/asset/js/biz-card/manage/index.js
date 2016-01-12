@@ -8,7 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import ModalHeader from '../../modal-header/';
-import MiniCard from '../mini-card/';
+import EditableCard from './editable-card/';
 import Private from '../../private/';
 
 export default class BizCardManagePage extends React.Component {
@@ -26,30 +26,7 @@ export default class BizCardManagePage extends React.Component {
             <span>新建名片</span>
           </a>
           <div className="list bc-list">
-            <div className="row">
-              <div className="action">
-                <i className="icon s16 icon-del"></i>
-              </div>
-              <div className="biz-card">
-                <MiniCard />
-              </div>
-            </div>
-            <div className="row">
-              <div className="action">
-                <i className="icon s16 icon-del"></i>
-              </div>
-              <div className="biz-card">
-                <MiniCard />
-              </div>
-            </div>
-            <div className="row">
-              <div className="action">
-                <i className="icon s16 icon-del"></i>
-              </div>
-              <div className="biz-card">
-                <MiniCard />
-              </div>
-            </div>
+            <EditableCard />
           </div>
         </div>
         <Private />

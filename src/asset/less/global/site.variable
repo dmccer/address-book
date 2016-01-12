@@ -83,6 +83,7 @@
 @c_lightGreen     : #00ae8e;
 @c_lightGreen_1   : #75ae9f;
 @c_lightGreen_2   : #6da697;
+@c_lightGreen_3   : #8ac1b2;
 @c_black          : #343850;
 @c_black_1        : #525151;
 @c_lightBlack     : #666666;

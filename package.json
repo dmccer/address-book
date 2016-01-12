@@ -12,6 +12,7 @@
     "querystring": "^0.2.0",
     "react": "^0.14.5",
     "react-dom": "^0.14.5",
+    "react-slick": "^0.9.3",
     "zepto": "https://github.com/madrobby/zepto/tarball/v1.1.6"
   },
   "devDependencies": {
