@@ -12,6 +12,7 @@ module.exports = {
     my: './src/asset/js/my/index.js',
     login: './src/asset/js/login/index.js',
     'my-biz-card': './src/asset/js/biz-card/my/index.js',
+    'swap-biz-card': './src/asset/js/biz-card/swap/index.js',
     'biz-card-certify': './src/asset/js/biz-card/certify/index.js',
     'biz-card-certified-ok': './src/asset/js/biz-card/certified-ok/index.js',
     'biz-card-certified-fail': './src/asset/js/biz-card/certified-fail/index.js',
@@ -116,6 +117,13 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'my-biz-card.html',
       chunks: ['ved', 'lib-react', 'zepto', 'my-biz-card'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '名片交换 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'swap-biz-card.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'swap-biz-card'],
       inject: 'body'
     })
   ],
