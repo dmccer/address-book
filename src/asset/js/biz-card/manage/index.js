@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom';
 import ModalHeader from '../../modal-header/';
 import EditableCard from './editable-card/';
 import Private from '../../private/';
+import Confirm from '../../confirm/';
 
 export default class BizCardManagePage extends React.Component {
   constructor() {
@@ -33,6 +34,7 @@ export default class BizCardManagePage extends React.Component {
           </div>
         </div>
         <Private />
+        <Confirm />
       </section>
     );
   }
