@@ -27,6 +27,9 @@ export default class BizCardManagePage extends React.Component {
           </a>
           <div className="list bc-list">
             <EditableCard />
+            <EditableCard />
+            <EditableCard />
+            <EditableCard />
           </div>
         </div>
         <Private />
