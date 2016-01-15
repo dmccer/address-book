@@ -8,7 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import ModalHeader from '../../modal-header/';
-import EditableCard from './editable-card/';
+import ManageMyMiniCard from '../mini-card/manage-my/';
 import Private from '../../private/';
 import Confirm from '../../confirm/';
 
@@ -27,10 +27,10 @@ export default class BizCardManagePage extends React.Component {
             <span>新建名片</span>
           </a>
           <div className="list bc-list">
-            <EditableCard />
-            <EditableCard />
-            <EditableCard />
-            <EditableCard />
+            <ManageMyMiniCard />
+            <ManageMyMiniCard />
+            <ManageMyMiniCard />
+            <ManageMyMiniCard />
           </div>
         </div>
         <Private />

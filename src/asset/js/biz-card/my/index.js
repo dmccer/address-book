@@ -9,11 +9,39 @@ import ReactDOM from 'react-dom';
 
 import Header from '../../header/';
 import Nav from '../../nav/';
-import MiniCard from '../mini-card/';
+import MainMiniCard from '../mini-card/main/';
+import BizCardGroupList from '../group-list/';
 
 export default class BizCardMyPage extends React.Component {
+  state = {
+    groups: [
+      {
+        name: '默认分组',
+        total: 10
+      }, {
+        name: '亲情市场',
+        total: 3
+      }, {
+        name: '道义市场',
+        total: 5
+      }, {
+        name: '黑名单',
+        total: 2
+      }
+    ]
+  };
+
   constructor() {
     super();
+  }
+
+  componentWillMount() {
+    let groups = this.state.groups;
+
+    groups.push({
+      name: '管理群组',
+      extra: true
+    });
   }
 
   render() {
@@ -25,7 +53,7 @@ export default class BizCardMyPage extends React.Component {
             <i className="icon s12 icon-plus"></i>
             <span>新建名片</span>
           </a>
-          <MiniCard />
+          <MainMiniCard />
           <ul className="menu grid">
             <li className="on">名片好友</li>
             <li>名片交换</li>
@@ -37,53 +65,7 @@ export default class BizCardMyPage extends React.Component {
             </a>
           </div>
           <div className="divide"></div>
-          <div className="list ab-group-list">
-            <a href="#">
-              <div className="row">
-                <div className="ab-group">
-                  <i className="icon icon-right-triangle"></i>
-                  <span>默认分组</span>
-                </div>
-                <div className="people-num">2/2</div>
-              </div>
-            </a>
-            <a href="#">
-              <div className="row">
-                <div className="ab-group">
-                  <i className="icon icon-right-triangle"></i>
-                  <span>亲情市场</span>
-                </div>
-                <div className="people-num">2/3</div>
-              </div>
-            </a>
-            <a href="#">
-              <div className="row">
-                <div className="ab-group">
-                  <i className="icon icon-right-triangle"></i>
-                  <span>道义市场</span>
-                </div>
-                <div className="people-num">2/3</div>
-              </div>
-            </a>
-            <a href="#">
-              <div className="row">
-                <div className="ab-group">
-                  <i className="icon icon-right-triangle"></i>
-                  <span>黑名单</span>
-                </div>
-                <div className="people-num">2/3</div>
-              </div>
-            </a>
-            <a href="#">
-              <div className="row">
-                <div className="ab-group">
-                  <i className="icon s15 icon-manage"></i>
-                  <span>管理群组</span>
-                </div>
-                <div className="people-num">2/3</div>
-              </div>
-            </a>
-          </div>
+          <BizCardGroupList items={this.state.groups} />
           <div className="fixed-holder"></div>
         </div>
         <Nav on="biz-card" />

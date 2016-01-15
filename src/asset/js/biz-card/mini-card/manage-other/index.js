@@ -3,13 +3,11 @@ import '../../../../less/component/icon.less';
 import './index.less';
 
 import React from 'react';
-import MiniCard from '../../mini-card/';
+import MiniCard from '../';
 import {DrawerEnhance} from '../../../enhance/drawer';
 
 @DrawerEnhance
-export default class EditableCard extends React.Component {
-  static state = {};
-
+export default class ManageOtherMiniCard extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -26,20 +24,15 @@ export default class EditableCard extends React.Component {
           onTouchMove={this.props.touchmove}
           onTouchEnd={this.props.touchend}
         >
-          <div className="action">
-            <i className="icon s16 icon-del"></i>
-          </div>
           <div className="biz-card">
             <MiniCard />
           </div>
         </div>
         <ul className="actions row">
-          <li className="share">分享</li>
-          <li className="set-main-card">设为主名片</li>
+          <li className="share">私信</li>
+          <li className="set-main-card">删除</li>
         </ul>
       </div>
     );
   }
 }
-
-// export default DrawerEnhance(EditableCard);

@@ -1,0 +1,46 @@
+@import '../../../../less/global/site.variable';
+
+.item {
+  position: relative;
+  background-color: @c_lightGrey_4;
+  margin-bottom: 1px;
+  overflow: hidden;
+
+  .cnt {
+    position: absolute;
+    z-index: 2;
+  }
+
+  .biz-card {
+    vertical-align: middle;
+  }
+
+  .biz-card .my-profile {
+    margin-bottom: 0;
+  }
+
+  .actions {
+    position: relative;
+    float: right;
+    width: 150px;
+    text-align: center;
+    font-size: 15/12rem;
+    color: @c_lightWhite;
+    z-index: 1;
+
+    .share, .set-main-card {
+      vertical-align: middle;
+      height: 49px;
+    }
+
+    .share {
+      width: 60px;
+      background-color: @c_lightGreen_3;
+    }
+
+    .set-main-card {
+      width: 90px;
+      background-color: @c_lightGreen_1;
+    }
+  }
+}

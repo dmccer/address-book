@@ -18,6 +18,12 @@ export var DrawerEnhance = ComposedComponent => class extends React.Component {
     super(props);
   }
 
+  maxLeft(max) {
+    this.setState({
+      maxLeft: max
+    });
+  }
+
   touchstart(e) {
     if (this.state.dragging) {
       return;
@@ -119,6 +125,7 @@ export var DrawerEnhance = ComposedComponent => class extends React.Component {
       {...this.state}
       touchstart={this.touchstart.bind(this)}
       touchmove={this.touchmove.bind(this)}
-      touchend={this.touchend.bind(this)}  />
+      touchend={this.touchend.bind(this)}
+      maxLeft={this.maxLeft.bind(this)}  />
   }
 }
