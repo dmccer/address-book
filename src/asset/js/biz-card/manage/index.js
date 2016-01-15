@@ -34,7 +34,7 @@ export default class BizCardManagePage extends React.Component {
           </div>
         </div>
         <Private />
-        <Confirm />
+        <Confirm ref="confirm" />
       </section>
     );
   }

@@ -12,7 +12,17 @@ export default class Confirm extends React.Component {
     this.state = {};
   }
 
+  show() {
+    this.setState({
+      on: true
+    });
+  }
+
   render() {
+    if (!this.state.on) {
+      return null;
+    }
+    
     return (
       <div className="confirm">
         <Mask type="black" />

@@ -137,7 +137,7 @@ module.exports = {
   ],
   module: {
     preLoaders: [{
-      test: /\.jsx?$/,
+      test: /\.js?$/,
       exclude: /(node_modules|bower_components)/,
       loader: 'source-map'
     }],
@@ -167,11 +167,11 @@ module.exports = {
       test: /\.(woff|eot)(#[a-zA-Z])*$/,
       loader: 'file-loader'
     }, {
-      test: /\.jsx?$/,
+      test: /\.js?$/,
       exclude: /(node_modules|bower_components)/,
       loaders: [
         'react-hot',
-        'babel?presets[]=react,presets[]=es2015'
+        'babel?presets[]=stage-1,presets[]=es2015,presets[]=react'
       ]
     }, {
       test: /zepto(\.min)?\.js$/,
