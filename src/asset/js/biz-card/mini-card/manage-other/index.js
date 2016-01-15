@@ -8,8 +8,16 @@ import {DrawerEnhance} from '../../../enhance/drawer';
 
 @DrawerEnhance
 export default class ManageOtherMiniCard extends React.Component {
+  state = {
+    maxLeft: 120
+  };
+
   constructor(props) {
     super(props);
+  }
+
+  componentWillMount() {
+    this.props.maxLeft(this.state.maxLeft);
   }
 
   render() {

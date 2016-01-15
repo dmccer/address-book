@@ -17,16 +17,20 @@ export default class BizCardMyPage extends React.Component {
     groups: [
       {
         name: '默认分组',
-        total: 10
+        total: 10,
+        id: 1
       }, {
         name: '亲情市场',
-        total: 3
+        total: 3,
+        id: 2
       }, {
         name: '道义市场',
-        total: 5
+        total: 5,
+        id: 3
       }, {
         name: '黑名单',
-        total: 2
+        total: 2,
+        id: 4
       }
     ]
   };

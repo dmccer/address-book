@@ -1,6 +1,28 @@
 @import '../../../less/global/site.variable';
 
 .biz-card-group {
+  display: block;
+  background-color: @white;
+  color: @c_lightBlack;
+  border-bottom: 1px solid @c_lightGrey_4;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  a {
+    color: @c_lightBlack;
+  }
+
+
+  &.opened {
+    border-bottom: none;
+  }
+
+  .group {
+    padding: 10px;
+  }
+
   font-size: 17px;
 
   .ab-group, .people-num {
