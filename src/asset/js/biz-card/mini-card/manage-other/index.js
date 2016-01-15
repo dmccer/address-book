@@ -4,6 +4,7 @@ import './index.less';
 
 import React from 'react';
 import MiniCard from '../';
+import Confirm from '../../../confirm/';
 import {DrawerEnhance} from '../../../enhance/drawer';
 
 @DrawerEnhance
@@ -20,6 +21,13 @@ export default class ManageOtherMiniCard extends React.Component {
     this.props.maxLeft(this.state.maxLeft);
   }
 
+  handleDelBizCard(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    this.refs.confirm.show(`是否移除${this.props.card.name}`);
+  }
+
   render() {
     return (
       <div className="item">
@@ -33,13 +41,14 @@ export default class ManageOtherMiniCard extends React.Component {
           onTouchEnd={this.props.touchend}
         >
           <div className="biz-card">
-            <MiniCard />
+            <MiniCard {...this.props.card} />
           </div>
         </div>
         <ul className="actions row">
-          <li className="share">私信</li>
-          <li className="set-main-card">删除</li>
+          <li>私信</li>
+          <li onClick={this.handleDelBizCard.bind(this)}>删除</li>
         </ul>
+        <Confirm ref="confirm" />
       </div>
     );
   }

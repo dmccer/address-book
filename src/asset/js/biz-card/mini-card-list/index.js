@@ -17,7 +17,7 @@ export default class MiniCardList extends React.Component {
       return (
         <ManageOtherMiniCard
           key={`min-card_${index}`}
-          {...item}
+          card={item}
         />
       );
     });

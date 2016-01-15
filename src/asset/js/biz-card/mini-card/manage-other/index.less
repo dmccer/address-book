@@ -28,19 +28,18 @@
     color: @c_lightWhite;
     z-index: 1;
 
-    .share, .set-main-card {
+    > * {
       vertical-align: middle;
       height: 49px;
-    }
-
-    .share {
       width: 60px;
-      background-color: @c_lightBlack_2;
-    }
 
-    .set-main-card {
-      width: 60px;
-      background-color: @c_red_2;
+      &:first-child {
+        background-color: @c_lightBlack_2;
+      }
+
+      &:last-child {
+        background-color: @c_red_2;
+      }
     }
   }
 }

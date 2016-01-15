@@ -8,6 +8,8 @@ export default class MiniCard extends React.Component {
 	}
 
 	render() {
+		let props = this.props;
+
 		return (
 			<div className="my-profile">
 		    <div className="avatar" style={{
@@ -15,7 +17,7 @@ export default class MiniCard extends React.Component {
 		    }}></div>
 		    <div className="profile">
 		      <p className="my">
-		        <span>王晓华</span>
+		        <span>{props.name}</span>
 		        <span className="vip-level">VIP1</span>
 		      </p>
 		      <p className="intro">我是描述文字，我是描述文字</p>

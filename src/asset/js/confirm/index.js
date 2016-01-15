@@ -5,35 +5,54 @@ import React from 'react';
 
 import Mask from '../mask/';
 
-export default class Confirm extends React.Component {
+class Confirm extends React.Component {
   constructor() {
     super();
 
     this.state = {};
   }
 
-  show() {
+  show(msg: String) {
     this.setState({
-      on: true
+      on: true,
+      msg: msg
     });
+  }
+
+  close() {
+    this.setState({
+      on: false
+    });
+  }
+
+  confirm() {
+    this.props.confirm();
+
+    this.close();
   }
 
   render() {
     if (!this.state.on) {
       return null;
     }
-    
+
     return (
       <div className="confirm">
         <Mask type="black" />
         <div className="confirm-panel">
-          <div className="tip">这里是提示文字</div>
+          <div className="tip">{this.state.msg}</div>
           <div className="btns grid">
-            <div className="btn block lightBlack">取消</div>
-            <div className="btn block lightBlack">确定</div>
+            <div className="btn block lightBlack" onClick={this.close.bind(this)}>取消</div>
+            <div className="btn block lightBlack" onClick={this.confirm.bind(this)}>确定</div>
           </div>
         </div>
       </div>
     );
   }
 }
+
+Confirm.defaultProps = {
+  confirm: () => {}
+}
+
+export default Confirm;
