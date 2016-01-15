@@ -28,6 +28,12 @@ export default class ManageOtherMiniCard extends React.Component {
     this.refs.confirm.show(`是否移除${this.props.card.name}`);
   }
 
+  handleConfirmDel() {
+    // TODO
+    // 1. ajax del card
+    // 2. tip for result
+  }
+
   render() {
     return (
       <div className="item">
@@ -48,7 +54,7 @@ export default class ManageOtherMiniCard extends React.Component {
           <li>私信</li>
           <li onClick={this.handleDelBizCard.bind(this)}>删除</li>
         </ul>
-        <Confirm ref="confirm" />
+        <Confirm ref="confirm" confirm={this.handleConfirmDel.bind(this)} />
       </div>
     );
   }
