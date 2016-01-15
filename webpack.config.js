@@ -11,6 +11,7 @@ module.exports = {
     'score-rule': './src/asset/js/score-rule/index.js',
     my: './src/asset/js/my/index.js',
     login: './src/asset/js/login/index.js',
+    'search-biz-card': './src/asset/js/biz-card/search/index.js',
     'my-biz-card': './src/asset/js/biz-card/my/index.js',
     'swap-biz-card': './src/asset/js/biz-card/swap/index.js',
     'manage-biz-card': './src/asset/js/biz-card/manage/index.js',
@@ -132,6 +133,13 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'manage-biz-card.html',
       chunks: ['ved', 'lib-react', 'zepto', 'manage-biz-card'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '名片搜索 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'search-biz-card.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'search-biz-card'],
       inject: 'body'
     })
   ],

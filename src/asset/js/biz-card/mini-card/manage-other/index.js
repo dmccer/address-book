@@ -51,8 +51,8 @@ export default class ManageOtherMiniCard extends React.Component {
           </div>
         </div>
         <ul className="actions row">
-          <li>私信</li>
-          <li onClick={this.handleDelBizCard.bind(this)}>删除</li>
+          <li className="personal-letter">私信</li>
+          <li className="del" onClick={this.handleDelBizCard.bind(this)}>删除</li>
         </ul>
         <Confirm ref="confirm" confirm={this.handleConfirmDel.bind(this)} />
       </div>

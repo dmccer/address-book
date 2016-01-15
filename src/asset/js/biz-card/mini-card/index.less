@@ -1,55 +1,55 @@
 @import '../../../less/global/site.variable';
 
-  .my-profile {
-    background-color: @c_lightGrey_4;
-    position: relative;
-    padding: 5px;
-    margin-bottom: 8px;
+.my-profile {
+  background-color: @c_lightGrey_4;
+  position: relative;
+  padding: 5px;
+  // margin-bottom: 8px;
+  overflow: hidden;
+
+  .avatar {
+    float: left;
+    width: 39px;
+    height: 39px;
+    background-position: center center;
+    background-size: contain;
+    margin-right: 10px;
+  }
+
+  .profile {
     overflow: hidden;
 
-    .avatar {
-      float: left;
-      width: 39px;
-      height: 39px;
-      background-position: center center;
-      background-size: contain;
-      margin-right: 10px;
+    p {
+      margin-bottom: 0;
     }
+  }
 
-    .profile {
-      overflow: hidden;
+  .my {
+    font-size: 16/12rem;
+    color: @lightBlack;
 
-      p {
-        margin-bottom: 0;
-      }
+    .vip-level {
+      color: @c_lightYellow_2;
+      padding-left: 12px;
     }
+  }
 
-    .my {
-      font-size: 16/12rem;
-      color: @lightBlack;
+  .intro {
+    font-size: 14px;
+    color: @c_grey_1;
+  }
 
-      .vip-level {
-        color: @c_lightYellow_2;
-        padding-left: 12px;
-      }
-    }
+  .icons {
+    position: absolute;
+    top: 5px;
+    right: 15px;
 
-    .intro {
-      font-size: 14px;
-      color: @c_grey_1;
-    }
+    .icon {
+      margin-right: 5px;
 
-    .icons {
-      position: absolute;
-      top: 5px;
-      right: 15px;
-
-      .icon {
-        margin-right: 5px;
-
-        &:last-child {
-          margin-right: 0;
-        }
+      &:last-child {
+        margin-right: 0;
       }
     }
   }
+}

@@ -1,9 +1,9 @@
 import './index.less';
 
 import React from 'react';
-import MiniCard from '../mini-card/';
+import ManageOtherMiniCard from '../mini-card/manage-other/';
 
-export default class MiniCardList extends React.Component {
+export default class ManageOtherMiniCardList extends React.Component {
   defaultProps = {
     items: []
   };
@@ -15,9 +15,10 @@ export default class MiniCardList extends React.Component {
   render() {
     let list = this.props.items.map((item, index) => {
       return (
-        <div className="item" key={`min-card_${index}`}>
-          <MiniCard {...item} />
-        </div>
+        <ManageOtherMiniCard
+          key={`min-card_${index}`}
+          card={item}
+        />
       );
     });
 

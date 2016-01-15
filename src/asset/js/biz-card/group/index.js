@@ -4,7 +4,7 @@ import React from 'react';
 import cx from 'classnames';
 import Promise from 'promise';
 
-import MiniCardList from '../mini-card-list/';
+import ManageOtherMiniCardList from '../manage-other-list/';
 
 export default class BizCardGroup extends React.Component {
   state = {
@@ -36,7 +36,7 @@ export default class BizCardGroup extends React.Component {
 
   renderMiniCardList() {
     if (this.state.opened) {
-      return <MiniCardList items={this.state.bizCards} />
+      return <ManageOtherMiniCardList items={this.state.bizCards} />
     }
   }
 
