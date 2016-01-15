@@ -171,7 +171,7 @@ module.exports = {
       exclude: /(node_modules|bower_components)/,
       loaders: [
         'react-hot',
-        'babel?presets[]=stage-1,presets[]=es2015,presets[]=react'
+        'babel-loader'
       ]
     }, {
       test: /zepto(\.min)?\.js$/,

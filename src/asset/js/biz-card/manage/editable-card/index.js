@@ -6,7 +6,10 @@ import React from 'react';
 import MiniCard from '../../mini-card/';
 import {DrawerEnhance} from '../../../enhance/drawer';
 
-class EditableCard extends React.Component {
+@DrawerEnhance
+export default class EditableCard extends React.Component {
+  static state = {};
+
   constructor(props) {
     super(props);
   }
@@ -39,4 +42,4 @@ class EditableCard extends React.Component {
   }
 }
 
-export default DrawerEnhance(EditableCard);
+// export default DrawerEnhance(EditableCard);

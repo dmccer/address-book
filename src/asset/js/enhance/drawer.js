@@ -1,21 +1,21 @@
 import React from 'react';
 
 export var DrawerEnhance = ComposedComponent => class extends React.Component {
-  // static displayName = 'ComponentEnhancedWithDrawerEventHandler';
+  static displayName = 'ComponentEnhancedWithDrawerEventHandler';
+
+  state = {
+    maxLeft: 150,
+    touches: {
+      startX: 0,
+      startY: 0,
+      curX: 0,
+      curY: 0,
+      left: 0
+    }
+  };
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      maxLeft: 150,
-      touches: {
-        startX: 0,
-        startY: 0,
-        curX: 0,
-        curY: 0,
-        left: 0
-      }
-    };
   }
 
   touchstart(e) {
