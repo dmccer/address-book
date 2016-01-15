@@ -19,7 +19,10 @@ export default class MiniCard extends React.Component {
 		        <span className="vip-level">VIP1</span>
 		      </p>
 		      <p className="intro">我是描述文字，我是描述文字</p>
-		      <i className="icon icon-account-type-truck"></i>
+					<div className="icons">
+						<i className="icon s14 icon-certificate"></i>
+						<i className="icon icon-account-type-truck"></i>
+					</div>
 		    </div>
 		  </div>
 		);

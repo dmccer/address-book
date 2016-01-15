@@ -39,9 +39,17 @@
       color: @c_grey_1;
     }
 
-    .icon {
+    .icons {
       position: absolute;
       top: 5px;
       right: 15px;
+
+      .icon {
+        margin-right: 5px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
     }
   }

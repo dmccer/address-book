@@ -79,7 +79,7 @@ export default class BizCardGroup extends React.Component {
         <div className="group">
           <div className="row" onClick={this.toggleBizCards.bind(this)}>
             <div className="ab-group">
-              <i className="icon icon-right-triangle"></i>
+              <i className={cx('icon', this.state.opened ? 'icon-bottom-triangle' : 'icon-right-triangle')}></i>
               <span>{props.name}</span>
             </div>
             <div className="people-num">{props.total}</div>
