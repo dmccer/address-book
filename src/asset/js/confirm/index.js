@@ -1,3 +1,16 @@
+/**
+ * 确认框
+ *
+ * Usage:
+ *
+ * function confirmed() {
+ * 		console.log('删除成功');
+ * }
+ *
+ * <Confirm ref="confirm" confirm={this.confirmed.bind(this)} />
+ *
+ * this.refs.confirm.show('是否删除该条记录?');
+ */
 import '../../less/component/layout.less';
 import './index.less';
 
@@ -25,9 +38,13 @@ class Confirm extends React.Component {
     });
   }
 
+  cancel() {
+    this.props.cancel();
+    this.close();
+  }
+
   confirm() {
     this.props.confirm();
-
     this.close();
   }
 
@@ -42,7 +59,7 @@ class Confirm extends React.Component {
         <div className="confirm-panel">
           <div className="tip">{this.state.msg}</div>
           <div className="btns grid">
-            <div className="btn block lightBlack" onClick={this.close.bind(this)}>取消</div>
+            <div className="btn block lightBlack" onClick={this.cancel.bind(this)}>取消</div>
             <div className="btn block lightBlack" onClick={this.confirm.bind(this)}>确定</div>
           </div>
         </div>
@@ -52,7 +69,8 @@ class Confirm extends React.Component {
 }
 
 Confirm.defaultProps = {
-  confirm: () => {}
+  confirm: () => {},
+  cancel: () => {}
 }
 
 export default Confirm;

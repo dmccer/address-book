@@ -13,7 +13,6 @@ import ReactDOM from 'react-dom';
 import ModalHeader from '../../modal-header/';
 import BizCardEditableGroupItem from '../group/editable/';
 import Private from '../../private/';
-import Confirm from '../../confirm/';
 
 export default class BizCardGroupManagePage extends React.Component {
   state = {
@@ -70,7 +69,6 @@ export default class BizCardGroupManagePage extends React.Component {
           </div>
         </div>
         <Private />
-        <Confirm ref="confirm" />
       </section>
     );
   }

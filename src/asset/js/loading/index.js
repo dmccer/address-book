@@ -1,5 +1,5 @@
-import './index.less';
 import '../../less/component/icon.less';
+import './index.less';
 
 import React from 'react';
 import cx from 'classnames';
