@@ -1,3 +1,6 @@
+/**
+ * 我的名片页面
+ */
 import '../../../less/global/global.less';
 import '../../../less/component/form.less';
 import '../../../less/component/layout.less';
@@ -59,8 +62,8 @@ export default class BizCardMyPage extends React.Component {
           </a>
           <MainMiniCard />
           <ul className="menu grid">
-            <li className="on">名片好友</li>
-            <li>名片交换</li>
+            <li className="on"><a href="./my-biz-card.html">名片好友</a></li>
+            <li><a href="./biz-card-swap.html">名片交换</a></li>
           </ul>
           <div className="search-sec">
             <a href="./search-biz-card.html" className="search">

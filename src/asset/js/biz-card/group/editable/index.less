@@ -1,0 +1,27 @@
+@import '../../../../less/global/site.variable';
+
+.editable-group-item {
+  border-bottom: 1px solid @c_lightGrey;
+  background-color: @white;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  > * {
+    vertical-align: middle;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .del, .edit {
+    width: 45px;
+    text-align: center;
+  }
+
+  .group-item h2 {
+    font-size: 17px;
+    color: @c_lightBlack;
+    margin: 0;
+    font-weight: normal;
+  }
+}

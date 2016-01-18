@@ -1,3 +1,6 @@
+/**
+ * 名片 Item
+ */
 import './index.less';
 
 import React from 'react';

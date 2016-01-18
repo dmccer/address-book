@@ -1,3 +1,6 @@
+/**
+ * 主名片 Item
+ */
 import '../../../../less/component/layout.less';
 import '../../../../less/component/icon.less';
 import './index.less';

@@ -11,10 +11,11 @@ module.exports = {
     'score-rule': './src/asset/js/score-rule/index.js',
     my: './src/asset/js/my/index.js',
     login: './src/asset/js/login/index.js',
+    'group-manage': './src/asset/js/biz-card/group-manage/index.js',
     'search-biz-card': './src/asset/js/biz-card/search/index.js',
     'my-biz-card': './src/asset/js/biz-card/my/index.js',
-    'swap-biz-card': './src/asset/js/biz-card/swap/index.js',
-    'manage-biz-card': './src/asset/js/biz-card/manage/index.js',
+    'biz-card-swap': './src/asset/js/biz-card/swap/index.js',
+    'biz-card-manage': './src/asset/js/biz-card/manage/index.js',
     'biz-card-certify': './src/asset/js/biz-card/certify/index.js',
     'biz-card-certified-ok': './src/asset/js/biz-card/certified-ok/index.js',
     'biz-card-certified-fail': './src/asset/js/biz-card/certified-fail/index.js',
@@ -124,15 +125,15 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: '名片交换 - 货运通讯录',
       template: './src/page/index.html',
-      filename: 'swap-biz-card.html',
-      chunks: ['ved', 'lib-react', 'zepto', 'swap-biz-card'],
+      filename: 'biz-card-swap.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'biz-card-swap'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片管理 - 货运通讯录',
       template: './src/page/index.html',
-      filename: 'manage-biz-card.html',
-      chunks: ['ved', 'lib-react', 'zepto', 'manage-biz-card'],
+      filename: 'biz-card-manage.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'biz-card-manage'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
@@ -140,6 +141,13 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'search-biz-card.html',
       chunks: ['ved', 'lib-react', 'zepto', 'search-biz-card'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '管理群组 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'group-manage.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'group-manage'],
       inject: 'body'
     })
   ],

@@ -41,16 +41,22 @@ body {
     li {
       text-align: center;
       font-size: 18/12rem;
-      color: @c_lightGrey_8;
       height: 44px;
       line-height: 44px;
       box-sizing: border-box;
       background-color: @c_lightBlack_2;
 
+      a {
+        color: @c_lightGrey_8;
+      }
+
       &.on {
         border-bottom: 4px solid @c_lightBlack_4;
-        color: @c_blue_3;
         background-color: @white;
+
+        a {
+          color: @c_blue_3;
+        }
       }
     }
   }

@@ -6,7 +6,7 @@ import Promise from 'promise';
 
 import ManageOtherMiniCardList from '../manage-other-list/';
 
-export default class BizCardGroup extends React.Component {
+export default class BizCardGroupItem extends React.Component {
   state = {
     bizCards: []
   };
@@ -56,7 +56,7 @@ export default class BizCardGroup extends React.Component {
     return (
       <div className="biz-card-group">
         <div className="group">
-          <a href="./manage-biz-card.html" className="row">
+          <a href="./group-manage.html" className="row">
             <div className="ab-group">
               <i className="icon icon-manage s15"></i>
               <span>{props.name}</span>

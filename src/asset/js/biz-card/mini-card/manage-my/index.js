@@ -1,3 +1,6 @@
+/**
+ * 自己名片管理 Item
+ */
 import '../../../../less/component/layout.less';
 import '../../../../less/component/icon.less';
 import './index.less';

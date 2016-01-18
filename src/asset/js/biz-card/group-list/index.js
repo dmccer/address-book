@@ -1,7 +1,7 @@
 import './index.less';
 
 import React from 'react';
-import BizCardGroup from '../group/';
+import BizCardGroupItem from '../group/';
 
 export default class BizCardGroupList extends React.Component {
   constructor() {
@@ -11,7 +11,7 @@ export default class BizCardGroupList extends React.Component {
   render() {
     let list = this.props.items.map((item, index) => {
       return (
-        <BizCardGroup
+        <BizCardGroupItem
           {...item}
           key={`biz-card-group_${index}`}
         />
