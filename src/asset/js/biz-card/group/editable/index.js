@@ -4,6 +4,7 @@ import React from 'react';
 import Promise from 'promise';
 
 import Confirm from '../../../confirm/';
+import GroupItemEditConfirm from '../edit-modal/';
 import Loading from '../../../loading/';
 import Toast from '../../../toast/';
 
@@ -13,7 +14,9 @@ export default class BizCardEditableGroupItem extends React.Component {
   }
 
   handleDel() {
-    this.refs.confirm.show(`是否删除群组${this.props.name}`);
+    this.refs.confirm.show({
+      msg: `删除群组${this.props.name}`
+    });
   }
 
   handleConfirmed() {
@@ -42,8 +45,13 @@ export default class BizCardEditableGroupItem extends React.Component {
   }
 
   handleEdit() {
-    
+    this.refs.editModal.show({
+      title: '添加群组',
+      placeholder: '请输入新群组名称'
+    });
   }
+
+  handleEditConfirmed() {}
 
   render() {
     let props = this.props;
@@ -64,6 +72,10 @@ export default class BizCardEditableGroupItem extends React.Component {
         <Confirm
           ref="confirm"
           confirm={this.handleConfirmed.bind(this)}
+        />
+        <GroupItemEditConfirm
+          ref="editModal"
+          confirm={this.handleEditConfirmed.bind(this)}
         />
         <Loading ref="loading" />
         <Toast ref="toast" />

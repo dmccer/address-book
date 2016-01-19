@@ -1,26 +1,14 @@
-/**
- * 确认框
- *
- * Usage:
- *
- * function confirmed() {
- * 		console.log('删除成功');
- * }
- *
- * <Confirm ref="confirm" confirm={this.confirmed.bind(this)} />
- *
- * this.refs.confirm.show('是否删除该条记录?');
- */
-import '../../less/component/layout.less';
 import './index.less';
 
 import React from 'react';
 
-import Mask from '../mask/';
-import {ConfirmEnhance} from '../enhance/confirm';
+import {ConfirmEnhance} from '../../../enhance/confirm';
+import {FieldChangeEnhance} from '../../../enhance/field-change';
+import Mask from '../../../mask/';
 
 @ConfirmEnhance
-export default class Confirm extends React.Component {
+@FieldChangeEnhance
+export default class GroupItemEditConfirm extends React.Component {
   state = {};
 
   constructor(props) {
@@ -38,7 +26,15 @@ export default class Confirm extends React.Component {
       <div className="confirm">
         <Mask type="black" />
         <div className="confirm-panel">
-          <div className="tip">{props.msg}</div>
+          <h2>{props.title}</h2>
+          <div className="input">
+            <input
+              type="text"
+              placeholder={props.placeholder}
+              value={props.val}
+              onChange={props.handleStrChange}
+            />
+          </div>
           <div className="btns grid">
             <div className="btn block lightBlack" onClick={props.cancel}>取消</div>
             <div className="btn block lightBlack" onClick={props.confirm}>确定</div>

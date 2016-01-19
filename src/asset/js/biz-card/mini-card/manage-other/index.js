@@ -28,7 +28,9 @@ export default class ManageOtherMiniCard extends React.Component {
     e.stopPropagation();
     e.preventDefault();
 
-    this.refs.confirm.show(`是否移除${this.props.card.name}`);
+    this.refs.confirm.show({
+      msg: `是否移除${this.props.card.name}`
+    });
   }
 
   handleConfirmDel() {

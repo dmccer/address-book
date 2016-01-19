@@ -105,6 +105,7 @@
 @c_lightGrey_6    : #d8d8d8;
 @c_lightGrey_7    : #c4c2c2;
 @c_lightGrey_8    : #acafc7;
+@c_lightGrey_9    : #c9c9c9;
 @c_lightWhite     : #f6f6f6;
 @c_lightWhite_1   : #f4f4f4;
 @c_lightPurple    : #797c91;
