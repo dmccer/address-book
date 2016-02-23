@@ -12,7 +12,9 @@ import ReactDOM from 'react-dom';
 
 import ModalHeader from '../../modal-header/';
 import BizCardEditableGroupItem from '../group/editable/';
+import GroupItemEditConfirm from '../group/edit-modal/';
 import Private from '../../private/';
+import Loading from '../../loading/';
 
 export default class BizCardGroupManagePage extends React.Component {
   state = {
@@ -55,12 +57,25 @@ export default class BizCardGroupManagePage extends React.Component {
     }
   }
 
+  handleAdd() {
+    this.refs.editModal.show({
+      title: '添加群组',
+      placeholder: '请输入新群组名称'
+    });
+  }
+
+  handleAddConfirmed() {}
+
   render() {
     return (
       <section className="group-manage-page">
         <ModalHeader title="管理群组" />
         <div className="group-manage">
-          <a href="#" className="btn block lightBlue add-btn">
+          <a
+            href="javascript:void(0)"
+            className="btn block lightBlue add-btn"
+            onClick={this.handleAdd.bind(this)}
+          >
             <i className="icon s15 icon-round-plus"></i>
             <span>新建群组</span>
           </a>
@@ -68,6 +83,10 @@ export default class BizCardGroupManagePage extends React.Component {
             {this.renderGroupList()}
           </div>
         </div>
+        <GroupItemEditConfirm
+          ref="editModal"
+          confirm={this.handleAddConfirmed.bind(this)}
+        />
         <Private />
       </section>
     );

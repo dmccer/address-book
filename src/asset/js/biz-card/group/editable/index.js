@@ -46,8 +46,8 @@ export default class BizCardEditableGroupItem extends React.Component {
 
   handleEdit() {
     this.refs.editModal.show({
-      title: '添加群组',
-      placeholder: '请输入新群组名称'
+      title: '编辑群组',
+      placeholder: this.props.name
     });
   }
 
