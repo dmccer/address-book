@@ -1,0 +1,130 @@
+@import '../../../less/global/site.variable';
+
+body {
+  background-color: @c_lightGrey;
+}
+
+.on {
+  display: block;
+}
+
+.create-biz-card {
+  .form {
+    padding-top: 0;
+  }
+  .desc {
+    font-size: 17px;
+    color: @c_lightBlack;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+  }
+
+  .field {
+    .control {
+      border-bottom: 2px solid #a1a4b2;
+    }
+
+    .star {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      font-size: 18px;
+      color: @c_red;
+      transform: translate(0, -50%);
+    }
+  }
+}
+
+.drop-btn, .route, .panel h3 {
+  .icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translate(0, -50%);
+  }
+}
+
+.drop-btn {
+  position: relative;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 4px;
+  font-weight: normal;
+}
+
+.more-link {
+  font-size: 17px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  color: @c_blue_1;
+
+  span {
+    padding-right: 5px;
+  }
+
+  .icon {
+    margin-top: -3px;
+  }
+}
+
+.panel {
+  border-radius: 2px;
+  border-bottom: 2px solid #a1a4b2;
+  margin-bottom: 4px;
+  overflow: hidden;
+
+  h2 {
+    background-color: @c_blue_3;
+    font-size: 17px;
+    color: @white;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 30px;
+    line-height: 30px;
+
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+
+  h3 {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 44px;
+    line-height: 44px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: @c_blue_3;
+    background-color: #d7d7d7;
+  }
+
+  .route {
+    position: relative;
+    background-color: @white;
+    font-size: 17px;
+    color: @c_green;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 44px;
+    line-height: 44px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #d7d7d7;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .field {
+    margin-bottom: 0;
+  }
+
+  .field .control {
+    border-bottom: none;
+  }
+}
+
+.submit {
+  margin-top: 10px;
+}

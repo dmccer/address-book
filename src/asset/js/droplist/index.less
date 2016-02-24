@@ -1,0 +1,41 @@
+@import '../../less/global/site.variable';
+
+.droplist {
+  position: absolute;
+  z-index: 10;
+  display: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  &.on {
+    display: block;
+  }
+
+  .droplist-item {
+    position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 17px;
+    height: 30px;
+    line-height: 30px;
+    color: @white;
+    background-color: @c_green;
+    border-bottom: 1px solid @white;
+    box-sizing: border-box;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .icon {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translate(0, -50%);
+    }
+  }
+
+
+}
