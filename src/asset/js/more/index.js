@@ -14,26 +14,28 @@ export default class More extends React.Component {
     if (this.props.on) {
       return (
         <section className="more">
-          <ul className="arrow-list">
-            <li>
-              <a href="#" className="row">
-                <div>您有未读消息</div>
-                <div className="count">
-                  <i className="icon s22 icon-badge">99</i>
-                  <i className="icon icon-right-arrow"></i>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="row">
-                <div>您有未处理审核</div>
-                <div className="count">
-                  <i className="icon s22 icon-badge">16</i>
-                  <i className="icon icon-right-arrow"></i>
-                </div>
-              </a>
-            </li>
-          </ul>
+          {
+            // <ul className="arrow-list">
+            //   <li>
+            //     <a href="#" className="row">
+            //       <div>您有未读消息</div>
+            //       <div className="count">
+            //         <i className="icon s22 icon-badge">99</i>
+            //         <i className="icon icon-right-arrow"></i>
+            //       </div>
+            //     </a>
+            //   </li>
+            //   <li>
+            //     <a href="#" className="row">
+            //       <div>您有未处理审核</div>
+            //       <div className="count">
+            //         <i className="icon s22 icon-badge">16</i>
+            //         <i className="icon icon-right-arrow"></i>
+            //       </div>
+            //     </a>
+            //   </li>
+            // </ul>
+          }
           <section className="nav row">
             <div className="menu">
               <a href="./my-biz-card.html">
@@ -48,7 +50,7 @@ export default class More extends React.Component {
               </a>
             </div>
             <div className="menu">
-              <a href="./msg.html">
+              <a href="./message.html">
                 <i className="icon icon-mail menu"></i>
                 <span>消息</span>
               </a>

@@ -24,6 +24,8 @@ module.exports = {
     'biz-card-certified': './src/asset/js/biz-card/certified/index.js',
     'address-book': './src/asset/js/address-book/home/index.js',
     'address-book-detail': './src/asset/js/address-book/detail/index.js',
+    'message': './src/asset/js/message/index.js',
+    'private-msg-list': './src/asset/js/message/private/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -165,7 +167,23 @@ module.exports = {
       filename: 'biz-card-detail.html',
       chunks: ['ved', 'lib-react', 'zepto', 'biz-card-detail'],
       inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '消息 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'message.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'message'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '私信列表 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'private-msg-list.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'private-msg-list'],
+      inject: 'body'
     })
+
+
   ],
   module: {
     preLoaders: [{
