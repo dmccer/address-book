@@ -4,10 +4,6 @@ body {
   background-color: @c_lightGrey;
 }
 
-.on {
-  display: block;
-}
-
 .create-biz-card {
   .form {
     padding-top: 0;
@@ -97,6 +93,10 @@ body {
     padding-right: 10px;
     color: @c_blue_3;
     background-color: #d7d7d7;
+
+    & + h3 {
+      border-top: 1px solid #cccccc;
+    }
   }
 
   .route {

@@ -4,7 +4,7 @@ import './index.less';
 import React from 'react';
 import cx from 'classnames';
 
-export default class Loading extends React.Component {
+export default class Popover extends React.Component {
   constructor() {
     super();
 
@@ -34,7 +34,7 @@ export default class Loading extends React.Component {
     this.show('success', msg, timeout);
   }
 
-  error() {
+  error(msg: string, timeout: number) {
     this.show('error', msg, timeout);
   }
 

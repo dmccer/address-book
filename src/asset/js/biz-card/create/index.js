@@ -15,6 +15,10 @@ import SubHeader from '../../sub-header/';
 import Private from '../../private/';
 import GoTop from '../../gotop/';
 import DropList from '../../droplist/';
+import Modal from '../../modal/';
+import AddressSelector from '../../address-selector/'
+
+const ALL = '不限';
 
 export default class CreateBizCardPage extends React.Component {
   state = {
@@ -53,7 +57,15 @@ export default class CreateBizCardPage extends React.Component {
       visibilityList: visibilityList,
       bizCardTypeList: bizCardTypeList,
       visibility: visibilityList[0],
-      bizCardType: bizCardTypeList[0]
+      bizCardType: bizCardTypeList[0],
+      fromCities: [
+        '上海-浦东新区',
+        '江苏-苏州'
+      ],
+      toCities: [
+        '湖南-长沙',
+        '山东-青岛'
+      ]
     });
   }
 
@@ -97,6 +109,71 @@ export default class CreateBizCardPage extends React.Component {
     });
   }
 
+  formatAddress(args) {
+    let selected = args.filter((arg) => {
+      return !!arg;
+    });
+
+    let lastIndex = selected.length - 1;
+
+    if (selected[lastIndex] === ALL) {
+      selected.splice(lastIndex, 1);
+    }
+
+    return selected.join('-');
+  }
+
+  handleSelectedAddress(...args) {
+    let address = this.formatAddress(args);
+
+    if (address === '') {
+      return;
+    }
+
+    let field = this.state.currentSelectAddressField;
+
+    let addresses = this.state[field];
+
+    if (addresses.indexOf(address) === -1) {
+      addresses.push(address);
+
+      this.setState({
+        [field]: addresses
+      });
+    }
+  }
+
+  handleAddAddress(field: String) {
+    this.setState({
+      currentSelectAddressField: field
+    });
+
+    this.refs.addressSelector.show(0);
+  }
+
+  handleRemoveRoute(field, typeDesc, item) {
+    this.currentRemoveField = field;
+    this.currentRemoveItem = item;
+
+    this.refs.modal.show({
+      title: `删除${typeDesc}`,
+      msg: item
+    });
+  }
+
+  confirmRemoveRoute() {
+    let cities = this.state[this.currentRemoveField];
+    cities.splice(cities.indexOf(this.currentRemoveItem), 1);
+    this.setState({
+      [this.currentRemoveField]: cities
+    });
+  }
+
+  cancelRemoveRoute() {
+    this.currentRemoveField = null;
+    this.currentRemoveItem = null;
+  }
+
   showTruckFields() {
     if (this.state.bizCardType.id === 1) {
       return (
@@ -127,6 +204,28 @@ export default class CreateBizCardPage extends React.Component {
           </div>
         </div>
       );
+    }
+  }
+
+  renderRoutes(type, list) {
+    if (list && list.length) {
+      let typeDesc = '出发地';
+
+      if (type === 'toCities') {
+        typeDesc = '到达地';
+      }
+
+      return list.map((item, index) => {
+        return (
+          <div className="route" key={`route-item_${index}`}>
+            <span>{item}</span>
+            <i
+              className="icon icon-del s15"
+              onClick={this.handleRemoveRoute.bind(this, type, typeDesc, item)}>
+            </i>
+          </div>
+        );
+      });
     }
   }
 
@@ -189,33 +288,15 @@ export default class CreateBizCardPage extends React.Component {
                 <h2>常跑路线</h2>
                 <h3>
                   <span>出发地</span>
-                  <i className="icon icon-add s15"></i>
+                  <i className="icon icon-add s15" onClick={this.handleAddAddress.bind(this, 'fromCities')}></i>
                 </h3>
-                <div>
-                  <div className="route">
-                    <span>上海-浦东新区</span>
-                    <i className="icon icon-del s15"></i>
-                  </div>
-                  <div className="route">
-                    <span>江苏-苏州</span>
-                    <i className="icon icon-del s15"></i>
-                  </div>
-                </div>
+                {this.renderRoutes('fromCities', this.state.fromCities)}
 
                 <h3>
                   <span>到达地</span>
-                  <i className="icon icon-add s15"></i>
+                  <i className="icon icon-add s15" onClick={this.handleAddAddress.bind(this, 'toCities')}></i>
                 </h3>
-                <div>
-                  <div className="route">
-                    <span>上海-浦东新区</span>
-                    <i className="icon icon-del s15"></i>
-                  </div>
-                  <div className="route">
-                    <span>江苏-苏州</span>
-                    <i className="icon icon-del s15"></i>
-                  </div>
-                </div>
+                {this.renderRoutes('toCities', this.state.toCities)}
               </div>
               {this.showTruckFields()}
               <div className="panel">
@@ -281,6 +362,15 @@ export default class CreateBizCardPage extends React.Component {
         />
         <Private />
         <GoTop />
+        <Modal
+          ref='modal'
+          confirm={this.confirmRemoveRoute.bind(this)}
+          cancel={this.cancelRemoveRoute.bind(this)}
+        />
+        <AddressSelector
+          ref="addressSelector"
+          done={this.handleSelectedAddress.bind(this)}
+        />
       </div>
     );
   }

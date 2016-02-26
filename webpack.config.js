@@ -14,6 +14,7 @@ module.exports = {
     'group-manage': './src/asset/js/biz-card/group-manage/index.js',
     'search-biz-card': './src/asset/js/biz-card/search/index.js',
     'biz-card-create': './src/asset/js/biz-card/create/index.js',
+    'biz-card-detail': './src/asset/js/biz-card/detail/index.js',
     'my-biz-card': './src/asset/js/biz-card/my/index.js',
     'biz-card-swap': './src/asset/js/biz-card/swap/index.js',
     'biz-card-manage': './src/asset/js/biz-card/manage/index.js',
@@ -157,6 +158,13 @@ module.exports = {
       filename: 'biz-card-create.html',
       chunks: ['ved', 'lib-react', 'zepto', 'biz-card-create'],
       inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '名片详情 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'biz-card-detail.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'biz-card-detail'],
+      inject: 'body'
     })
   ],
   module: {
@@ -215,6 +223,10 @@ module.exports = {
     proxy: {
       '/api/*': {
         target: 'http://localhost:3000',
+        secure: false
+      },
+      '/mvc*': {
+        target: 'http://api.ttyhuo.com:85',
         secure: false
       }
     }
