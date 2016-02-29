@@ -1,0 +1,71 @@
+@import '../../../less/global/site.variable';
+@import '../../../less/global/util.less';
+
+.ab-create {
+  .form {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 10px;
+
+    .field {
+      margin-bottom: 0;
+
+      &.ab-name {
+        margin-bottom: 10px;
+      }
+
+      .control {
+        border-radius: 0;
+      }
+
+      textarea {
+        padding: 0;
+        resize: none;
+      }
+
+      .char-count {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        color: @c_lightBlack_1;
+      }
+    }
+
+    .submit {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      border-radius: 0;
+    }
+  }
+}
+
+.panel-field {
+  background-color: @white;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+
+  p {
+    color: @c_lightBlack_1;
+    font-size: 12px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 0;
+  }
+}
+
+.biz-card-fields {
+  .clearfix();
+
+  li {
+    float: left;
+    padding: 10px 13px;
+    color: @white;
+    background-color: @c_green;
+    border-radius: 2px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+}

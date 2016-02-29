@@ -26,6 +26,9 @@ module.exports = {
     'address-book-detail': './src/asset/js/address-book/detail/index.js',
     'message': './src/asset/js/message/index.js',
     'private-msg-list': './src/asset/js/message/private/index.js',
+    'select-ab-type': './src/asset/js/address-book/create/select-ab-type/index.js',
+    'create-ab-type': './src/asset/js/address-book/create/index.js',
+    'ab-applicat-list': './src/asset/js/address-book/applicat/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -181,9 +184,28 @@ module.exports = {
       filename: 'private-msg-list.html',
       chunks: ['ved', 'lib-react', 'zepto', 'private-msg-list'],
       inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '选择通讯录类型 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'select-ab-type.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'select-ab-type'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '新建通讯录 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'create-ab-type.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'create-ab-type'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '申请审核列表 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'ab-applicat-list.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'ab-applicat-list'],
+      inject: 'body'
     })
-
-
   ],
   module: {
     preLoaders: [{
