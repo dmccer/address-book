@@ -8,10 +8,6 @@ body {
   border-bottom: 1px solid @c_lightGrey_4;
 }
 
-.fixed-holder {
-  height: 44px;
-}
-
 .search {
   display: block;
   margin-left: 10px;
@@ -97,6 +93,21 @@ body {
   }
 }
 
+.member {
+  .more-list {
+    display: block;
+    font-size: 12px;
+    color: @c_lightBlack_1;
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .pub-ab-btn {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
 .btn.block.join-btn {
   position: fixed;
   width: 100%;
@@ -104,5 +115,6 @@ body {
   left: 0;
   border-radius: 0;
   text-align: center;
-  background-color: rgba(46, 51, 73, .9);
+  // background-color: rgba(46, 51, 73, .9);
+  z-index: 10;
 }

@@ -14,10 +14,14 @@ import ABMember from '../member/';
 import SubHeader from '../../sub-header/';
 import Loading from '../../loading/';
 import Popover from '../../popover/';
+import Prviate from '../../private/';
+import FixedHolder from '../../fixed-holder/';
 
 export default class ABDetailPage extends React.Component {
 
-  state = {};
+  state = {
+    memberList: [{}, {}, {}]
+  };
 
   constructor() {
     super();
@@ -43,6 +47,11 @@ export default class ABDetailPage extends React.Component {
           <div className="ab-member-list cells cells-access">
             {list}
           </div>
+          <a className="more-list">点击查看更多</a>
+          <div className="pub-ab-btn">
+            <div className="btn block lightBlue">我也要发布通讯录</div>
+          </div>
+          <div className="btn block lightBlue join-btn">加入该通讯录</div>
         </div>
       );
     }
@@ -58,23 +67,6 @@ export default class ABDetailPage extends React.Component {
         </div>
         <div className="ab-member-list cells">
           <ABMember />
-        </div>
-        <h2 className="accordion-hd">疑难帮助</h2>
-        <div className="help accordion access">
-          <div className="media-box">
-            <h3 className="media-box-title">
-              <i className="icon icon-dot"></i>
-              <span>什么是物流通讯录？</span>
-            </h3>
-            <p className="media-box-desc">答：一人创建通讯录，大家来加入。快速帮您制作人脉通讯录，随时随地查看详细信息。</p>
-          </div>
-          <div className="media-box">
-            <h3 className="media-box-title">
-              <i className="icon icon-dot"></i>
-              <span>如何找到物流通讯录？</span>
-            </h3>
-            <p className="media-box-desc">答：微信搜索公众号“物流通讯录”，关注物流通讯录即可。</p>
-          </div>
         </div>
       </div>
     );
@@ -96,10 +88,28 @@ export default class ABDetailPage extends React.Component {
           </ul>
           {this.renderABCreated()}
           {this.renderABMembers()}
-          <div className="fixed-holder"></div>
-          <div className="btn block blue join-btn">加入该通讯录</div>
+
+          <h2 className="accordion-hd">疑难帮助</h2>
+          <div className="help accordion access">
+            <div className="media-box">
+              <h3 className="media-box-title">
+                <i className="icon green icon-dot"></i>
+                <span>什么是物流通讯录？</span>
+              </h3>
+              <p className="media-box-desc">答：一人创建通讯录，大家来加入。快速帮您制作人脉通讯录，随时随地查看详细信息。</p>
+            </div>
+            <div className="media-box">
+              <h3 className="media-box-title">
+                <i className="icon green icon-dot"></i>
+                <span>如何找到物流通讯录？</span>
+              </h3>
+              <p className="media-box-desc">答：微信搜索公众号“物流通讯录”，关注物流通讯录即可。</p>
+            </div>
+          </div>
         </section>
         <Loading ref="loading" />
+        <Prviate />
+        <FixedHolder height="44" />
       </section>
     );
   }
