@@ -1,4 +1,6 @@
 import '../../../less/global/global.less';
+import '../../../less/component/cell.less';
+import '../../../less/component/accordion.less';
 import '../../../less/component/layout.less';
 import '../../../less/component/form.less';
 import '../../../less/component/icon.less';
@@ -8,15 +10,74 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
 
+import ABMember from '../member/';
 import SubHeader from '../../sub-header/';
 import Loading from '../../loading/';
 import Popover from '../../popover/';
 
 export default class ABDetailPage extends React.Component {
+
+  state = {};
+
   constructor() {
     super();
+  }
 
-    this.state = {}
+  renderABMembers() {
+    let memberList = this.state.memberList;
+
+    if (memberList && memberList.length) {
+      let list = this.state.memberList.map((member, index) => {
+        return (
+          <ABMember key={`member-item_${index}`} {...member} />
+        );
+      });
+
+      return (
+        <div className="member">
+          <a className="search" href="./ab-member-search.html">
+            <i className="icon s14 icon-search"></i>
+            <span>通讯录共有 {memberList.length} 人</span>
+          </a>
+          <div className="divide"></div>
+          <div className="ab-member-list cells cells-access">
+            {list}
+          </div>
+        </div>
+      );
+    }
+  }
+
+  renderABCreated() {
+    return (
+      <div className="ab-created">
+        <div className="invitation">
+          <p>通讯录创建成功</p>
+          <p>您可以分享给朋友一起加入通讯录</p>
+          <button className="btn block lightBlue">邀请好友</button>
+        </div>
+        <div className="ab-member-list cells">
+          <ABMember />
+        </div>
+        <h2 className="accordion-hd">疑难帮助</h2>
+        <div className="help accordion access">
+          <div className="media-box">
+            <h3 className="media-box-title">
+              <i className="icon icon-dot"></i>
+              <span>什么是物流通讯录？</span>
+            </h3>
+            <p className="media-box-desc">答：一人创建通讯录，大家来加入。快速帮您制作人脉通讯录，随时随地查看详细信息。</p>
+          </div>
+          <div className="media-box">
+            <h3 className="media-box-title">
+              <i className="icon icon-dot"></i>
+              <span>如何找到物流通讯录？</span>
+            </h3>
+            <p className="media-box-desc">答：微信搜索公众号“物流通讯录”，关注物流通讯录即可。</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -33,67 +94,8 @@ export default class ABDetailPage extends React.Component {
             <li className="on">成员 (100)</li>
             <li>设置</li>
           </ul>
-          <a className="search">
-            <i className="icon s14 icon-search"></i>
-            <span>通讯录共有 100 人</span>
-          </a>
-          <div className="divide"></div>
-          <ul className="list member-list">
-            <li>
-              <a href="#">
-                <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
-                <div className="member-profile">
-                  <h3>李四 (车主)</h3>
-                  <div>车型，载重，车长</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
-                <div className="member-profile">
-                  <h3>李四 (货主)</h3>
-                  <div>公司职位</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
-                <div className="member-profile">
-                  <h3>李四 (车主)</h3>
-                  <div>车型，载重，车长</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
-                <div className="member-profile">
-                  <h3>李四 (货主)</h3>
-                  <div>公司职位</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
-                <div className="member-profile">
-                  <h3>李四 (车主)</h3>
-                  <div>车型，载重，车长</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
-                <div className="member-profile">
-                  <h3>李四 (货主)</h3>
-                  <div>公司职位</div>
-                </div>
-              </a>
-            </li>
-          </ul>
+          {this.renderABCreated()}
+          {this.renderABMembers()}
           <div className="fixed-holder"></div>
           <div className="btn block blue join-btn">加入该通讯录</div>
         </section>
