@@ -29,6 +29,7 @@ module.exports = {
     'select-ab-type': './src/asset/js/address-book/create/select-ab-type/index.js',
     'create-ab-type': './src/asset/js/address-book/create/index.js',
     'ab-applicat-list': './src/asset/js/address-book/applicat/index.js',
+    'ab-member-search': './src/asset/js/address-book/member-search/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -204,6 +205,13 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'ab-applicat-list.html',
       chunks: ['ved', 'lib-react', 'zepto', 'ab-applicat-list'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '成员搜索 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'ab-member-search.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'ab-member-search'],
       inject: 'body'
     })
   ],
