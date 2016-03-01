@@ -63,7 +63,7 @@ export default class BizCardEditableGroupItem extends React.Component {
             <i className="icon icon-del s16"></i>
           </div>
           <div className="group-item">
-            <h2>{props.name}</h2>
+            <h2>{props.groupname}</h2>
           </div>
           <div className="edit" onClick={this.handleEdit.bind(this)}>
             <i className="icon icon-edit s16"></i>

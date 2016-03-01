@@ -5,6 +5,9 @@ import cx from 'classnames';
 import Promise from 'promise';
 
 import ManageOtherMiniCardList from '../manage-other-list/';
+import Loading from '../../loading/';
+import Toast from '../../toast/';
+import Log from '../../log/';
 
 export default class BizCardGroupItem extends React.Component {
   state = {
@@ -16,21 +19,35 @@ export default class BizCardGroupItem extends React.Component {
   }
 
   getBizCards() {
+    this.refs.loading.show('加载中...');
+
     new Promise((resolve, reject) => {
       $.ajax({
-        url: `/api/${this.props.id}/biz_cards`,
+        url: '/mvc/pim/query_card_friends',
         type: 'GET',
+        cache: false,
+        data: {
+          gid: this.props.id
+        },
         success: resolve.bind(this),
         error: reject.bind(this)
       });
     }).then((res) => {
-      this.setState({
-        bizCards: res
-      });
-    }).catch((xhr) => {
-      console.log(xhr)
+      if (res.retcode === 0) {
+        this.setState({
+          bizCards: res.cardFriends
+        });
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      Log.error(err);
+
+      this.refs.toast.warn(`获取名片失败, ${err.message}`)
     }).done(() => {
-      // hide loading
+      this.refs.loading.close();
     });
   }
 
@@ -41,6 +58,10 @@ export default class BizCardGroupItem extends React.Component {
   }
 
   toggleBizCards() {
+    if (this.props.friends_count === 0) {
+      return;
+    }
+    
     if (!this.state.opened && !this.state.bizCards.length) {
       this.getBizCards();
     }
@@ -59,7 +80,7 @@ export default class BizCardGroupItem extends React.Component {
           <a href="./group-manage.html" className="row">
             <div className="ab-group">
               <i className="icon icon-manage s15"></i>
-              <span>{props.name}</span>
+              <span>{props.groupname}</span>
             </div>
           </a>
         </div>
@@ -80,12 +101,14 @@ export default class BizCardGroupItem extends React.Component {
           <div className="row" onClick={this.toggleBizCards.bind(this)}>
             <div className="ab-group">
               <i className={cx('icon', this.state.opened ? 'icon-bottom-triangle' : 'icon-right-triangle')}></i>
-              <span>{props.name}</span>
+              <span>{props.groupname}</span>
             </div>
-            <div className="people-num">{props.total}</div>
+            <div className="people-num">{props.friends_count}</div>
           </div>
         </div>
         {this.renderMiniCardList()}
+        <Loading ref="loading" />
+        <Toast ref="toast" />
       </div>
     )
   }

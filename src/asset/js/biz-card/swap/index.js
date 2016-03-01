@@ -26,7 +26,7 @@ export default class BizCardSwapPage extends React.Component {
         <div className="biz-card-swap">
           <MiniCard />
           <ul className="menu grid">
-            <li>名片好友</li>
+            <li><a href="./my-biz-card.html">名片好友</a></li>
             <li className="on">名片交换</li>
           </ul>
           <div className="swap">
