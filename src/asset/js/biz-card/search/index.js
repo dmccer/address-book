@@ -1,5 +1,7 @@
 /**
- * 名片搜索页面
+ * SearchBizCardPage 名片搜索页面
+ *
+ * @author Kane xiaoyunhua@ttyhuo.cn
  */
 import '../../../less/global/global.less';
 import '../../../less/component/form.less';
@@ -9,21 +11,75 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Promise from 'promise';
+import debounce from 'lodash/function/debounce';
 
 import TinyHeader from '../../tiny-header/';
 import MiniCardList from '../mini-card-list/';
 
 export default class SearchBizCardPage extends React.Component {
   state = {
-    bizCards: [{
-      name: '李刚'
-    }, {
-      name: '张三丰'
-    }]
+    bizCards: []
   };
 
   constructor() {
     super();
+  }
+
+  handleKeywordChange(e) {
+    let keyword = $.trim(e.target.value);
+    let _last = this.state.keyword;
+
+    if (keyword === _last) {
+      return;
+    }
+
+    this.setState({
+      keyword: keyword
+    }, () => {
+      this.query();
+    });
+  }
+
+  query() {
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/search_my_card_friends',
+        type: 'GET',
+        cache: false,
+        data: {
+          keyword: this.state.keyword
+        },
+        success: resolve.bind(this),
+        error: reject.bind(this)
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.setState({
+          bizCards: res.cardFriends
+        });
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      Log.error(err);
+
+      this.refs.toast.warn(`搜索名片好友出错，${err.message}`);
+    });
+  }
+
+  handleCancelSearch() {
+    history.back();
+  }
+
+  renderEmpty() {
+    if (!this.state.bizCards || !this.state.bizCards.length) {
+      return (
+        <div className="empty">没有搜索到结果</div>
+      );
+    }
   }
 
   render() {
@@ -35,14 +91,23 @@ export default class SearchBizCardPage extends React.Component {
             <div className="search-bar row">
               <div className="field search">
                 <i className="icon s14 icon-search"></i>
-                <input type="text" className="control" placeholder="您共有135位好友可搜索" />
+                <input
+                  type="text"
+                  className="control"
+                  placeholder="关键字"
+                  value={this.state.keyword}
+                  onChange={this.handleKeywordChange.bind(this)} />
               </div>
               <div className="cancel">
-                <button type="button" className="btn block green">取消</button>
+                <button
+                  type="button"
+                  className="btn block green"
+                  onClick={this.handleCancelSearch.bind(this)}>取消</button>
               </div>
             </div>
           </form>
           <MiniCardList items={this.state.bizCards} />
+          {this.renderEmpty()}
         </section>
       </div>
     );
