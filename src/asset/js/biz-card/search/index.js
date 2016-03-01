@@ -26,6 +26,11 @@ export default class SearchBizCardPage extends React.Component {
     super();
   }
 
+  /**
+   * handleKeywordChange 处理用户输入关键字
+   * @param  {ChangeEvent} e
+   * @return
+   */
   handleKeywordChange(e) {
     let keyword = $.trim(e.target.value);
     let _last = this.state.keyword;
@@ -41,6 +46,10 @@ export default class SearchBizCardPage extends React.Component {
     });
   }
 
+  /**
+   * query 根据关键字搜索名片好友
+   * @return
+   */
   query() {
     new Promise((resolve, reject) => {
       $.ajax({
@@ -70,10 +79,18 @@ export default class SearchBizCardPage extends React.Component {
     });
   }
 
+  /**
+   * handleCancelSearch 取消搜索
+   * @return
+   */
   handleCancelSearch() {
     history.back();
   }
 
+  /**
+   * renderEmpty 结果为空提示
+   * @return {Element}
+   */
   renderEmpty() {
     if (!this.state.bizCards || !this.state.bizCards.length) {
       return (
