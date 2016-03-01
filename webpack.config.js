@@ -273,8 +273,8 @@ module.exports = {
         target: 'http://localhost:3000',
         secure: false
       },
-      '/mvc*': {
-        target: 'http://api.ttyhuo.com:85',
+      '/mvc/pim/*': {
+        target: 'http://api.ttyhuo.com:83',
         secure: false
       }
     }

@@ -1,3 +1,23 @@
+/**
+ * 处理表单字段改变及格式化
+ *
+ * @author Kane xiaoyunhua@ttyhuo.cn
+ *
+ * 目前提供以下类型字段处理:
+ * 1. 纯数字字符串或整数 - handleIntegerChange
+ * 2. 小数或整数 - handleFloatChange
+ * 3. 字符串 - handleStrChange
+ * 4. 手机号 - handleMobileNoChange
+ *
+ * Usage:
+ *
+ * <input
+ * 	type="tel"
+ * 	value={this.props.tel}
+ * 	onChange={this.props.handleMobileNoChange.bind(this, 'tel')}
+ * />
+ *
+ */
 import React from 'react';
 
 // for validate
@@ -13,32 +33,54 @@ export var FieldChangeEnhance = ComposedComponent => class extends React.Compone
     super(props);
   }
 
+  noop() {}
+
   // 纯数字字符串或整数
-  handleIntegerChange(field: String, e: Object) {
+  handleIntegerChange(field: String, cb: Function, e: Object) {
+    if (typeof cb !== 'function') {
+      e = cb;
+      cb = this.noop;
+    }
+
     this.setState({
       [field]: $.trim(e.target.value).replace(/[^\d]/g, '')
-    });
+    }, cb);
   }
 
   // 小数或整数
-  handleFloatChange(field: String, e: Object) {
+  handleFloatChange(field: String, cb: Function, e: Object) {
+    if (typeof cb !== 'function') {
+      e = cb;
+      cb = this.noop;
+    }
+
     this.setState({
-      [field]: $.trim(e.target.value).replace(/[^\d\.]/, '')
-    })
+      [field]: $.trim(e.target.value).replace(/[^\d\.]/g, '')
+    }, cb )
   }
 
   // 字符串
-  handleStrChange(field: String, e: Object) {
+  handleStrChange(field: String, cb: Function, e: Object) {
+    if (typeof cb !== 'function') {
+      e = cb;
+      cb = this.noop;
+    }
+
     this.setState({
-      [field]: $.trim(e.target.value).replace(/[^\s]/, '')
-    });
+      [field]: $.trim(e.target.value)
+    }, cb);
   }
 
   // 手机号
-  handleMobileNoChange(field: String, e: Object) {
+  handleMobileNoChange(field: String, cb: Function, e: Object) {
+    if (typeof cb !== 'function') {
+      e = cb;
+      cb = this.noop;
+    }
+
     this.setState({
-      [field]: $.trim(e.target.value).replace(/[^\d]/, '').substring(0, 11)
-    });
+      [field]: $.trim(e.target.value).replace(/[^\d]/g, '').substring(0, 11)
+    }, cb);
   }
 
   render() {
