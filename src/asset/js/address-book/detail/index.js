@@ -72,6 +72,49 @@ export default class ABDetailPage extends React.Component {
     );
   }
 
+  renderSetting() {
+    return (
+      <div className="ab-setting cells cells-access">
+        <a className="cell" href="#">
+          <div className="cell-hd">
+            <i className="icon icon-ab-edit s15"></i>
+          </div>
+          <div className="cell-bd">
+            <h3>修改通讯录</h3>
+          </div>
+          <div className="cell-ft"></div>
+        </a>
+        <a className="cell" href="#">
+          <div className="cell-hd">
+            <i className="icon icon-dustbin s15"></i>
+          </div>
+          <div className="cell-bd">
+            <h3>删除通讯录</h3>
+          </div>
+          <div className="cell-ft"></div>
+        </a>
+        <a className="cell" href="#">
+          <div className="cell-hd">
+            <i className="icon icon-recommend-star s15"></i>
+          </div>
+          <div className="cell-bd">
+            <h3>推荐给好友</h3>
+          </div>
+          <div className="cell-ft"></div>
+        </a>
+        <a className="cell" href="#">
+          <div className="cell-hd">
+            <i className="icon icon-power s15"></i>
+          </div>
+          <div className="cell-bd">
+            <h3>退出该通讯录</h3>
+          </div>
+          <div className="cell-ft"></div>
+        </a>
+      </div>
+    );
+  }
+
   render() {
     return (
       <section className="ab-detail-page">
@@ -86,9 +129,9 @@ export default class ABDetailPage extends React.Component {
             <li className="on">成员 (100)</li>
             <li>设置</li>
           </ul>
+          {this.renderSetting()}
           {this.renderABCreated()}
           {this.renderABMembers()}
-
           <h2 className="accordion-hd">疑难帮助</h2>
           <div className="help accordion access">
             <div className="media-box">
