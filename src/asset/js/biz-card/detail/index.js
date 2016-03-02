@@ -6,11 +6,17 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import querystring from 'querystring';
+import Promise from 'promise';
 
+import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';
 import Private from '../../private/';
 import Selector from '../../selector/';
 import Popover from '../../popover/';
+import Loading from '../../loading/';
+import Toast from '../../toast/';
+import Log from '../../log/';
 
 export default class BizCardDetailPage extends React.Component {
   state = {
@@ -28,11 +34,49 @@ export default class BizCardDetailPage extends React.Component {
         name: '黑名单',
         id: 4
       }
-    ]
+    ],
+    qs: querystring.parse(location.search.substring(1)),
+    bizCard: {}
   };
 
   constructor() {
     super();
+  }
+
+  componentDidMount() {
+    AjaxError.init(this.refs.toast);
+    this.getBizCard();
+  }
+
+  getBizCard() {
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/query_card_desc',
+        type: 'GET',
+        data: {
+          cid: this.state.qs.cid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.setState({
+          bizCard: res.card
+        });
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`获取名片详情出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
   }
 
   handleMoveFriend() {
@@ -58,6 +102,9 @@ export default class BizCardDetailPage extends React.Component {
   }
 
   render() {
+    let bizCard = this.state.bizCard;
+    let accountType = bizCard.ctype === 1 ? <i className="icon icon-account-type-truck"></i> : <i className="icon icon-account-type-package"></i>;
+
     return (
       <section className="biz-card-detail-page">
         <SubHeader title="xx的名片" />
@@ -69,16 +116,15 @@ export default class BizCardDetailPage extends React.Component {
             }}></a>
           </div>
           <p>
-            <span className="name">欧巴</span>
-            <span className="office">经理</span>
+            <span className="name">{bizCard.nikename}</span>
+            <span className="office">{bizCard.com_position}</span>
           </p>
-          <p className="company">上海急哦及有限公司</p>
+          <p className="company">{bizCard.com_name}</p>
         </div>
         <ul className="vip-score grid">
           <li className="vip">
             <i className="icon s14 icon-certificate"></i>
-            <i className="icon icon-account-type-truck"></i>
-            <i className="icon icon-account-type-package"></i>
+            {accountType}
             <b>VIP 1</b>
           </li>
           <li className="score">
@@ -93,11 +139,11 @@ export default class BizCardDetailPage extends React.Component {
           </h2>
           <dl className="info-list inline basic-info">
             <dt>手机号码:</dt>
-            <dd className="tel">17028291821</dd>
+            <dd className="tel">{bizCard.tel}</dd>
             <dt>微信账号:</dt>
-            <dd>weixin</dd>
+            <dd>{bizCard.wechat}</dd>
             <dt>QQ 账号:</dt>
-            <dd>17362827382</dd>
+            <dd>{bizCard.qq}</dd>
           </dl>
           <h2>
             <i className="icon icon-route s15"></i>
@@ -121,13 +167,13 @@ export default class BizCardDetailPage extends React.Component {
           </h2>
           <dl className="info-list inline truck-info">
             <dt>车 型:</dt>
-            <dd>板车</dd>
+            <dd>{bizCard.trucktype}</dd>
             <dt>车 长:</dt>
-            <dd>10米</dd>
+            <dd>{bizCard.trucklength}米</dd>
             <dt>载 重:</dt>
-            <dd>3吨</dd>
+            <dd>{bizCard.loadlimit}吨</dd>
             <dt>车牌号:</dt>
-            <dd>沪X01922</dd>
+            <dd>{bizCard.licenseplate}</dd>
           </dl>
           <h2>
             <i className="icon icon-other-info s15"></i>
@@ -135,9 +181,9 @@ export default class BizCardDetailPage extends React.Component {
           </h2>
           <dl className="info-list inline other-info">
             <dt>地址:</dt>
-            <dd>上海市浦东新区毕升路289弄1号401</dd>
+            <dd>{bizCard.com_addr}</dd>
             <dt>业务介绍:</dt>
-            <dd>主运各种冷冻物品</dd>
+            <dd>{bizCard.service_desc}</dd>
           </dl>
 
           <div className="actions">
@@ -158,6 +204,8 @@ export default class BizCardDetailPage extends React.Component {
           onSelect={this.handleSelectedGroup.bind(this)}
         />
         <Private />
+        <Loading ref="loading" />
+        <Toast ref="toast" />
       </section>
     );
   }
