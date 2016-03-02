@@ -31,7 +31,7 @@ export default class ManageMyMiniCard extends React.Component {
             <i className="icon s16 icon-del"></i>
           </div>
           <div className="biz-card">
-            <MiniCard />
+            <MiniCard {...this.props} />
           </div>
         </div>
         <ul className="actions row">

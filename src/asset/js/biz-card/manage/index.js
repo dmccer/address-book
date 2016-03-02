@@ -9,15 +9,69 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Promise from 'promise';
 
+import AjaxError from '../../ajax-err/';
 import ModalHeader from '../../modal-header/';
 import ManageMyMiniCard from '../mini-card/manage-my/';
 import Private from '../../private/';
 import Confirm from '../../confirm/';
+import Toast from '../../toast/';
+import Loading from '../../loading/';
+import Log from '../../log/';
 
 export default class BizCardManagePage extends React.Component {
+  state = {
+    bizCards: []
+  };
+
   constructor() {
     super();
+  }
+
+  componentDidMount() {
+    AjaxError.init(this.refs.toast);
+    this.getMyBizCards();
+  }
+
+  getMyBizCards() {
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/query_my_cards',
+        type: 'GET',
+        cache: false,
+        success: resolve.bind(this),
+        error: reject.bind(this)
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.setState({
+          bizCards: res.pimCards
+        });
+
+        return;
+      }
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(`加载我的名片出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  renderMyBizCards() {
+    let bizCards = this.state.bizCards;
+
+    if (bizCards && bizCards.length) {
+      return bizCards.map((bizCard, index) => {
+        return <ManageMyMiniCard key={`biz-card-item_${index}`} {...bizCard} />;
+      });
+    }
   }
 
   render() {
@@ -30,14 +84,13 @@ export default class BizCardManagePage extends React.Component {
             <span>新建名片</span>
           </a>
           <div className="list bc-list">
-            <ManageMyMiniCard />
-            <ManageMyMiniCard />
-            <ManageMyMiniCard />
-            <ManageMyMiniCard />
+            {this.renderMyBizCards()}
           </div>
         </div>
         <Private />
         <Confirm ref="confirm" />
+        <Loading ref="loading" />
+        <Toast ref="toast" />
       </section>
     );
   }

@@ -134,8 +134,16 @@ export default class CreateBizCardPage extends React.Component {
       });
     }).then((res) => {
       if (res.retcode === 0) {
-        // TODO: 跳转到我的名片列表
         this.refs.toast.warn('保存名片成功');
+
+        setTimeout(() => {
+          let qs = querystring.stringify({
+            id: res.card.id
+          });
+
+          location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
+        });
+
         return;
       }
 
