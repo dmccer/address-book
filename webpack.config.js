@@ -276,6 +276,10 @@ module.exports = {
       '/mvc/pim/*': {
         target: 'http://api.ttyhuo.com:83',
         secure: false
+      },
+      '/mvc/v2/*': {
+        target: 'http://api.ttyhuo.com:85',
+        secure: false
       }
     }
   }

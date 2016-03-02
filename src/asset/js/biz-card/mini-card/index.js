@@ -12,6 +12,17 @@ export default class MiniCard extends React.Component {
 
 	render() {
 		let props = this.props;
+		let intro = '';
+
+		if (props.com_name) {
+			intro += props.com_name;
+
+			if (props.com_position) {
+				intro += props.com_position;
+			}
+		} else {
+			intro += `联系电话: ${props.tel}`;
+		}
 
 		return (
 			<div className="my-profile">
@@ -20,10 +31,10 @@ export default class MiniCard extends React.Component {
 		    }}></div>
 		    <div className="profile">
 		      <p className="my">
-		        <span>{props.name}</span>
+		        <span>{props.nikename}</span>
 		        <span className="vip-level">VIP1</span>
 		      </p>
-		      <p className="intro">我是描述文字，我是描述文字</p>
+		      <p className="intro">{intro}</p>
 					<div className="icons">
 						<i className="icon s14 icon-certificate"></i>
 						<i className="icon icon-account-type-truck"></i>

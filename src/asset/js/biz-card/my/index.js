@@ -23,7 +23,8 @@ import Log from '../../log/';
 
 export default class BizCardMyPage extends React.Component {
   state = {
-    groups: []
+    groups: [],
+    myBizCard: null
   };
 
   constructor() {
@@ -113,7 +114,7 @@ export default class BizCardMyPage extends React.Component {
       });
     }).then((res) => {
       if (res.retcode === 0) {
-        return;
+        return res.card;
       }
 
       this.refs.toast.warn(res.msg);
@@ -143,8 +144,17 @@ export default class BizCardMyPage extends React.Component {
   }
 
   renderMyBizCard() {
-    if (this.state.myBizCard) {
-      return <MainMiniCard {...this.state.myBizCard} />;
+    let myBizCard = this.state.myBizCard;
+
+    if (myBizCard) {
+      return <MainMiniCard {...myBizCard} />;
+    } else {
+      return (
+        <a href="./biz-card-create.html" className="btn block green add-btn">
+          <i className="icon s12 icon-plus"></i>
+          <span>新建名片</span>
+        </a>
+      );
     }
   }
 
@@ -153,10 +163,6 @@ export default class BizCardMyPage extends React.Component {
       <section className="biz-card-my-page">
         <Header title="我的名片" />
         <div className="biz-card-my">
-          <a href="./biz-card-create.html" className="btn block green add-btn">
-            <i className="icon s12 icon-plus"></i>
-            <span>新建名片</span>
-          </a>
           {this.renderMyBizCard()}
           <ul className="menu grid">
             <li className="on"><a href="javascript:;">名片好友</a></li>

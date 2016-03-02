@@ -16,6 +16,7 @@ import Promise from 'promise';
 
 import {FieldChangeEnhance} from '../enhance/field-change';
 import AjaxError from '../ajax-err/';
+import Validator from '../validator/';
 import Loading from '../loading/';
 import Toast from '../toast/';
 import Log from '../log/';
@@ -99,7 +100,7 @@ export default class LoginPage extends React.Component {
    * @return {Boolean}
    */
   validateCode() {
-    if ($.trim(this.props.code) === '') {
+    if (Validator.empty(this.props.code)) {
       this.refs.toast.warn('验证码不能为空');
       return false;
     }
@@ -108,19 +109,17 @@ export default class LoginPage extends React.Component {
   }
 
   /**
-   * [validateTel 验证手机格式]
+   * validateTel 验证手机格式
    * @return {Boolean} Boolean
    */
   validateTel() {
-    const tel = $.trim(this.props.tel);
-
-    if (tel === '') {
+    if (Validator.empty(this.props.tel)) {
       this.refs.toast.warn('请输入手机号');
 
       return false;
     }
 
-    if (tel.length !== 11) {
+    if (Validator.len(this.props.tel, 11)) {
       this.refs.toast.warn('手机号格式不正确');
 
       return false;

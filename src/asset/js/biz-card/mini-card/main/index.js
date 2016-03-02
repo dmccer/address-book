@@ -34,7 +34,7 @@ export default class MainMiniCard extends React.Component {
           onTouchEnd={this.props.touchend}
         >
           <div className="biz-card">
-            <MiniCard />
+            <MiniCard {...this.props} />
           </div>
         </div>
         <ul className="actions row">

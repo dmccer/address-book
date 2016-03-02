@@ -10,16 +10,23 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
+import Promise from 'promise';
 
+import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';
+import {FieldChangeEnhance} from '../../enhance/field-change';
+import Validator from '../../validator/';
 import Private from '../../private/';
 import GoTop from '../../gotop/';
 import DropList from '../../droplist/';
 import Modal from '../../modal/';
 import AddressSelector from '../../address-selector/'
+import Loading from '../../loading/';
+import Toast from '../../toast/';
 
 const ALL = '不限';
 
+@FieldChangeEnhance
 export default class CreateBizCardPage extends React.Component {
   state = {
     dropListData: [],
@@ -32,14 +39,17 @@ export default class CreateBizCardPage extends React.Component {
   }
 
   componentDidMount() {
+    AjaxError.init(this.refs.toast);
+    Validator.config(this.refs.toast);
+
     let visibilityList = [
       {
         name: '公开(所有人可见)',
-        id: 1,
+        id: 0,
         selected: true
       }, {
         name: '私密(交换名片可见)',
-        id: 2
+        id: 1
       }
     ];
     let bizCardTypeList = [
@@ -58,14 +68,86 @@ export default class CreateBizCardPage extends React.Component {
       bizCardTypeList: bizCardTypeList,
       visibility: visibilityList[0],
       bizCardType: bizCardTypeList[0],
-      fromCities: [
-        '上海-浦东新区',
-        '江苏-苏州'
-      ],
-      toCities: [
-        '湖南-长沙',
-        '山东-青岛'
-      ]
+      fromCities: [],
+      toCities: []
+    });
+  }
+
+  validate() {
+    let props = this.props;
+
+    return Validator.test('required', '姓名不能为空', props.nickname) &&
+      Validator.test('required', '手机号不能为空', props.tel) &&
+      Validator.test('len', '手机号格式不正确', props.tel, 11);
+  }
+
+  buildData() {
+    let props = this.props;
+    let state = this.state;
+
+    let data = {
+      ctype: state.bizCardType.id,
+      auth: state.visibility.id,
+      nikename: props.nickname,
+      tel: props.tel,
+      wechat: props.wechat,
+      qq: props.qq,
+      start_addr: state.fromCities.join(),
+      end_addr: state.toCities.join(),
+      com_name: props.com_name,
+      com_position: props.com_position,
+      com_addr: props.com_addr,
+      service_desc: props.service_desc,
+      share_title: props.share_title,
+      share_desc: props.share_desc
+    };
+
+    if (state.bizCardType.id === 1) {
+      $.extend(data, {
+        licenseplate: props.licenseplate,
+        truckLength: props.truckLength,
+        loadlimit: props.loadlimit,
+        trucktype: props.truckType
+      });
+    }
+
+    return data;
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!this.validate()) {
+      return;
+    }
+
+    this.refs.loading.show('保存中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/create_card',
+        type: 'POST',
+        data: this.buildData(),
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        // TODO: 跳转到我的名片列表
+        this.refs.toast.warn('保存名片成功');
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(`保存名片出错, ${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
     });
   }
 
@@ -176,31 +258,41 @@ export default class CreateBizCardPage extends React.Component {
 
   showTruckFields() {
     if (this.state.bizCardType.id === 1) {
+      let props = this.props;
+
       return (
         <div>
           <div className="field">
             <input
               type="text"
               className="control"
-              placeholder="车型" />
+              placeholder="车型"
+              value={props.truckType}
+              onChange={props.handleStrChange.bind(this, 'truckType')} />
           </div>
           <div className="field">
             <input
               type="number"
               className="control"
-              placeholder="载重(吨)" />
+              placeholder="载重(吨)"
+              value={props.loadlimit}
+              onChange={props.handleFloatChange.bind(this, 'loadlimit')} />
           </div>
           <div className="field">
             <input
               type="number"
               className="control"
-              placeholder="车长(米)" />
+              placeholder="车长(米)"
+              value={props.truckLength}
+              onChange={props.handleFloatChange.bind(this, 'truckLength')} />
           </div>
           <div className="field">
             <input
               type="text"
               className="control"
-              placeholder="车牌号" />
+              placeholder="车牌号"
+              value={props.licenseplate}
+              onChange={props.handleStrChange.bind(this, 'licenseplate')} />
           </div>
         </div>
       );
@@ -230,11 +322,13 @@ export default class CreateBizCardPage extends React.Component {
   }
 
   render() {
+    let props = this.props;
+
     return (
       <div className="create-biz-card-page">
         <SubHeader title="新建名片" />
         <section className="create-biz-card">
-          <form className="form">
+          <form className="form" onSubmit={this.handleSubmit.bind(this)}>
             <div className="desc">
               现在开始创建您的名片<br />(仅需填写一次，可重复使用)
             </div>
@@ -254,27 +348,35 @@ export default class CreateBizCardPage extends React.Component {
               <input
                 type="text"
                 className="control"
-                placeholder="姓名" />
+                placeholder="姓名"
+                value={props.nickname}
+                onChange={props.handleStrChange.bind(this, 'nickname')} />
               <i className="star">*</i>
             </div>
             <div className="field required">
               <input
                 type="tel"
                 className="control"
-                placeholder="手机" />
+                placeholder="手机"
+                value={props.tel}
+                onChange={props.handleMobileNoChange.bind(this, 'tel')} />
               <i className="star">*</i>
             </div>
             <div className="field">
               <input
                 type="text"
                 className="control"
-                placeholder="微信" />
+                placeholder="微信"
+                value={props.wechat}
+                onChange={props.handleStrChange.bind(this, 'wechat')} />
             </div>
             <div className="field">
               <input
                 type="tel"
                 className="control"
-                placeholder="QQ" />
+                placeholder="QQ"
+                value={props.qq}
+                onChange={props.handleIntegerChange.bind(this, 'qq')} />
             </div>
 
             <div
@@ -304,7 +406,9 @@ export default class CreateBizCardPage extends React.Component {
                 <div className="field">
                   <input
                     type="text"
-                    className="control" />
+                    className="control"
+                    value={props.com_name}
+                    onChange={props.handleStrChange.bind(this, 'com_name')} />
                 </div>
               </div>
               <div className="panel">
@@ -312,7 +416,9 @@ export default class CreateBizCardPage extends React.Component {
                 <div className="field">
                   <input
                     type="text"
-                    className="control" />
+                    className="control"
+                    value={props.com_position}
+                    onChange={props.handleStrChange.bind(this, 'com_position')} />
                 </div>
               </div>
               <div className="panel">
@@ -320,7 +426,9 @@ export default class CreateBizCardPage extends React.Component {
                 <div className="field">
                   <input
                     type="text"
-                    className="control" />
+                    className="control"
+                    value={props.com_addr}
+                    onChange={props.handleStrChange.bind(this, 'com_addr')} />
                 </div>
               </div>
               <div className="panel">
@@ -328,7 +436,9 @@ export default class CreateBizCardPage extends React.Component {
                 <div className="field">
                   <input
                     type="text"
-                    className="control" />
+                    className="control"
+                    value={props.service_desc}
+                    onChange={props.handleStrChange.bind(this, 'service_desc')} />
                 </div>
               </div>
               <div className="panel">
@@ -337,7 +447,9 @@ export default class CreateBizCardPage extends React.Component {
                   <input
                     type="text"
                     className="control"
-                    placeholder="请填写分享名片到微信等平台的标题" />
+                    placeholder="请填写分享名片到微信等平台的标题"
+                    value={props.share_title}
+                    onChange={props.handleStrChange.bind(this, 'share_title')} />
                 </div>
               </div>
               <div className="panel">
@@ -346,7 +458,9 @@ export default class CreateBizCardPage extends React.Component {
                   <input
                     type="text"
                     className="control"
-                    placeholder="请填写分享名片到微信等平台的分享语" />
+                    placeholder="请填写分享名片到微信等平台的分享语"
+                    value={props.share_desc}
+                    onChange={props.handleStrChange.bind(this, 'share_desc')} />
                 </div>
               </div>
             </section>
@@ -371,6 +485,8 @@ export default class CreateBizCardPage extends React.Component {
           ref="addressSelector"
           done={this.handleSelectedAddress.bind(this)}
         />
+        <Loading ref="loading" />
+        <Toast ref="toast" />
       </div>
     );
   }
