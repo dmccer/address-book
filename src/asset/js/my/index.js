@@ -12,7 +12,9 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import querystring from 'querystring';
 
+import AjaxError from '../ajax-err/';
 import Header from '../header/';
 import Nav from '../nav/';
 import Loading from '../loading/';
@@ -31,6 +33,8 @@ export default class MyPage extends React.Component {
   }
 
   componentDidMount() {
+    AjaxError.init(this.refs.toast);
+
     this.getUser();
   }
 
@@ -57,16 +61,18 @@ export default class MyPage extends React.Component {
         this.setState({
           signinable: false
         });
-
         this.refs.popover.success('签到成功');
+
         return;
       }
 
       this.refs.toast.error(res.msg);
     }).catch((err) => {
-      Log.error(err);
+      if (err && err instanceof Error) {
+        Log.error(err);
 
-      this.refs.toast.error('签到失败');
+        this.refs.toast.error(`签到出错,${err.message}`);
+      }
     }).done(() => {
       this.refs.loading.close();
     });
@@ -94,9 +100,10 @@ export default class MyPage extends React.Component {
 
       this.refs.toast.warn(res.msg);
     }).catch((err) => {
-      Log.error(err);
-
-      this.refs.toast.error(`加载用户信息出错, ${err.message}`);
+      if (err && err instanceof Error) {
+        Log.error(err);
+        this.refs.toast.error(`加载用户信息出错, ${err.message}`);
+      }
     }).done(() => {
       this.refs.loading.close();
     });

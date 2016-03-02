@@ -15,6 +15,7 @@ import querystring from 'querystring';
 import Promise from 'promise';
 
 import {FieldChangeEnhance} from '../enhance/field-change';
+import AjaxError from '../ajax-err/';
 import Loading from '../loading/';
 import Toast from '../toast/';
 import Log from '../log/';
@@ -30,6 +31,10 @@ export default class LoginPage extends React.Component {
 
   constructor() {
     super();
+  }
+
+  componentDidMount() {
+    AjaxError.init(this.refs.toast);
   }
 
   /**
@@ -53,7 +58,7 @@ export default class LoginPage extends React.Component {
       submiting: true
     });
 
-    this.refs.toast.show('登录中...');
+    this.refs.loading.show('登录中...');
 
     new Promise((resolve, reject) => {
       $.ajax({
@@ -64,8 +69,8 @@ export default class LoginPage extends React.Component {
           code: this.props.code,
           source: 'h5'
         },
-        success: resolve,
-        error: reject
+        success: resolve.bind(this),
+        error: reject.bind(this)
       });
     }).then((res) => {
       if (res.retcode === 0) {
@@ -73,6 +78,7 @@ export default class LoginPage extends React.Component {
         let url = this.state.qs.ref || location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/index.html?${qs}`);
 
         location.replace(url);
+
         return;
       }
 
@@ -88,6 +94,10 @@ export default class LoginPage extends React.Component {
     });
   }
 
+  /**
+   * validateCode 验证验证码
+   * @return {Boolean}
+   */
   validateCode() {
     if ($.trim(this.props.code) === '') {
       this.refs.toast.warn('验证码不能为空');
@@ -151,20 +161,22 @@ export default class LoginPage extends React.Component {
         data: {
           tel: this.props.tel
         },
-        success: resolve,
-        error: reject
+        success: resolve.bind(this),
+        error: reject.bind(this)
       });
     }).then((res) => {
       if (res.retcode === 0) {
-        this.refs.toast.show('验证码发送成功');
+        this.refs.toast.warn('验证码发送成功');
         this.countDown();
         return;
       }
 
       this.refs.toast.warn(res.msg);
     }).catch((err) => {
-      Log.error(err);
-      this.refs.toast.warn('验证码发送失败');
+      if (err && err instanceof Error) {
+        Log.error(err);
+        this.refs.toast.warn('验证码发送失败');
+      }
     }).done(() => {
       this.refs.loading.close();
     });

@@ -4,6 +4,7 @@ import React from 'react';
 import cx from 'classnames';
 import Promise from 'promise';
 
+import AjaxError from '../../ajax-err/';
 import ManageOtherMiniCardList from '../manage-other-list/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
@@ -16,6 +17,10 @@ export default class BizCardGroupItem extends React.Component {
 
   constructor() {
     super();
+  }
+
+  componentDidMount() {
+    AjaxError.init(this.refs.toast);
   }
 
   getBizCards() {
@@ -43,9 +48,11 @@ export default class BizCardGroupItem extends React.Component {
 
       this.refs.toast.warn(res.msg);
     }).catch((err) => {
-      Log.error(err);
+      if (err && err instanceof Error) {
+        Log.error(err);
 
-      this.refs.toast.warn(`获取名片失败, ${err.message}`)
+        this.refs.toast.warn(`获取名片失败, ${err.message}`)
+      }
     }).done(() => {
       this.refs.loading.close();
     });
@@ -61,7 +68,7 @@ export default class BizCardGroupItem extends React.Component {
     if (this.props.friends_count === 0) {
       return;
     }
-    
+
     if (!this.state.opened && !this.state.bizCards.length) {
       this.getBizCards();
     }

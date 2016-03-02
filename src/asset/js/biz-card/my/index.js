@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
 
+import AjaxError from '../../ajax-err/';
 import Header from '../../header/';
 import Nav from '../../nav/';
 import MainMiniCard from '../mini-card/main/';
@@ -30,6 +31,7 @@ export default class BizCardMyPage extends React.Component {
   }
 
   componentDidMount() {
+    AjaxError.init(this.refs.toast);
     this.fetch();
   }
 
@@ -57,9 +59,11 @@ export default class BizCardMyPage extends React.Component {
         });
       })
       .catch((err) => {
-        Log.error(err);
+        if (err && err instanceof Error) {
+          Log.error(err);
 
-        this.refs.toast.warn(`加载页面失败,${err.message}`);
+          this.refs.toast.warn(`加载页面失败,${err.message}`);
+        }
       })
       .done(() => {
         this.refs.loading.close();
@@ -149,7 +153,7 @@ export default class BizCardMyPage extends React.Component {
       <section className="biz-card-my-page">
         <Header title="我的名片" />
         <div className="biz-card-my">
-          <a href="#" className="btn block green add-btn">
+          <a href="./biz-card-create.html" className="btn block green add-btn">
             <i className="icon s12 icon-plus"></i>
             <span>新建名片</span>
           </a>
