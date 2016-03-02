@@ -21,7 +21,7 @@ export default class Header extends React.Component {
       return (
         <ul className="actions">
           <li><a href="#">新建通讯录</a></li>
-          <li><a href="#">新建名片</a></li>
+          <li><a href="./biz-card-create.html">新建名片</a></li>
         </ul>
       );
     }
