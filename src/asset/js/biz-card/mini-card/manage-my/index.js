@@ -36,7 +36,7 @@ export default class ManageMyMiniCard extends React.Component {
         </div>
         <ul className="actions row">
           <li className="share">分享</li>
-          <li className="set-main-card">设为主名片</li>
+          <li className="set-main-card" onClick={this.props.onSetMainBizCard}>设为主名片</li>
         </ul>
       </div>
     );

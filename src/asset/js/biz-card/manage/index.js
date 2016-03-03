@@ -65,13 +65,18 @@ export default class BizCardManagePage extends React.Component {
   }
 
   handleRemove(bizCard) {
-    this.toRemovedBizCard = bizCard;
+    this.confirmTempData = bizCard;
+    this.confirmAction = 'removeBizCard';
     this.refs.confirm.show({
       msg: '是否删除名片?'
     });
   }
 
   handleConfirmRemoveBizCard() {
+    this[this.confirmAction]();
+  }
+
+  removeBizCard() {
     this.refs.loading.show('删除中...');
 
     new Promise((resolve, reject) => {
@@ -79,7 +84,7 @@ export default class BizCardManagePage extends React.Component {
         url: '/mvc/pim/del_my_card',
         type: 'POST',
         data: {
-          cid: this.toRemovedBizCard.cid
+          cid: this.confirmTempData.cid
         },
         success: resolve,
         error: reject
@@ -101,7 +106,45 @@ export default class BizCardManagePage extends React.Component {
   }
 
   handleCancelRemoveBizCard() {
-    this.toRemovedBizCard = null;
+    this.confirmTempData = null;
+    this.confirmAction = null;
+  }
+
+  handleSetMainBizCard(bizCard) {
+    this.confirmAction = 'setMainBizCard';
+    this.confirmTempData = bizCard;
+    this.refs.confirm.show({
+      msg: '确认设置为主名片?'
+    });
+  }
+
+  setMainBizCard() {
+    this.refs.loading.show('设置中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/set_main_card',
+        type: 'POST',
+        data: {
+          cid: this.confirmTempData.cid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success('设置主名片成功');
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`设置主名片出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
   }
 
   renderMyBizCards() {
@@ -112,6 +155,7 @@ export default class BizCardManagePage extends React.Component {
         return <ManageMyMiniCard
           key={`biz-card-item_${index}`}
           onDel={this.handleRemove.bind(this, bizCard)}
+          onSetMainBizCard={this.handleSetMainBizCard.bind(this, bizCard)}
           {...bizCard} />;
       });
     }
