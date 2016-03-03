@@ -97,7 +97,7 @@ body {
     font-size: 18px;
     border-bottom: 2px solid #e6e5e5;
     padding-bottom: 6px;
-    margin-bottom: 0;
+    margin-bottom: 6px;
 
     span {
       padding-left: 5px;
@@ -106,7 +106,12 @@ body {
 
   .info-list {
     font-size: 17px;
-    margin-top: 6px;
+    margin-bottom: 0;
+    margin-top: 0;
+
+    &:first-child {
+      margin-top: 6px;
+    }
 
     dt, dd {
       margin-bottom: 5px;
@@ -146,6 +151,8 @@ body {
 }
 
 .actions {
+  margin-top: 25px;
+
   .btn {
     margin-bottom: 4px;
   }

@@ -106,7 +106,7 @@ export default class BizCardMyPage extends React.Component {
   getMyBizCard() {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_main_card_desc',
+        url: '/mvc/pim/query_user_card_desc',
         type: 'GET',
         cache: false,
         success: resolve.bind(this),

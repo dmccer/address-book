@@ -9,7 +9,7 @@ let AjaxErrorHandler = {
 
   listen: () => {
     $(document).on('ajaxError', (e, xhr, opts, err) => {
-      Log.error(xhr);
+      Log.error(xhr.responseText);
 
       if (xhr.status === 403) {
         AjaxErrorHandler.toast.warn('未登录,进入登录页面中...')
@@ -25,7 +25,7 @@ let AjaxErrorHandler = {
         return;
       }
 
-      AjaxErrorHandler.toast.warn(`请求服务器出错, ${xhr.responseText}`);
+      AjaxErrorHandler.toast.warn(`请求服务器出错, ${xhr.statusText}`);
     });
   }
 };

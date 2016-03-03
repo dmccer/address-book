@@ -119,7 +119,7 @@ export default class LoginPage extends React.Component {
       return false;
     }
 
-    if (Validator.len(this.props.tel, 11)) {
+    if (!Validator.len(this.props.tel, 11)) {
       this.refs.toast.warn('手机号格式不正确');
 
       return false;

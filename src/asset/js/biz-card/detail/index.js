@@ -20,23 +20,10 @@ import Log from '../../log/';
 
 export default class BizCardDetailPage extends React.Component {
   state = {
-    selectorData: [
-      {
-        name: '默认分组',
-        id: 1
-      }, {
-        name: '亲情市场',
-        id: 2
-      }, {
-        name: '道义市场',
-        id: 3
-      }, {
-        name: '黑名单',
-        id: 4
-      }
-    ],
+    selectorData: [],
     qs: querystring.parse(location.search.substring(1)),
-    bizCard: {}
+    bizCard: {},
+    account: {}
   };
 
   constructor() {
@@ -45,13 +32,57 @@ export default class BizCardDetailPage extends React.Component {
 
   componentDidMount() {
     AjaxError.init(this.refs.toast);
-    this.getBizCard();
+    this.fetch();
+  }
+
+  fetch() {
+    this.refs.loading.show('加载中...');
+
+    Promise
+      .all([this.getAccountInfo(), this.getBizCard()])
+      .then((args) => {
+        this.setState({
+          account: args[0],
+          bizCard: args[1]
+        });
+      })
+      .catch((err) => {
+        if (err && err instanceof Error) {
+          this.refs.toast.warn(`加载数据出错,${err.message}`);
+        }
+      })
+      .done(() => {
+        this.refs.loading.close();
+      });
+  }
+
+  getAccountInfo() {
+    return new Promise((resolve, reject) => {
+      let data = {};
+
+      if (this.state.qs.uid){
+        data.uid = this.state.qs.uid;
+      }
+
+      $.ajax({
+        url: '/mvc/pim/query_user_card_desc',
+        type: 'GET',
+        cache: false,
+        data: data,
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        return res.card;
+      }
+
+      this.refs.toast.warn(res.msg);
+    });
   }
 
   getBizCard() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       $.ajax({
         url: '/mvc/pim/query_card_desc',
         type: 'GET',
@@ -63,8 +94,39 @@ export default class BizCardDetailPage extends React.Component {
       });
     }).then((res) => {
       if (res.retcode === 0) {
+        return res.card;
+      }
+
+      this.refs.toast.warn(res.msg);
+    });
+  }
+
+  /**
+   * getGroups 获取我的名片分组
+   * @return {Promise}
+   */
+  getGroups() {
+    this.refs.loading.show('加载中...');
+
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/query_my_card_groups',
+        type: 'GET',
+        cache: false,
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        let groups = res.pimCardGroups.map((group) => {
+          return {
+            id: group.id,
+            name: group.groupname
+          };
+        });
+        
         this.setState({
-          bizCard: res.card
+          selectorData: groups
         });
         return;
       }
@@ -72,7 +134,7 @@ export default class BizCardDetailPage extends React.Component {
       this.refs.toast.warn(res.msg);
     }).catch((err) => {
       if (err && err instanceof Error) {
-        this.refs.toast.warn(`获取名片详情出错,${err.message}`);
+        this.refs.toast.warn(`加载名片分组出错,${err.message}`);
       }
     }).done(() => {
       this.refs.loading.close();
@@ -80,6 +142,8 @@ export default class BizCardDetailPage extends React.Component {
   }
 
   handleMoveFriend() {
+    this.getGroups();
+
     this.refs.selector.show();
   }
 
@@ -101,17 +165,30 @@ export default class BizCardDetailPage extends React.Component {
     this.refs.popover.success('名片好友成功移动到黑名单');
   }
 
+  renderRoutes(routes) {
+    if (routes && routes.length) {
+      return routes.map((route, index) => {
+        return (
+          <p key={`route-item_${index}`}>{route}</p>
+        );
+      });
+    }
+  }
+
   render() {
     let bizCard = this.state.bizCard;
+    let account = this.state.account;
     let accountType = bizCard.ctype === 1 ? <i className="icon icon-account-type-truck"></i> : <i className="icon icon-account-type-package"></i>;
+    let fromCities = bizCard.start_addr ? bizCard.start_addr.split(',') : [];
+    let toCities = bizCard.end_addr ? bizCard.end_addr.split(',') : [];
 
     return (
       <section className="biz-card-detail-page">
-        <SubHeader title="xx的名片" />
+        <SubHeader title={`${bizCard.nikename}的名片`} />
         <div className="profile">
           <div className="avatar">
             <a href="#" style={{
-              backgroundImage: 'url("http://imgsize.ph.126.net/?imgurl=http://img1.ph.126.net/DgzSMe-5TSTtQzsb7zSaKg==/6631308558750149593.bmp_188x188x1.jpg")',
+              backgroundImage: `url(${account.photo})`,
               backgroundSize: 'contain'
             }}></a>
           </div>
@@ -140,8 +217,12 @@ export default class BizCardDetailPage extends React.Component {
           <dl className="info-list inline basic-info">
             <dt>手机号码:</dt>
             <dd className="tel">{bizCard.tel}</dd>
+          </dl>
+          <dl className="info-list inline basic-info">
             <dt>微信账号:</dt>
             <dd>{bizCard.wechat}</dd>
+          </dl>
+          <dl className="info-list inline basic-info">
             <dt>QQ 账号:</dt>
             <dd>{bizCard.qq}</dd>
           </dl>
@@ -152,13 +233,13 @@ export default class BizCardDetailPage extends React.Component {
           <dl className="info-list private-route">
             <dt>出发地:</dt>
             <dd>
-              <p>上海-浦东新区</p>
-              <p>江苏-苏州</p>
+              {this.renderRoutes(fromCities)}
             </dd>
+          </dl>
+          <dl className="info-list private-route">
             <dt>到达地:</dt>
             <dd>
-              <p>上海-浦东新区</p>
-              <p>江苏-苏州</p>
+              {this.renderRoutes(toCities)}
             </dd>
           </dl>
           <h2>
@@ -168,10 +249,16 @@ export default class BizCardDetailPage extends React.Component {
           <dl className="info-list inline truck-info">
             <dt>车 型:</dt>
             <dd>{bizCard.trucktype}</dd>
+          </dl>
+          <dl className="info-list inline truck-info">
             <dt>车 长:</dt>
             <dd>{bizCard.trucklength}米</dd>
+          </dl>
+          <dl className="info-list inline truck-info">
             <dt>载 重:</dt>
             <dd>{bizCard.loadlimit}吨</dd>
+          </dl>
+          <dl className="info-list inline truck-info">
             <dt>车牌号:</dt>
             <dd>{bizCard.licenseplate}</dd>
           </dl>
@@ -182,6 +269,8 @@ export default class BizCardDetailPage extends React.Component {
           <dl className="info-list inline other-info">
             <dt>地址:</dt>
             <dd>{bizCard.com_addr}</dd>
+          </dl>
+          <dl className="info-list inline other-info">
             <dt>业务介绍:</dt>
             <dd>{bizCard.service_desc}</dd>
           </dl>
