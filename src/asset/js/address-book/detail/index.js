@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
 import querystring from 'querystring';
+import find from 'lodash/collection/find';
 
 import AjaxError from '../../ajax-err/';
 import ABMember from '../member/';
@@ -20,6 +21,8 @@ import Prviate from '../../private/';
 import FixedHolder from '../../fixed-holder/';
 import Toast from '../../toast/';
 import Log from '../../log/';
+import AB_TYPES from '../../const/abtype';
+
 
 export default class ABDetailPage extends React.Component {
 
@@ -51,8 +54,16 @@ export default class ABDetailPage extends React.Component {
     Promise
       .all([this.getABBaseInfo(), this.getMemberList()])
       .then((args) => {
+        let abInfo = args[0];
+
+        let abType = find(AB_TYPES, (abType) => {
+          return abType.id === abInfo.atype;
+        });
+
+        abInfo.abTypeText = abType.name;
+
         this.setState({
-          abInfo: args[0],
+          abInfo: abInfo,
           memberList: args[1]
         });
       })
@@ -261,6 +272,7 @@ export default class ABDetailPage extends React.Component {
         <section className="ab-detail">
           <div className="ab-profile">
             <h2>{abInfo.aname}</h2>
+            <p className="ab-type">[{abInfo.abTypeText}]</p>
             <div className="description">{abInfo.adesc}</div>
             <div className="creator">创建人: {abInfo.group_holder}</div>
           </div>
