@@ -9,7 +9,9 @@
  *
  * <Confirm ref="confirm" confirm={this.confirmed.bind(this)} />
  *
- * this.refs.confirm.show('是否删除该条记录?');
+ * this.refs.confirm.show({
+ * 		msg: '是否删除该条记录?'
+ * });
  */
 import '../../less/component/layout.less';
 import './index.less';

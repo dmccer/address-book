@@ -39,7 +39,7 @@ export default class BizCardManagePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_my_cards',
+        url: '/mvc/pim/query_user_cards',
         type: 'GET',
         cache: false,
         success: resolve.bind(this),
@@ -48,7 +48,7 @@ export default class BizCardManagePage extends React.Component {
     }).then((res) => {
       if (res.retcode === 0) {
         this.setState({
-          bizCards: res.pimCards
+          bizCards: res.cards
         });
 
         return;
@@ -64,12 +64,55 @@ export default class BizCardManagePage extends React.Component {
     });
   }
 
+  handleRemove(bizCard) {
+    this.toRemovedBizCard = bizCard;
+    this.refs.confirm.show({
+      msg: '是否删除名片?'
+    });
+  }
+
+  handleConfirmRemoveBizCard() {
+    this.refs.loading.show('删除中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/del_my_card',
+        type: 'POST',
+        data: {
+          cid: this.toRemovedBizCard.cid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success('删除名片成功');
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`删除名片出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  handleCancelRemoveBizCard() {
+    this.toRemovedBizCard = null;
+  }
+
   renderMyBizCards() {
     let bizCards = this.state.bizCards;
 
     if (bizCards && bizCards.length) {
       return bizCards.map((bizCard, index) => {
-        return <ManageMyMiniCard key={`biz-card-item_${index}`} {...bizCard} />;
+        return <ManageMyMiniCard
+          key={`biz-card-item_${index}`}
+          onDel={this.handleRemove.bind(this, bizCard)}
+          {...bizCard} />;
       });
     }
   }
@@ -79,7 +122,7 @@ export default class BizCardManagePage extends React.Component {
       <section className="biz-card-manage-page">
         <ModalHeader title="名片管理" />
         <div className="biz-card-manage">
-          <a href="#" className="btn block lightBlue add-btn">
+          <a href="./biz-card-create.html" className="btn block lightBlue add-btn">
             <i className="icon s15 icon-round-plus"></i>
             <span>新建名片</span>
           </a>
@@ -88,7 +131,10 @@ export default class BizCardManagePage extends React.Component {
           </div>
         </div>
         <Private />
-        <Confirm ref="confirm" />
+        <Confirm
+          ref="confirm"
+          confirm={this.handleConfirmRemoveBizCard.bind(this)}
+          cancel={this.handleCancelRemoveBizCard.bind(this)} />
         <Loading ref="loading" />
         <Toast ref="toast" />
       </section>
