@@ -71,6 +71,18 @@ export var FieldChangeEnhance = ComposedComponent => class extends React.Compone
     }, cb);
   }
 
+  // 长度限制的字符串
+  handleLimitStrChange(field: String, limit: Number, cb: Function, e: Object) {
+    if (typeof cb !== 'function') {
+      e = cb;
+      cb = this.noop;
+    }
+
+    this.setState({
+      [field]: $.trim(e.target.value).substring(0, limit)
+    }, cb);
+  }
+
   // 手机号
   handleMobileNoChange(field: String, cb: Function, e: Object) {
     if (typeof cb !== 'function') {
@@ -92,6 +104,7 @@ export var FieldChangeEnhance = ComposedComponent => class extends React.Compone
         handleFloatChange={this.handleFloatChange.bind(this)}
         handleStrChange={this.handleStrChange.bind(this)}
         handleMobileNoChange={this.handleMobileNoChange.bind(this)}
+        handleLimitStrChange={this.handleLimitStrChange.bind(this)}
       />
     );
   }

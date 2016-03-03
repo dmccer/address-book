@@ -27,7 +27,7 @@ module.exports = {
     'message': './src/asset/js/message/index.js',
     'private-msg-list': './src/asset/js/message/private/index.js',
     'select-ab-type': './src/asset/js/address-book/create/select-ab-type/index.js',
-    'create-ab-type': './src/asset/js/address-book/create/index.js',
+    'create-ab': './src/asset/js/address-book/create/index.js',
     'ab-applicat-list': './src/asset/js/address-book/applicat/index.js',
     'ab-member-search': './src/asset/js/address-book/member-search/index.js',
     'lib-react': ['react', 'react-dom'],
@@ -196,8 +196,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: '新建通讯录 - 货运通讯录',
       template: './src/page/index.html',
-      filename: 'create-ab-type.html',
-      chunks: ['ved', 'lib-react', 'zepto', 'create-ab-type'],
+      filename: 'create-ab.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'create-ab'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({

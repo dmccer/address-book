@@ -9,28 +9,111 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import querystring from 'querystring';
 
+import AjaxError from '../../ajax-err/';
 import ABMember from '../member/';
 import SubHeader from '../../sub-header/';
 import Loading from '../../loading/';
 import Popover from '../../popover/';
 import Prviate from '../../private/';
 import FixedHolder from '../../fixed-holder/';
+import Toast from '../../toast/';
+import Log from '../../log/';
 
 export default class ABDetailPage extends React.Component {
 
   state = {
-    memberList: [{}, {}, {}]
+    abInfo: {},
+    memberList: [],
+    qs: querystring.parse(location.search.substring(1))
   };
 
   constructor() {
     super();
   }
 
+  componentWillMount() {
+    this.setState({
+      atab: this.state.qs.atab || 'member'
+    });
+  }
+
+  componentDidMount() {
+    AjaxError.init(this.refs.toast);
+
+    this.fetch();
+  }
+
+  fetch() {
+    this.refs.loading.show('加载中...');
+
+    Promise
+      .all([this.getABBaseInfo(), this.getMemberList()])
+      .then((args) => {
+        this.setState({
+          abInfo: args[0],
+          memberList: args[1]
+        });
+      })
+      .catch((err) => {
+        if (err && err instanceof Error) {
+          Log.error(err);
+
+          this.refs.toast.warn(`加载数据出错,${err.message}`);
+        }
+      })
+      .done(() => {
+        this.refs.loading.close();
+      });
+  }
+
+  getABBaseInfo() {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/addlist_cards_baseinfo',
+        type: 'GET',
+        cache: false,
+        data: {
+          aid: this.state.qs.id
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        return res.addlist_card;
+      }
+
+      this.refs.toast.warn(res.msg);
+    });
+  }
+
+  getMemberList() {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/query_addlist_cards',
+        type: 'GET',
+        cache: false,
+        data: {
+          aid: this.state.qs.id
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        return res.addlist_cards;
+      }
+
+      this.refs.toast.warn(res.msg);
+    });
+  }
+
   renderABMembers() {
     let memberList = this.state.memberList;
 
-    if (memberList && memberList.length) {
+    if (memberList && memberList.length > 1) {
       let list = this.state.memberList.map((member, index) => {
         return (
           <ABMember key={`member-item_${index}`} {...member} />
@@ -58,78 +141,80 @@ export default class ABDetailPage extends React.Component {
   }
 
   renderABCreated() {
-    return (
-      <div className="ab-created">
-        <div className="invitation">
-          <p>通讯录创建成功</p>
-          <p>您可以分享给朋友一起加入通讯录</p>
-          <button className="btn block lightBlue">邀请好友</button>
-        </div>
-        <div className="ab-member-list cells">
-          <ABMember />
-        </div>
-      </div>
-    );
+    let memberList = this.state.memberList;
+
+    if (memberList.length === 1) {
+      let member = memberList[0];
+      let abInfo = this.state.abInfo;
+
+      if (abInfo.group_holder_uid === member.uid) {
+        return (
+          <div className="ab-created">
+            <div className="invitation">
+              <p>通讯录创建成功</p>
+              <p>您可以分享给朋友一起加入通讯录</p>
+              <button className="btn block lightBlue">邀请好友</button>
+            </div>
+            <div className="ab-member-list cells">
+              <ABMember {...member} />
+            </div>
+          </div>
+        );
+      }
+    }
+
   }
 
   renderSetting() {
-    return (
-      <div className="ab-setting cells cells-access">
-        <a className="cell" href="#">
-          <div className="cell-hd">
-            <i className="icon icon-ab-edit s15"></i>
-          </div>
-          <div className="cell-bd">
-            <h3>修改通讯录</h3>
-          </div>
-          <div className="cell-ft"></div>
-        </a>
-        <a className="cell" href="#">
-          <div className="cell-hd">
-            <i className="icon icon-dustbin s15"></i>
-          </div>
-          <div className="cell-bd">
-            <h3>删除通讯录</h3>
-          </div>
-          <div className="cell-ft"></div>
-        </a>
-        <a className="cell" href="#">
-          <div className="cell-hd">
-            <i className="icon icon-recommend-star s15"></i>
-          </div>
-          <div className="cell-bd">
-            <h3>推荐给好友</h3>
-          </div>
-          <div className="cell-ft"></div>
-        </a>
-        <a className="cell" href="#">
-          <div className="cell-hd">
-            <i className="icon icon-power s15"></i>
-          </div>
-          <div className="cell-bd">
-            <h3>退出该通讯录</h3>
-          </div>
-          <div className="cell-ft"></div>
-        </a>
-      </div>
-    );
+    if (this.state.atab === 'setting') {
+      return (
+        <div className="ab-setting cells cells-access">
+          <a className="cell" href="#">
+            <div className="cell-hd">
+              <i className="icon icon-ab-edit s15"></i>
+            </div>
+            <div className="cell-bd">
+              <h3>修改通讯录</h3>
+            </div>
+            <div className="cell-ft"></div>
+          </a>
+          <a className="cell" href="#">
+            <div className="cell-hd">
+              <i className="icon icon-dustbin s15"></i>
+            </div>
+            <div className="cell-bd">
+              <h3>删除通讯录</h3>
+            </div>
+            <div className="cell-ft"></div>
+          </a>
+          <a className="cell" href="#">
+            <div className="cell-hd">
+              <i className="icon icon-recommend-star s15"></i>
+            </div>
+            <div className="cell-bd">
+              <h3>推荐给好友</h3>
+            </div>
+            <div className="cell-ft"></div>
+          </a>
+          <a className="cell" href="#">
+            <div className="cell-hd">
+              <i className="icon icon-power s15"></i>
+            </div>
+            <div className="cell-bd">
+              <h3>退出该通讯录</h3>
+            </div>
+            <div className="cell-ft"></div>
+          </a>
+        </div>
+      );
+    }
+
   }
 
-  render() {
-    return (
-      <section className="ab-detail-page">
-        <SubHeader />
-        <section className="ab-detail">
-          <div className="ab-profile">
-            <h2>上海到南昌货运联盟名字过长两行</h2>
-            <div className="description">通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介通讯录简介</div>
-            <div className="creator">创建人: 人物名称</div>
-          </div>
-          <ul className="menu grid">
-            <li className="on">成员 (100)</li>
-            <li>设置</li>
-          </ul>
-          {this.renderSetting()}
+  renderABMember() {
+    if (this.state.atab === 'member') {
+      return (
+        <div>
           {this.renderABCreated()}
           {this.renderABMembers()}
           <h2 className="accordion-hd">疑难帮助</h2>
@@ -149,10 +234,51 @@ export default class ABDetailPage extends React.Component {
               <p className="media-box-desc">答：微信搜索公众号“物流通讯录”，关注物流通讯录即可。</p>
             </div>
           </div>
+        </div>
+      );
+    }
+  }
+
+  handleTabChange(tab: String) {
+    let last = this.state.atab;
+
+    if (tab === last) {
+      return;
+    }
+
+    this.setState({
+      atab: tab
+    });
+  }
+
+  render() {
+    let abInfo = this.state.abInfo;
+    let memberList = this.state.memberList;
+
+    return (
+      <section className="ab-detail-page">
+        <SubHeader />
+        <section className="ab-detail">
+          <div className="ab-profile">
+            <h2>{abInfo.aname}</h2>
+            <div className="description">{abInfo.adesc}</div>
+            <div className="creator">创建人: {abInfo.group_holder}</div>
+          </div>
+          <ul className="menu grid">
+            <li
+              className={this.state.atab === 'member' ? 'on' : ''}
+              onClick={this.handleTabChange.bind(this, 'member')}>成员 ({memberList.length})</li>
+            <li
+              className={this.state.atab === 'setting' ? 'on' : ''}
+              onClick={this.handleTabChange.bind(this, 'setting')}>设置</li>
+          </ul>
+          {this.renderABMember()}
+          {this.renderSetting()}
         </section>
-        <Loading ref="loading" />
         <Prviate />
         <FixedHolder height="44" />
+        <Loading ref="loading" />
+        <Toast ref="toast" />
       </section>
     );
   }

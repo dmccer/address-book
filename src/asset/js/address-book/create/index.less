@@ -60,6 +60,7 @@
   .clearfix();
 
   li {
+    position: relative;
     float: left;
     padding: 10px 13px;
     color: @white;
@@ -67,5 +68,17 @@
     border-radius: 2px;
     margin-right: 8px;
     margin-bottom: 8px;
+
+    .icon-ok {
+      display: block;
+      position: absolute;
+      right: 3px;
+      bottom: 6px;
+      width: 10px;
+      height: 5px;
+      border-left: 2px solid @white;
+      border-bottom: 2px solid @white;
+      transform: rotate(-45deg);
+    }
   }
 }

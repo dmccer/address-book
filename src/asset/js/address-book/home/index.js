@@ -71,16 +71,16 @@ export default class ABPage extends React.Component {
 
   renderItems(list) {
     if (list && list.length) {
-      return list.map((item) => {
+      return list.map((item, index) => {
         return (
-          <li>
-            <a href="./address-book-detail.html">
-              <img className="cover" src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/Bxuv7RNkBKTwug5oISbHZw==/6631311857283249341.jpg_188x188x1.jpg" />
+          <li key={`ab-item_${index}`}>
+            <a href={`./address-book-detail.html?id=${item.id}`}>
+              <img className="cover" src={item.photo} />
               <div className="ab-profile">
-                <h3>通讯录名称</h3>
+                <h3>{item.name}</h3>
                 <div>
-                  <span className="creator">由 <b>张三</b> 创建</span>
-                  <span className="people-num">人数: 100</span>
+                  <span className="creator">由 <b>{item.group_holder}</b> 创建</span>
+                  <span className="people-num">人数: {item.cards_count}</span>
                 </div>
               </div>
             </a>
@@ -105,7 +105,7 @@ export default class ABPage extends React.Component {
         <section className="ab">
           <a className="search">
             <i className="icon s14 icon-search"></i>
-            <span>通讯录共有 100 人</span>
+            <span>点击开始搜索</span>
           </a>
           <div className="divide"></div>
           <h2 className="subtitle">我发起的</h2>

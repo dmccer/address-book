@@ -20,7 +20,7 @@ export default class Header extends React.Component {
     if (this.state.adding) {
       return (
         <ul className="actions">
-          <li><a href="#">新建通讯录</a></li>
+          <li><a href="./select-ab-type.html">新建通讯录</a></li>
           <li><a href="./biz-card-create.html">新建名片</a></li>
         </ul>
       );
