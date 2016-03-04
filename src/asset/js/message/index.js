@@ -7,6 +7,7 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import find from 'lodash/collection/find';
 
 import AjaxError from '../ajax-err/';
 import SubHeader from '../sub-header/';
@@ -15,8 +16,11 @@ import Loading from '../loading/';
 import Toast from '../toast/';
 import Log from '../log/';
 
+
 export default class MessagePage extends React.Component {
-  state = {};
+  state = {
+    msgCategories: []
+  };
 
   constructor() {
     super();
@@ -41,7 +45,9 @@ export default class MessagePage extends React.Component {
       });
     }).then((res) => {
       if (res.retcode === 0) {
-        // this.setState();
+        this.setState({
+          msgCategories: res.msgs_count_list
+        });
 
         return;
       }
@@ -58,6 +64,29 @@ export default class MessagePage extends React.Component {
     });
   }
 
+  getMsgCategory(categoryId) {
+    let r = find(this.state.msgCategories, (item) => {
+      return item.msg_type === categoryId;
+    });
+
+    if (!r) {
+      r = {
+        msg_type: categoryId,
+        msg_count: 0
+      };
+    }
+
+    return r;
+  }
+
+  renderMsgCount(categoryId) {
+    let msg = this.getMsgCategory(categoryId);
+
+    if (msg.msg_count) {
+      return <i className="icon s22 icon-badge">{msg.msg_count}</i>;
+    }
+  }
+
   render() {
     return (
       <section className="message-page">
@@ -69,13 +98,17 @@ export default class MessagePage extends React.Component {
               <div className="cell-bd cell_primary">
                 <p>管理通知</p>
               </div>
-              <div className="cell-ft"></div>
+              <div className="cell-ft">
+                {this.renderMsgCount(1)}
+              </div>
             </a>
             <a className="cell" href="javascript:;">
               <div className="cell-bd cell_primary">
                 <p>申请回复</p>
               </div>
-              <div className="cell-ft"></div>
+              <div className="cell-ft">
+                {this.renderMsgCount(2)}
+              </div>
             </a>
           </div>
           <h2 className="cells-title">名片</h2>
@@ -84,13 +117,17 @@ export default class MessagePage extends React.Component {
               <div className="cell-bd cell_primary">
                 <p>管理通知</p>
               </div>
-              <div className="cell-ft"></div>
+              <div className="cell-ft">
+                {this.renderMsgCount(3)}
+              </div>
             </a>
             <a className="cell" href="javascript:;">
               <div className="cell-bd cell_primary">
                 <p>申请回复</p>
               </div>
-              <div className="cell-ft"></div>
+              <div className="cell-ft">
+                {this.renderMsgCount(4)}
+              </div>
             </a>
           </div>
           <h2 className="cells-title">私信</h2>
@@ -100,7 +137,7 @@ export default class MessagePage extends React.Component {
                 <p>名片好友</p>
               </div>
               <div className="cell-ft">
-                <i className="icon s22 icon-badge">90</i>
+              {this.renderMsgCount(5)}
               </div>
             </a>
           </div>

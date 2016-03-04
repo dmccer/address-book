@@ -16,7 +16,7 @@ export default class MiniCard extends React.Component {
 		let certified = props.verifyflag === 2 ? <i className="icon s14 icon-certificate"></i> : null;
 
 		return (
-			<a className="my-profile" href={`./biz-card-detail.html?id=${props.id}`}>
+			<a className="my-profile" href={`./biz-card-detail.html?cid=${props.cid}&uid=${props.uid}`}>
 		    <div className="avatar" style={{
 		      backgroundImage: `url(${props.photo})`
 		    }}></div>

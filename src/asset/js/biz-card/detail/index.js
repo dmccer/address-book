@@ -74,6 +74,7 @@ export default class BizCardDetailPage extends React.Component {
       });
     }).then((res) => {
       if (res.retcode === 0) {
+        res.card.holder_flag = res.holder_flag;
         return res.card;
       }
 
@@ -87,7 +88,7 @@ export default class BizCardDetailPage extends React.Component {
         url: '/mvc/pim/query_card_desc',
         type: 'GET',
         data: {
-          cid: this.state.qs.id
+          cid: this.state.qs.cid
         },
         success: resolve,
         error: reject
@@ -173,6 +174,29 @@ export default class BizCardDetailPage extends React.Component {
         );
       });
     }
+  }
+
+  renderActions() {
+    if (this.state.account.holder_flag) {
+      return (
+        <div>
+          <div className="btn block lightBlue">名片认证</div>
+          <div className="btn block lightBlue">设为主名片</div>
+          <div className="btn block del-btn">删除名片</div>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <div className="btn block lightBlue">发送私信</div>
+        <div className="btn block lightBlue move-btn" onClick={this.handleMoveFriend.bind(this)}>
+          <span>移动好友到</span>
+          <i className="icon icon-right-triangle white"></i>
+        </div>
+        <div className="btn block del-btn">删除好友</div>
+      </div>
+    );
   }
 
   render() {
@@ -276,13 +300,8 @@ export default class BizCardDetailPage extends React.Component {
           </dl>
 
           <div className="actions">
-            <div className="btn block lightBlue">发送私信</div>
-            <div className="btn block lightBlue move-btn" onClick={this.handleMoveFriend.bind(this)}>
-              <span>移动好友到</span>
-              <i className="icon icon-right-triangle white"></i>
-            </div>
             <div className="btn block lightBlue">名片分享</div>
-            <div className="btn block del-btn">删除好友</div>
+            {this.renderActions()}
             <div className="btn block lightBlue">完善我的名片</div>
           </div>
           <Popover ref="popover" />
