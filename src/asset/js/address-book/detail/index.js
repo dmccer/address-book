@@ -16,13 +16,12 @@ import AjaxError from '../../ajax-err/';
 import ABMember from '../member/';
 import SubHeader from '../../sub-header/';
 import Loading from '../../loading/';
-import Popover from '../../popover/';
+import Confirm from '../../confirm/';
 import Prviate from '../../private/';
 import FixedHolder from '../../fixed-holder/';
 import Toast from '../../toast/';
 import Log from '../../log/';
 import AB_TYPES from '../../const/abtype';
-
 
 export default class ABDetailPage extends React.Component {
 
@@ -121,6 +120,49 @@ export default class ABDetailPage extends React.Component {
     });
   }
 
+  handleClickDelAB(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.refs.confirm.show({
+      msg: '确定删除整个通讯录？'
+    });
+  }
+
+  handleDelAB() {
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/del_addlist',
+        type: 'POST',
+        data: {
+          aid: this.state.qs.id
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success('删除通讯录成功');
+        setTimeout(() => {
+          history.back();
+        }, 2000);
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(`删除通讯录出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
   renderABMembers() {
     let memberList = this.state.memberList;
 
@@ -173,31 +215,37 @@ export default class ABDetailPage extends React.Component {
         );
       }
     }
-
   }
 
   renderSetting() {
     if (this.state.atab === 'setting') {
+      if (this.state.abInfo.group_holder_flag) {
+        return (
+          <div className="ab-setting cells cells-access">
+            <a className="cell" href="#">
+              <div className="cell-hd">
+                <i className="icon icon-ab-edit s15"></i>
+              </div>
+              <div className="cell-bd">
+                <h3>修改通讯录</h3>
+              </div>
+              <div className="cell-ft"></div>
+            </a>
+            <a className="cell" href="#" onClick={this.handleClickDelAB.bind(this)}>
+              <div className="cell-hd">
+                <i className="icon icon-dustbin s15"></i>
+              </div>
+              <div className="cell-bd">
+                <h3>删除通讯录</h3>
+              </div>
+              <div className="cell-ft"></div>
+            </a>
+          </div>
+        );
+      }
+
       return (
         <div className="ab-setting cells cells-access">
-          <a className="cell" href="#">
-            <div className="cell-hd">
-              <i className="icon icon-ab-edit s15"></i>
-            </div>
-            <div className="cell-bd">
-              <h3>修改通讯录</h3>
-            </div>
-            <div className="cell-ft"></div>
-          </a>
-          <a className="cell" href="#">
-            <div className="cell-hd">
-              <i className="icon icon-dustbin s15"></i>
-            </div>
-            <div className="cell-bd">
-              <h3>删除通讯录</h3>
-            </div>
-            <div className="cell-ft"></div>
-          </a>
           <a className="cell" href="#">
             <div className="cell-hd">
               <i className="icon icon-recommend-star s15"></i>
@@ -219,7 +267,6 @@ export default class ABDetailPage extends React.Component {
         </div>
       );
     }
-
   }
 
   renderABMember() {
@@ -289,6 +336,9 @@ export default class ABDetailPage extends React.Component {
         </section>
         <Prviate />
         <FixedHolder height="44" />
+        <Confirm
+          ref="confirm"
+          confirm={this.handleDelAB.bind(this)}/>
         <Loading ref="loading" />
         <Toast ref="toast" />
       </section>

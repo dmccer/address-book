@@ -91,8 +91,8 @@ export default class BizCardMyPage extends React.Component {
    */
   calcFriendsCount(groups) {
     let count = groups.reduce((a, b) => {
-      return a.friends_count + b.friends_count;
-    });
+      return a + b.friends_count;
+    }, 0);
 
     this.setState({
       friendsCount: count

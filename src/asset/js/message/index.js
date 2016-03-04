@@ -6,15 +6,56 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Promise from 'promise';
 
+import AjaxError from '../ajax-err/';
 import SubHeader from '../sub-header/';
 import Private from '../private/';
+import Loading from '../loading/';
+import Toast from '../toast/';
+import Log from '../log/';
 
 export default class MessagePage extends React.Component {
   state = {};
 
   constructor() {
     super();
+  }
+
+  componentDidMount() {
+    AjaxError.init(this.refs.toast);
+
+    this.fetch();
+  }
+
+  fetch() {
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/query_msgs_count',
+        type: 'GET',
+        cache: false,
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        // this.setState();
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(err.message);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
   }
 
   render() {
@@ -65,6 +106,8 @@ export default class MessagePage extends React.Component {
           </div>
         </section>
         <Private />
+        <Loading ref="loading" />
+        <Toast ref="toast" />
       </section>
     );
   }

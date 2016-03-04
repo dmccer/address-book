@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
 import Promise from 'promise';
+import querystring from 'querystring';
 
 import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';
@@ -138,7 +139,7 @@ export default class CreateBizCardPage extends React.Component {
 
         setTimeout(() => {
           let qs = querystring.stringify({
-            id: res.card.id
+            id: res.cid
           });
 
           location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);

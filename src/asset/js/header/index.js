@@ -30,7 +30,7 @@ export default class Header extends React.Component {
   render() {
     return (
       <header className="header row">
-        <section className="left"><i className="icon icon-mail"></i></section>
+        <section className="left"><a href="./message.html"><i className="icon icon-mail"></i></a></section>
         <section className="center">{this.props.title}</section>
         <section className="right" onClick={this.handleAdd.bind(this)}>
           <i className="icon s20 icon-plus"></i>

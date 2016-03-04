@@ -22,19 +22,21 @@ export default class MainMiniCard extends React.Component {
   }
 
   render() {
+    let props = this.props;
+
     return (
       <div className="item">
         <div
           className="row cnt"
           style={{
-            left: this.props.left + 'px'
+            left: props.left + 'px'
           }}
-          onTouchStart={this.props.touchstart}
-          onTouchMove={this.props.touchmove}
-          onTouchEnd={this.props.touchend}
+          onTouchStart={props.touchstart}
+          onTouchMove={props.touchmove}
+          onTouchEnd={props.touchend}
         >
           <div className="biz-card">
-            <MiniCard {...this.props} />
+            <MiniCard {...props} />
           </div>
         </div>
         <ul className="actions row">

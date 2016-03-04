@@ -87,7 +87,7 @@ export default class BizCardDetailPage extends React.Component {
         url: '/mvc/pim/query_card_desc',
         type: 'GET',
         data: {
-          cid: this.state.qs.cid
+          cid: this.state.qs.id
         },
         success: resolve,
         error: reject
@@ -124,7 +124,7 @@ export default class BizCardDetailPage extends React.Component {
             name: group.groupname
           };
         });
-        
+
         this.setState({
           selectorData: groups
         });

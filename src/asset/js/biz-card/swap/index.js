@@ -54,7 +54,7 @@ export default class BizCardSwapPage extends React.Component {
         this.setState({
           bizCard: res.card
         });
-        
+
         return;
       }
 
@@ -83,7 +83,7 @@ export default class BizCardSwapPage extends React.Component {
           <div className="swap">
             <h2>我的名片二维码</h2>
           		<div className="qrcode">
-          		  <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRIFWNF49yLwt9Tz7iO6BVKVL2Adx-0Ekv-vIdToGOYqYmF31Ck" />
+          		  <img src={this.state.bizCard.qr_code} />
           		</div>
           		<p>扫描二维码，自动加入到我的货运通讯录</p>
           		<div className="swap-btn">

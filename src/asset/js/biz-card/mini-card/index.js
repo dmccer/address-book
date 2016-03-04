@@ -16,7 +16,7 @@ export default class MiniCard extends React.Component {
 		let certified = props.verifyflag === 2 ? <i className="icon s14 icon-certificate"></i> : null;
 
 		return (
-			<div className="my-profile">
+			<a className="my-profile" href={`./biz-card-detail.html?id=${props.id}`}>
 		    <div className="avatar" style={{
 		      backgroundImage: `url(${props.photo})`
 		    }}></div>
@@ -31,7 +31,7 @@ export default class MiniCard extends React.Component {
 						<i className={cx('icon', props.ctype === 1 ? 'icon-account-type-truck' : 'icon-account-type-package')}></i>
 					</div>
 		    </div>
-		  </div>
+		  </a>
 		);
 	}
 }
