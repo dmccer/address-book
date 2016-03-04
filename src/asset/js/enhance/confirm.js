@@ -32,8 +32,8 @@ export var ConfirmEnhance = ComposedComponent => class extends React.Component {
     this.close();
   }
 
-  confirm() {
-    this.props.confirm();
+  confirm(...args) {
+    this.props.confirm.apply(this, args);
     this.close();
   }
 

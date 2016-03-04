@@ -15,43 +15,16 @@ export default class BizCardEditableGroupItem extends React.Component {
 
   handleDel() {
     this.refs.confirm.show({
-      msg: `删除群组${this.props.name}`
-    });
-  }
-
-  handleConfirmed() {
-    this.refs.loading.show('删除中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: `/api/biz_card/group/${this.props.id}`,
-        type: 'POST',
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.code === 0) {
-        this.refs.toast.success(`删除群组${this.props.name}成功`);
-
-        return;
-      }
-
-      this.refs.toast.warn(res.errMsg);
-    }).catch((xhr) => {
-      this.refs.toast.error(`删除群组${this.props.name}失败`);
-    }).done(() => {
-      this.refs.loading.close();
+      msg: `删除群组${this.props.groupname}`
     });
   }
 
   handleEdit() {
     this.refs.editModal.show({
       title: '编辑群组',
-      placeholder: this.props.name
+      placeholder: this.props.groupname
     });
   }
-
-  handleEditConfirmed() {}
 
   render() {
     let props = this.props;
@@ -71,11 +44,11 @@ export default class BizCardEditableGroupItem extends React.Component {
         </div>
         <Confirm
           ref="confirm"
-          confirm={this.handleConfirmed.bind(this)}
+          confirm={props.onRemove}
         />
         <GroupItemEditConfirm
           ref="editModal"
-          confirm={this.handleEditConfirmed.bind(this)}
+          confirm={props.onEdit}
         />
         <Loading ref="loading" />
         <Toast ref="toast" />

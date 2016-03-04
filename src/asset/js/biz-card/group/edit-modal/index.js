@@ -15,6 +15,10 @@ export default class GroupItemEditConfirm extends React.Component {
     super(props);
   }
 
+  handleConfirm() {
+    this.props.confirm(this.props.val);
+  }
+
   render() {
     let props = this.props;
 
@@ -32,12 +36,12 @@ export default class GroupItemEditConfirm extends React.Component {
               type="text"
               placeholder={props.placeholder}
               value={props.val}
-              onChange={props.handleStrChange}
+              onChange={props.handleStrChange.bind(this, 'val')}
             />
           </div>
           <div className="btns grid">
             <div className="btn block lightBlack" onClick={props.cancel}>取消</div>
-            <div className="btn block lightBlack" onClick={props.confirm}>确定</div>
+            <div className="btn block lightBlack" onClick={props.confirm.bind(this, props.val)}>确定</div>
           </div>
         </div>
       </div>

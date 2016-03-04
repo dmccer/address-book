@@ -111,8 +111,15 @@ export default class BizCardManagePage extends React.Component {
   }
 
   handleSetMainBizCard(bizCard) {
+    if (bizCard.main_card === 1) {
+      this.refs.toast.warn('当前名片已是主名片');
+
+      return;
+    }
+
     this.confirmAction = 'setMainBizCard';
     this.confirmTempData = bizCard;
+
     this.refs.confirm.show({
       msg: '确认设置为主名片?'
     });
