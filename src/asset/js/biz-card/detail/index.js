@@ -13,6 +13,7 @@ import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';
 import Private from '../../private/';
 import Selector from '../../selector/';
+import Confirm from '../../confirm/';
 import Popover from '../../popover/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
@@ -162,8 +163,152 @@ export default class BizCardDetailPage extends React.Component {
   handleSelectedGroup(group: Object) {
     this.setSelectedGroup(group);
 
-    // TODO: 移动好友到分组 ajax 和提示
-    this.refs.popover.success('名片好友成功移动到黑名单');
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/move_my_card_friend',
+        type: 'POST',
+        data: {
+          friendly_uid: this.state.qs.uid,
+          gid: group.id
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.popover.success(`名片好友成功移动到${group.name}`);
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.error(`移动好友出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  handleClickRemoveFriend() {
+    this.refs.confirm.show({
+      msg: '确认删除名片好友?'
+    });
+  }
+
+  handleRemoveFriend() {
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/del_my_card_friend',
+        type: 'POST',
+        data: {
+          friendly_uid: this.state.qs.uid,
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.popover.success(`删除名片好友成功`);
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.error(`删除名片好友出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  handleClickSetMainBizCard() {
+    let bizCard = this.state.bizCard;
+
+    if (bizCard.main_card === 1) {
+      this.refs.toast.warn('当前名片已是主名片');
+
+      return;
+    }
+
+    this.refs.setMainBizCardConfirm.show({
+      msg: '确认设置为主名片?'
+    });
+  }
+
+  handleSetMainBizCard() {
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/set_main_card',
+        type: 'POST',
+        data: {
+          cid: this.state.bizCard.id
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.popover.success('设置主名片成功');
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`设置主名片出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  handleClickRemoveMyBizCard() {
+    this.refs.removeMyBizCardConfirm.show({
+      msg: '确认删除该名片?'
+    });
+  }
+
+  handleRemoveMyBizCard() {
+    this.refs.loading.show('删除中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/del_my_card',
+        type: 'POST',
+        data: {
+          cid: this.state.bizCard.id
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.popover.success('删除名片成功');
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`删除名片出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
   }
 
   renderRoutes(routes) {
@@ -180,9 +325,9 @@ export default class BizCardDetailPage extends React.Component {
     if (this.state.account.holder_flag) {
       return (
         <div>
-          <div className="btn block lightBlue">名片认证</div>
-          <div className="btn block lightBlue">设为主名片</div>
-          <div className="btn block del-btn">删除名片</div>
+          <a href={`./biz-card-certify.html?cid=${this.state.bizCard.id}&uid=${this.state.qs.uid}`} className="btn block lightBlue">名片认证</a>
+          <div className="btn block lightBlue" onClick={this.handleClickSetMainBizCard.bind(this)}>设为主名片</div>
+          <div className="btn block del-btn" onClick={this.handleClickRemoveMyBizCard.bind(this)}>删除名片</div>
         </div>
       );
     }
@@ -194,7 +339,7 @@ export default class BizCardDetailPage extends React.Component {
           <span>移动好友到</span>
           <i className="icon icon-right-triangle white"></i>
         </div>
-        <div className="btn block del-btn">删除好友</div>
+        <div className="btn block del-btn" onClick={this.handleClickRemoveFriend.bind(this)}>删除好友</div>
       </div>
     );
   }
@@ -310,6 +455,18 @@ export default class BizCardDetailPage extends React.Component {
           ref="selector"
           items={this.state.selectorData}
           onSelect={this.handleSelectedGroup.bind(this)}
+        />
+        <Confirm
+          ref="confirm"
+          confirm={this.handleRemoveFriend.bind(this)}
+        />
+        <Confirm
+          ref="removeMyBizCardConfirm"
+          confirm={this.handleRemoveMyBizCard.bind(this)}
+        />
+        <Confirm
+          ref="setMainBizCardConfirm"
+          confirm={this.handleSetMainBizCard.bind(this)}
         />
         <Private />
         <Loading ref="loading" />

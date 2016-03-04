@@ -126,7 +126,7 @@ export default class BizCardManagePage extends React.Component {
   }
 
   setMainBizCard() {
-    this.refs.loading.show('设置中...');
+    this.refs.loading.show('请求中...');
 
     new Promise((resolve, reject) => {
       $.ajax({
