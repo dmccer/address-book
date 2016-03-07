@@ -80,7 +80,8 @@ export default class ABCreatePage extends React.Component {
           atype: this.state.qs.atype,
           aname: this.props.aname,
           arequires: this.getSelectedBizCardFieldVals(),
-          adesc: this.props.adesc
+          adesc: this.props.adesc,
+          aquestion: this.props.aquestion
         },
         success: resolve,
         error: reject
@@ -177,6 +178,18 @@ export default class ABCreatePage extends React.Component {
                   value={props.adesc}
                   onChange={props.handleLimitStrChange.bind(this, 'adesc', this.state.maxAdescLength)}></textarea>
                 <span className="char-count">{props.adesc && props.adesc.length || 0}/{this.state.maxAdescLength}</span>
+              </div>
+            </div>
+            <div className="panel-field">
+              <p>验证问题:</p>
+              <div className="field question">
+                <input
+                  type="text"
+                  className="control"
+                  placeholder="如: 你是车主还是货主?"
+                  value={props.aquestion}
+                  onChange={props.handleStrChange.bind(this, 'aquestion')}
+                />
               </div>
             </div>
             <button type="submit" className="btn block lightBlue submit">确定发起</button>
