@@ -30,6 +30,8 @@ module.exports = {
     'create-ab': './src/asset/js/address-book/create/index.js',
     'ab-applicat-list': './src/asset/js/address-book/applicat/index.js',
     'ab-member-search': './src/asset/js/address-book/member-search/index.js',
+    'biz-card-application-msg': './src/asset/js/message/biz-card-application/index.js',
+    'biz-card-reply-msg': './src/asset/js/message/biz-card-reply/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -212,6 +214,20 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'ab-member-search.html',
       chunks: ['ved', 'lib-react', 'zepto', 'ab-member-search'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '名片交换申请消息 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'biz-card-application-msg.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'biz-card-application-msg'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '名片交换回复消息 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'biz-card-reply-msg.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'biz-card-reply-msg'],
       inject: 'body'
     })
   ],
