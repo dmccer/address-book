@@ -15,7 +15,7 @@ export default class MsgItem extends React.Component {
     let props = this.props;
 
     return (
-      <a className="cell" href={`./biz-card-detail.html?uid=${props.uid}&cid=${props.cid}`}>
+      <a className="cell" href={`./biz-card-detail.html?uid=${props.uid}&cid=${props.cid}&askid=${props.askid}`}>
         <div className="weui_cell_hd">
           <img style={{
             width: '50px',
@@ -26,7 +26,7 @@ export default class MsgItem extends React.Component {
         </div>
         <div className="cell-bd cell_primary">
           <h3>{props.msg}</h3>
-          <p>{this.formatDateTime(new Date(props.createtime))}</p>
+          <p>{props.createtime}</p>
         </div>
         <div className="cell-ft"></div>
       </a>

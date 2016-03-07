@@ -33,19 +33,35 @@ export default class BizCardDetailPage extends React.Component {
 
   componentDidMount() {
     AjaxError.init(this.refs.toast);
+
     this.fetch();
+
+
   }
 
   fetch() {
     this.refs.loading.show('加载中...');
 
+    let reqs = [this.getAccountInfo(), this.getBizCard()];
+
+    // 消息审核状态
+    if (this.state.qs.askid) {
+      reqs.push(this.getApplicationStatus());
+    }
+
     Promise
-      .all([this.getAccountInfo(), this.getBizCard()])
+      .all(reqs)
       .then((args) => {
-        this.setState({
+        let state = {
           account: args[0],
           bizCard: args[1]
-        });
+        };
+
+        if (args[2]) {
+          state.askfor = args[2];
+        }
+
+        this.setState(state);
       })
       .catch((err) => {
         if (err && err instanceof Error) {
@@ -55,6 +71,27 @@ export default class BizCardDetailPage extends React.Component {
       .done(() => {
         this.refs.loading.close();
       });
+  }
+
+  getApplicationStatus() {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/query_card_askfor',
+        type: 'GET',
+        cache: false,
+        data: {
+          askfor: this.state.qs.askid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        return res.ask_for;
+      }
+
+      this.refs.toast.warn(res.msg);
+    });
   }
 
   getAccountInfo() {
@@ -448,6 +485,10 @@ export default class BizCardDetailPage extends React.Component {
             <div className="btn block lightBlue">名片分享</div>
             {this.renderActions()}
             <div className="btn block lightBlue">完善我的名片</div>
+          </div>
+          <div className="application-status">
+            <button type="button" className="btn block lightBlue">通过</button>
+            <button type="button" className="btn block lightBlue">忽略</button>
           </div>
           <Popover ref="popover" />
         </section>
