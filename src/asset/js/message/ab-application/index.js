@@ -1,6 +1,9 @@
 /**
- * 名片交换回复列表页面 ./biz-card-reply-msg.html
+ * 申请审核列表页面
+ *
+ * @author Kane xiaoyunhua@ttyhuo.cn
  */
+
 import '../../../less/global/global.less';
 import '../../../less/component/cell.less';
 import './index.less';
@@ -15,8 +18,9 @@ import MsgItem from '../item/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
 import Log from '../../log/';
+import Private from '../../private/';
 
-export default class BizCardReplyMsgListPage extends React.Component {
+export default class ABApplicationMsgListPage extends React.Component {
   state = {
     notices: []
   };
@@ -38,7 +42,7 @@ export default class BizCardReplyMsgListPage extends React.Component {
         type: 'GET',
         cache: false,
         data: {
-          ntype: 4
+          ntype: 1
         },
         success: resolve,
         error: reject
@@ -82,13 +86,12 @@ export default class BizCardReplyMsgListPage extends React.Component {
 
   render() {
     return (
-      <section className="bc-reply-msg-list-page">
-        <SubHeader title="名片交换回复消息" />
-        <section className="bc-reply-msg-list">
-          <div className="cells cells-access">
-            {this.renderMsg()}
-          </div>
-        </section>
+      <section className="ab-applicat-list-page">
+        <SubHeader title="通讯录申请审核消息" />
+        <div className="ab-applicat-list cells cells-access">
+          {this.renderMsg()}
+        </div>
+        <Private />
         <Loading ref="loading" />
         <Toast ref="toast" />
       </section>
@@ -96,4 +99,4 @@ export default class BizCardReplyMsgListPage extends React.Component {
   }
 }
 
-ReactDOM.render(<BizCardReplyMsgListPage />, document.querySelector('.page'));
+ReactDOM.render(<ABApplicationMsgListPage />, document.querySelector('.page'));

@@ -94,7 +94,7 @@ export default class MessagePage extends React.Component {
         <section className="message">
           <h2 className="cells-title">通讯录</h2>
           <div className="cells cells-access">
-            <a className="cell" href="javascript:;">
+            <a className="cell" href="./ab-application-msg-list.html">
               <div className="cell-bd cell_primary">
                 <p>管理通知</p>
               </div>
@@ -102,7 +102,7 @@ export default class MessagePage extends React.Component {
                 {this.renderMsgCount(1)}
               </div>
             </a>
-            <a className="cell" href="javascript:;">
+            <a className="cell" href="./ab-reply-msg-list.html">
               <div className="cell-bd cell_primary">
                 <p>申请回复</p>
               </div>

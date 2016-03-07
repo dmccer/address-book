@@ -38,7 +38,7 @@ export default class BizCardApplicationMsgListPage extends React.Component {
         type: 'GET',
         cache: false,
         data: {
-          ntype: 4
+          ntype: 3
         },
         success: resolve,
         error: reject

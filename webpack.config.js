@@ -28,8 +28,9 @@ module.exports = {
     'private-msg-list': './src/asset/js/message/private/index.js',
     'select-ab-type': './src/asset/js/address-book/create/select-ab-type/index.js',
     'create-ab': './src/asset/js/address-book/create/index.js',
-    'ab-applicat-list': './src/asset/js/address-book/applicat/index.js',
     'ab-member-search': './src/asset/js/address-book/member-search/index.js',
+    'ab-application-msg-list': './src/asset/js/message/ab-application/index.js',
+    'ab-reply-msg-list': './src/asset/js/message/ab-reply/index.js',
     'biz-card-application-msg': './src/asset/js/message/biz-card-application/index.js',
     'biz-card-reply-msg': './src/asset/js/message/biz-card-reply/index.js',
     'lib-react': ['react', 'react-dom'],
@@ -203,13 +204,6 @@ module.exports = {
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
-      title: '申请审核列表 - 货运通讯录',
-      template: './src/page/index.html',
-      filename: 'ab-applicat-list.html',
-      chunks: ['ved', 'lib-react', 'zepto', 'ab-applicat-list'],
-      inject: 'body'
-    }),
-    new HtmlWebpackPlugin({
       title: '成员搜索 - 货运通讯录',
       template: './src/page/index.html',
       filename: 'ab-member-search.html',
@@ -228,6 +222,20 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'biz-card-reply-msg.html',
       chunks: ['ved', 'lib-react', 'zepto', 'biz-card-reply-msg'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '通讯录申请审核消息 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'ab-application-msg-list.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'ab-application-msg-list'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '通讯录申请回复消息 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'ab-reply-msg-list.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'ab-reply-msg-list'],
       inject: 'body'
     })
   ],
