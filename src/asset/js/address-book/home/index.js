@@ -16,6 +16,8 @@ import Promise from 'promise';
 import AjaxError from '../../ajax-err/';
 import Header from '../../header/';
 import Nav from '../../nav/';
+import ABMiniItem from '../mini-item/';
+import ABList from '../list/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
 import Log from '../../log/';
@@ -69,55 +71,20 @@ export default class ABPage extends React.Component {
     });
   }
 
-  renderItems(list) {
-    if (list && list.length) {
-      return list.map((item, index) => {
-        return (
-          <li key={`ab-item_${index}`}>
-            <a href={`./address-book-detail.html?id=${item.id}`}>
-              <img className="cover" src={item.photo} />
-              <div className="ab-profile">
-                <h3>{item.name}</h3>
-                <div>
-                  <span className="creator">由 <b>{item.group_holder}</b> 创建</span>
-                  <span className="people-num">人数: {item.cards_count}</span>
-                </div>
-              </div>
-            </a>
-          </li>
-        );
-      });
-    }
-  }
-
-  renderEmpty(list) {
-    if (!list || !list.length) {
-      return (
-        <li className="empty">暂无</li>
-      );
-    }
-  }
-
   render() {
     return (
       <section className="ab-page">
         <Header title="通讯录" />
         <section className="ab">
-          <a className="search">
+          <a className="search" href="./search-ab.html">
             <i className="icon s14 icon-search"></i>
             <span>点击开始搜索</span>
           </a>
           <div className="divide"></div>
           <h2 className="subtitle">我发起的</h2>
-          <ul className="list ab-list">
-            {this.renderItems(this.state.createdList)}
-            {this.renderEmpty(this.state.createdList)}
-          </ul>
+          <ABList items={this.state.createdList} />
           <h2 className="subtitle">我加入的</h2>
-          <ul className="list ab-list">
-            {this.renderItems(this.state.joinedList)}
-            {this.renderEmpty(this.state.joinedList)}
-          </ul>
+          <ABList items={this.state.joinedList} />
         </section>
         <div className="fixed-holder"></div>
         <Nav on="address-book" />

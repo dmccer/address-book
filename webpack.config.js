@@ -33,6 +33,7 @@ module.exports = {
     'ab-reply-msg-list': './src/asset/js/message/ab-reply/index.js',
     'biz-card-application-msg': './src/asset/js/message/biz-card-application/index.js',
     'biz-card-reply-msg': './src/asset/js/message/biz-card-reply/index.js',
+    'search-ab': './src/asset/js/address-book/search/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -236,6 +237,13 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'ab-reply-msg-list.html',
       chunks: ['ved', 'lib-react', 'zepto', 'ab-reply-msg-list'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '搜索通讯录 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'search-ab.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'search-ab'],
       inject: 'body'
     })
   ],

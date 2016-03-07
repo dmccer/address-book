@@ -1,0 +1,60 @@
+@import '../../../less/global/site.variable';
+
+
+.list {
+  li {
+    border-bottom: 1px solid @c_lightGrey_4;
+    background-color: @white;
+    padding: 10px 15px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.ab-list {
+  li a {
+    display: block;
+    overflow: hidden;
+    color: @c_lightBlack_1;
+
+    .cover {
+      float: left;
+      width: 40px;
+      height: 40px;
+      margin-right: 8px;
+    }
+
+    .ab-profile {
+      overflow: hidden;
+
+      h3 {
+        font-size: 16/12rem;
+        color: @lightBlack;
+        margin-bottom: 5px;
+        font-weight: normal;
+      }
+
+      > div {
+        overflow: hidden;
+      }
+
+      span {
+        b {
+          color: @c_lightGreen_1;
+        }
+      }
+
+      .people-num {
+        float: right;
+      }
+    }
+  }
+}
+
+.empty {
+  text-align: center;
+  color: @c_lightBlack_1;
+  padding: 10px;
+}
