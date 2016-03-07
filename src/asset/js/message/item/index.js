@@ -7,20 +7,26 @@ export default class MsgItem extends React.Component {
     super();
   }
 
+  formatDateTime(d) {
+    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+  }
+
   render() {
+    let props = this.props;
+
     return (
-      <a className="cell" href="#">
+      <a className="cell" href={`./biz-card-detail.html?uid=${props.uid}&cid=${props.cid}`}>
         <div className="weui_cell_hd">
           <img style={{
             width: '50px',
             height: '50px',
             display: 'block',
             marginRight: '8px'
-          }} src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/S1Z9d539QDBx__a7M8n1xQ==/6630599373748343075.jpg_188x188x1.jpg" />
+          }} src={props.photo} />
         </div>
         <div className="cell-bd cell_primary">
-          <h3>张三申请和您交换名片</h3>
-          <p>2015-12-30 12:11:50</p>
+          <h3>{props.msg}</h3>
+          <p>{this.formatDateTime(new Date(props.createtime))}</p>
         </div>
         <div className="cell-ft"></div>
       </a>
