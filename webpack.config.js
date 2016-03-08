@@ -34,6 +34,7 @@ module.exports = {
     'biz-card-application-msg': './src/asset/js/message/biz-card-application/index.js',
     'biz-card-reply-msg': './src/asset/js/message/biz-card-reply/index.js',
     'search-ab': './src/asset/js/address-book/search/index.js',
+    'private-msg-send': './src/asset/js/message/private/send/index.js',
     'lib-react': ['react', 'react-dom'],
     ved: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server']
   },
@@ -244,6 +245,13 @@ module.exports = {
       template: './src/page/index.html',
       filename: 'search-ab.html',
       chunks: ['ved', 'lib-react', 'zepto', 'search-ab'],
+      inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      title: '发送私信 - 货运通讯录',
+      template: './src/page/index.html',
+      filename: 'private-msg-send.html',
+      chunks: ['ved', 'lib-react', 'zepto', 'private-msg-send'],
       inject: 'body'
     })
   ],
