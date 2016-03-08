@@ -14,6 +14,8 @@ import Promise from 'promise';
 import AjaxError from '../../ajax-err/';
 import Header from '../../header/';
 import Nav from '../../nav/';
+import Config from '../../config';
+import WXVerify from '../../wx-verify/';
 import MiniCard from '../mini-card/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
@@ -26,6 +28,23 @@ export default class BizCardSwapPage extends React.Component {
 
   constructor() {
     super();
+  }
+
+  componentWillMount() {
+    WXVerify({
+      appId: Config.wxAppId,
+      url: Config.wxSignatureUrl,
+      jsApiList: ['scanQRCode']
+    }, (err) => {
+      if (err) {
+        // 微信验证失败处理
+        return;
+      }
+
+      this.setState({
+        wxReady: true
+      });
+    });
   }
 
   componentDidMount() {
@@ -70,6 +89,24 @@ export default class BizCardSwapPage extends React.Component {
     });
   }
 
+  handleScan() {
+    if (!this.state.wxReady) {
+      this.refs.toast.warn('等待微信验证...');
+
+      return;
+    }
+
+    wx.scanQRCode({
+      needResult: 1,
+      scanType: ["qrCode"],
+      success: function (res) {
+        var result = res.resultStr;
+
+        alert(JSON.stringify(res));
+      }
+    });
+  }
+
   render() {
     return (
       <section className="biz-card-swap-page">
@@ -87,7 +124,7 @@ export default class BizCardSwapPage extends React.Component {
           		</div>
           		<p>扫描二维码，自动加入到我的货运通讯录</p>
           		<div className="swap-btn">
-          			<button className="btn block blue">扫一扫</button>
+          			<button className="btn block blue" onClick={this.handleScan.bind(this)}>扫一扫</button>
           		</div>
           </div>
           <div className="fixed-holder"></div>

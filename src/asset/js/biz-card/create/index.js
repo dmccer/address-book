@@ -139,7 +139,7 @@ export default class CreateBizCardPage extends React.Component {
 
         setTimeout(() => {
           let qs = querystring.stringify({
-            id: res.cid
+            cid: res.cid
           });
 
           location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
