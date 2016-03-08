@@ -95,7 +95,7 @@ export default class AddressSelector extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/v2/getCitys',
+        url: '/mvc/pim/getCitys',
         type: 'GET',
         cache: false,
         success: resolve,
@@ -125,7 +125,7 @@ export default class AddressSelector extends React.Component {
       let index = provinces.indexOf(this.state.province);
 
       $.ajax({
-        url: '/mvc/v2/getCitys',
+        url: '/mvc/pim/getCitys',
         type: 'GET',
         cache: false,
         data: {
@@ -155,7 +155,7 @@ export default class AddressSelector extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/v2/getCitys',
+        url: '/mvc/pim/getCitys',
         type: 'GET',
         cache: false,
         data: {
