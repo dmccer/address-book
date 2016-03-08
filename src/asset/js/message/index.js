@@ -2,6 +2,7 @@
  * 消息分类及数量展示页面
  */
 import '../../less/global/global.less';
+import '../../less/component/cell.less';
 import './index.less';
 
 import React from 'react';

@@ -7,16 +7,77 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Promise from 'promise';
 
+import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';
+import MsgUserItem from './item/';
+import Loading from '../../loading/';
+import Toast from '../../toast/';
+import Log from '../../log/';
 
 export default class PrivateMsgListPage extends React.Component {
-  static defaultProps = {};
-
-  state = {};
+  state = {
+    notices: []
+  };
 
   constructor() {
     super();
+  }
+
+  componentDidMount() {
+    this.fetch();
+  }
+
+  fetch() {
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/query_pivmsg_list',
+        type: 'GET',
+        cache: false,
+        data: {
+          ntype: 4
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.setState({
+          notices: res.piv_msg_list
+        });
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(err.message);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  renderMsg() {
+    let msgs = this.state.notices;
+
+    if (msgs.length) {
+      return msgs.map((msg, index) => {
+        return (
+          <MsgUserItem
+            key={`msg-item_${index}`}
+            {...msg} />
+        );
+      });
+    }
+
+    return (<div className="empty">暂无私信</div>);
   }
 
   render() {
@@ -25,76 +86,11 @@ export default class PrivateMsgListPage extends React.Component {
         <SubHeader title="私信" />
         <section className="private-msg-list">
           <div className="cells cells-access">
-            <a className="cell" href="#">
-              <div className="weui_cell_hd">
-                <img style={{
-                  width: '50px',
-                  height: '50px',
-                  display: 'block',
-                  marginRight: '8px'
-                }} src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/S1Z9d539QDBx__a7M8n1xQ==/6630599373748343075.jpg_188x188x1.jpg" />
-              </div>
-              <div className="cell-bd cell_primary">
-                <h3>张三</h3>
-                <p>消息内容描述消息内容描述</p>
-              </div>
-              <div className="cell-ft">
-                <i className="icon s22 icon-badge">10</i>
-              </div>
-            </a>
-            <a className="cell" href="#">
-              <div className="weui_cell_hd">
-                <img style={{
-                  width: '50px',
-                  height: '50px',
-                  display: 'block',
-                  marginRight: '8px'
-                }} src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/S1Z9d539QDBx__a7M8n1xQ==/6630599373748343075.jpg_188x188x1.jpg" />
-              </div>
-              <div className="cell-bd cell_primary">
-                <h3>张三</h3>
-                <p>消息内容描述消息内容描述</p>
-              </div>
-              <div className="cell-ft">
-                <i className="icon s22 icon-badge">10</i>
-              </div>
-            </a>
-            <a className="cell" href="#">
-              <div className="weui_cell_hd">
-                <img style={{
-                  width: '50px',
-                  height: '50px',
-                  display: 'block',
-                  marginRight: '8px'
-                }} src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/S1Z9d539QDBx__a7M8n1xQ==/6630599373748343075.jpg_188x188x1.jpg" />
-              </div>
-              <div className="cell-bd cell_primary">
-                <h3>张三</h3>
-                <p>消息内容描述消息内容描述</p>
-              </div>
-              <div className="cell-ft">
-                <i className="icon s22 icon-badge">10</i>
-              </div>
-            </a>
-            <a className="cell" href="#">
-              <div className="weui_cell_hd">
-                <img style={{
-                  width: '50px',
-                  height: '50px',
-                  display: 'block',
-                  marginRight: '8px'
-                }} src="http://imgsize.ph.126.net/?imgurl=http://img2.ph.126.net/S1Z9d539QDBx__a7M8n1xQ==/6630599373748343075.jpg_188x188x1.jpg" />
-              </div>
-              <div className="cell-bd cell_primary">
-                <h3>张三</h3>
-                <p>消息内容描述消息内容描述</p>
-              </div>
-              <div className="cell-ft">
-                <i className="icon s22 icon-badge">10</i>
-              </div>
-            </a>
+            {this.renderMsg()}
           </div>
         </section>
+        <Loading ref="loading" />
+        <Toast ref="toast" />
       </section>
     );
   }
