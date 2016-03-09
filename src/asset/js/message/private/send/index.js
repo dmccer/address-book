@@ -40,6 +40,13 @@ export default class PrivateMsgSendPage extends React.Component {
     this.fetch();
   }
 
+  bottom() {
+    let winH = $(window).height();
+    let docH = $(document).height();
+
+    $(window).scrollTop(docH - winH);
+  }
+
   fetch() {
     this.refs.loading.show('加载中...');
 
@@ -58,7 +65,10 @@ export default class PrivateMsgSendPage extends React.Component {
       if (res.retcode === 0) {
         this.setState({
           msgs: res.piv_msg_data_list
+        }, () => {
+          this.bottom();
         });
+
 
         return;
       }
@@ -103,6 +113,7 @@ export default class PrivateMsgSendPage extends React.Component {
     }).then((res) => {
       if (res.retcode === 0) {
         this.refs.toast.success('发送成功');
+        this.props.clear('msg');
         this.fetch();
 
         return;
