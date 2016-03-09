@@ -69,6 +69,8 @@ export default class BizCardApplicationMsgListPage extends React.Component {
 
     if (msgs.length) {
       return msgs.map((msg, index) => {
+        msg.askType = 'bc';
+
         return (
           <MsgItem
             key={`msg-item_${index}`}

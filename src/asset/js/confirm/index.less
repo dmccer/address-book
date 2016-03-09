@@ -12,6 +12,7 @@
 .confirm-panel {
   position: absolute;
   z-index: 101;
+  width: 90%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -19,22 +20,20 @@
   overflow: hidden;
 
   .tip {
-    width: 200px;
-    height: 60px;
-    line-height: 60px;
-    font-size: 21px;
+    font-size: 16px;
     color: @c_lightWhite;
     background-color: @c_blue_3;
     text-align: center;
+    padding: 15px;
   }
 
   .btns {
     .btn {
       text-align: center;
       border-radius: 0;
-      height: 30px;
-      line-height: 30px;
-      font-size: 15px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
       border-right: 1px solid @c_lightWhite;
 
       &:last-child {

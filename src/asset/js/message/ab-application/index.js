@@ -73,6 +73,8 @@ export default class ABApplicationMsgListPage extends React.Component {
 
     if (msgs.length) {
       return msgs.map((msg, index) => {
+        msg.askType = 'ab';
+
         return (
           <MsgItem
             key={`msg-item_${index}`}
