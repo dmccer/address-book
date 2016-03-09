@@ -17,6 +17,7 @@ import ABMember from '../member/';
 import SubHeader from '../../sub-header/';
 import Loading from '../../loading/';
 import Confirm from '../../confirm/';
+import Prompt from '../../prompt/';
 import Prviate from '../../private/';
 import FixedHolder from '../../fixed-holder/';
 import Toast from '../../toast/';
@@ -163,15 +164,78 @@ export default class ABDetailPage extends React.Component {
     });
   }
 
+  handleClickJoinAB() {
+    let question = this.state.abInfo.aquestion;
+
+    if (question) {
+      this.refs.prompt.show({
+        title: question
+      });
+    }
+  }
+
+  handleJoinAB(val) {
+    if (val === '') {
+      return;
+    }
+
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/join_addlist',
+        type: 'POST',
+        data: {
+          aid: this.state.qs.id,
+          answer: val
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success(res.msg);
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(`加入该通讯录成功,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
   renderABMembers() {
     let memberList = this.state.memberList;
+    let abInfo = this.state.abInfo;
 
-    if (memberList && memberList.length > 1) {
+    if (memberList && memberList.length) {
       let list = this.state.memberList.map((member, index) => {
+        if (member.uid === abInfo.group_holder_uid) {
+          member.holder = true;
+        }
+
         return (
-          <ABMember key={`member-item_${index}`} {...member} />
+          <ABMember
+            key={`member-item_${index}`}
+            {...member}
+            onView={this.handleToggleActiveMember.bind(this, member)}
+          />
         );
       });
+
+      let joinAB = !abInfo.joined_flag ? (
+        <div
+          className="btn block lightBlue join-btn"
+          onClick={this.handleClickJoinAB.bind(this)}
+        >加入该通讯录</div>
+      ) : null;
 
       return (
         <div className="member">
@@ -185,9 +249,15 @@ export default class ABDetailPage extends React.Component {
           </div>
           <a className="more-list">点击查看更多</a>
           <div className="pub-ab-btn">
-            <div className="btn block lightBlue">我也要发布通讯录</div>
+            <a className="btn block lightBlue" href="./create-ab.html">我也要发布通讯录</a>
           </div>
-          <div className="btn block lightBlue join-btn">加入该通讯录</div>
+          {joinAB}
+          <Prompt
+            ref="prompt"
+            confirm={this.handleJoinAB.bind(this)}
+          />
+          {this.renderMemberActions()}
+          <FixedHolder height="44" />
         </div>
       );
     }
@@ -196,17 +266,19 @@ export default class ABDetailPage extends React.Component {
   renderABCreated() {
     let memberList = this.state.memberList;
 
-    if (memberList.length === 1) {
+    if (this.state.qs.create == 1) {
       let member = memberList[0];
       let abInfo = this.state.abInfo;
 
       if (abInfo.group_holder_uid === member.uid) {
+        member.holder = true;
+
         return (
           <div className="ab-created">
             <div className="invitation">
               <p>通讯录创建成功</p>
               <p>您可以分享给朋友一起加入通讯录</p>
-              <button className="btn block lightBlue">邀请好友</button>
+              <button className="btn block green">邀请好友</button>
             </div>
             <div className="ab-member-list cells">
               <ABMember {...member} />
@@ -309,6 +381,54 @@ export default class ABDetailPage extends React.Component {
     });
   }
 
+  handleToggleActiveMember(member: Object, e: Object) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    let activeMember = this.state.activeMember;
+    if (activeMember === member) {
+      this.setState({
+        activeMember: null
+      });
+
+      return;
+    }
+
+    this.setState({
+      activeMember: member
+    });
+  }
+
+  renderMemberActions() {
+    let activeMember = this.state.activeMember;
+
+    if (activeMember) {
+      let qs = querystring.stringify({
+        cid: activeMember.cid,
+        uid: activeMember.uid
+      });
+
+      return (
+        <div className="member-actions row">
+          <div>
+            <a
+              href={`tel:${activeMember.tel}`}
+              className="btn block lightBlue">
+              拨打电话
+            </a>
+          </div>
+          <div>
+            <a
+              href={`./biz-card-detail.html?${qs}`}
+              className="btn block lightBlue">
+              查看详细信息
+            </a>
+          </div>
+        </div>
+      );
+    }
+  }
+
   render() {
     let abInfo = this.state.abInfo;
     let memberList = this.state.memberList;
@@ -335,7 +455,6 @@ export default class ABDetailPage extends React.Component {
           {this.renderSetting()}
         </section>
         <Prviate />
-        <FixedHolder height="44" />
         <Confirm
           ref="confirm"
           confirm={this.handleDelAB.bind(this)}/>

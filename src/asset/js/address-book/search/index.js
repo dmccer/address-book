@@ -53,7 +53,7 @@ export default class SearchABPage extends React.Component {
   query() {
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/search_my_addlist',
+        url: '/mvc/pim/search_addlist',
         type: 'GET',
         cache: false,
         data: {

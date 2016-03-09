@@ -92,7 +92,8 @@ export default class ABCreatePage extends React.Component {
 
         setTimeout(() => {
           let qs = querystring.stringify({
-            id: res.aid
+            id: res.aid,
+            create: 1
           });
 
           location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
