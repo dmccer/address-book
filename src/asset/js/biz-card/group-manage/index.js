@@ -13,7 +13,7 @@ import Promise from 'promise';
 
 import ModalHeader from '../../modal-header/';
 import BizCardEditableGroupItem from '../group/editable/';
-import GroupItemEditConfirm from '../group/edit-modal/';
+import Prompt from '../../prompt/';
 import Private from '../../private/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
@@ -221,7 +221,7 @@ export default class BizCardGroupManagePage extends React.Component {
             {this.renderGroupList()}
           </div>
         </div>
-        <GroupItemEditConfirm
+        <Prompt
           ref="editModal"
           confirm={this.handleAddGroup.bind(this)}
         />

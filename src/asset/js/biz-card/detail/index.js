@@ -18,13 +18,26 @@ import Popover from '../../popover/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
 import Log from '../../log/';
+import FixedHolder from '../../fixed-holder/';
+
+const ASK_URL = {
+  bc: {
+    get: '/mvc/pim/query_card_askfor',
+    handle: '/mvc/pim/handle_card_askfor'
+  },
+  ab: {
+    get: '/mvc/pim/query_addlist_askfor',
+    handle: '/mvc/pim/handle_addlist_askfor'
+  }
+};
 
 export default class BizCardDetailPage extends React.Component {
   state = {
     selectorData: [],
     qs: querystring.parse(location.search.substring(1)),
     bizCard: {},
-    account: {}
+    account: {},
+    askfor: {}
   };
 
   constructor() {
@@ -35,8 +48,6 @@ export default class BizCardDetailPage extends React.Component {
     AjaxError.init(this.refs.toast);
 
     this.fetch();
-
-
   }
 
   fetch() {
@@ -46,7 +57,7 @@ export default class BizCardDetailPage extends React.Component {
 
     // 消息审核状态
     if (this.state.qs.askid) {
-      reqs.push(this.getApplicationStatus());
+      reqs.push(this.getAskStatus());
     }
 
     Promise
@@ -73,10 +84,12 @@ export default class BizCardDetailPage extends React.Component {
       });
   }
 
-  getApplicationStatus() {
+  getAskStatus() {
+    let askType = this.state.qs.askType;
+
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_card_askfor',
+        url: ASK_URL[askType].get,
         type: 'GET',
         cache: false,
         data: {
@@ -91,6 +104,49 @@ export default class BizCardDetailPage extends React.Component {
       }
 
       this.refs.toast.warn(res.msg);
+    });
+  }
+
+  handleClickAsk(val) {
+    this.askHandleVal = val;
+
+    this.refs.handleAsk.show({
+      msg: `确认${val === 1 ? '通过' : '拒绝'}该用户的申请?`
+    });
+  }
+
+  handleAsk() {
+    this.refs.loading.show('请求中...');
+
+    let askType = this.state.qs.askType;
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: ASK_URL[askType].handle,
+        type: 'POST',
+        data: {
+          askfor: this.state.qs.askid,
+          status: this.askHandleVal
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success('处理申请完成');
+        this.fetch();
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    })
+    .catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`处理申请出错,${err.message}`);
+      }
+    })
+    .done(() => {
+      this.refs.loading.close();
     });
   }
 
@@ -381,6 +437,36 @@ export default class BizCardDetailPage extends React.Component {
     );
   }
 
+  renderAskActions() {
+    if (this.state.qs.askid) {
+      // status 为 0, 标示申请未处理，其他表示已处理
+      let status = this.state.askfor.status !== 0;
+
+      return (
+        <div className="ask-actions row">
+          <div>
+            <button
+              type="button"
+              disabled={status}
+              className="btn block lightBlue"
+              onClick={this.handleClickAsk.bind(this, 1)}>
+              {status ? '已通过' : '通过'}
+            </button>
+          </div>
+          <div>
+            <button
+              type="button"
+              disabled={status}
+              className="btn block lightBlue"
+              onClick={this.handleClickAsk.bind(this, 2)}>
+              忽略
+            </button>
+          </div>
+        </div>
+      );
+    }
+  }
+
   render() {
     let bizCard = this.state.bizCard;
     let account = this.state.account;
@@ -486,12 +572,10 @@ export default class BizCardDetailPage extends React.Component {
             {this.renderActions()}
             <div className="btn block lightBlue">完善我的名片</div>
           </div>
-          <div className="application-status">
-            <button type="button" className="btn block lightBlue">通过</button>
-            <button type="button" className="btn block lightBlue">忽略</button>
-          </div>
+          {this.renderAskActions()}
           <Popover ref="popover" />
         </section>
+        <Private />
         <Selector
           ref="selector"
           items={this.state.selectorData}
@@ -509,7 +593,11 @@ export default class BizCardDetailPage extends React.Component {
           ref="setMainBizCardConfirm"
           confirm={this.handleSetMainBizCard.bind(this)}
         />
-        <Private />
+        <Confirm
+          ref="handleAsk"
+          confirm={this.handleAsk.bind(this)}
+        />
+        <FixedHolder height="44" />
         <Loading ref="loading" />
         <Toast ref="toast" />
       </section>

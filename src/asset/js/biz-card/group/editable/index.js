@@ -4,7 +4,7 @@ import React from 'react';
 import Promise from 'promise';
 
 import Confirm from '../../../confirm/';
-import GroupItemEditConfirm from '../edit-modal/';
+import Prompt from '../../../prompt/';
 import Loading from '../../../loading/';
 import Toast from '../../../toast/';
 
@@ -46,7 +46,7 @@ export default class BizCardEditableGroupItem extends React.Component {
           ref="confirm"
           confirm={props.onRemove}
         />
-        <GroupItemEditConfirm
+        <Prompt
           ref="editModal"
           confirm={props.onEdit}
         />

@@ -178,3 +178,23 @@ body {
     }
   }
 }
+
+.ask-actions {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  opacity: .8;
+
+  .btn {
+    border-radius: 0;
+
+    &:disabled {
+      background-color: @c_black_1;
+    }
+  }
+
+  > div:first-child {
+    border-right: 1px solid @c_black;
+  }
+}
