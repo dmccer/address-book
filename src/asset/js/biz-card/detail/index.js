@@ -415,7 +415,9 @@ export default class BizCardDetailPage extends React.Component {
   }
 
   renderActions() {
-    if (this.state.account.holder_flag) {
+    let account = this.state.account;
+
+    if (account.holder_flag) {
       return (
         <div>
           <a href={`./biz-card-certify.html?cid=${this.state.bizCard.id}&uid=${this.state.qs.uid}`} className="btn block lightBlue">名片认证</a>
@@ -425,9 +427,13 @@ export default class BizCardDetailPage extends React.Component {
       );
     }
 
+    let qs = querystring.stringify({
+      fuid: account.uid
+    });
+
     return (
       <div>
-        <div className="btn block lightBlue">发送私信</div>
+        <a href={`./private-msg-send.html?${qs}`} className="btn block lightBlue">发送私信</a>
         <div className="btn block lightBlue move-btn" onClick={this.handleMoveFriend.bind(this)}>
           <span>移动好友到</span>
           <i className="icon icon-right-triangle white"></i>

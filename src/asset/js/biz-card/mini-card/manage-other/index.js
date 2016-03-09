@@ -40,23 +40,25 @@ export default class ManageOtherMiniCard extends React.Component {
   }
 
   render() {
+    let props = this.props;
+
     return (
       <div className="item">
         <div
           className="row cnt"
           style={{
-            left: this.props.left + 'px'
+            left: props.left + 'px'
           }}
-          onTouchStart={this.props.touchstart}
-          onTouchMove={this.props.touchmove}
-          onTouchEnd={this.props.touchend}
+          onTouchStart={props.touchstart}
+          onTouchMove={props.touchmove}
+          onTouchEnd={props.touchend}
         >
           <div className="biz-card">
-            <MiniCard {...this.props.card} />
+            <MiniCard {...props.card} />
           </div>
         </div>
         <ul className="actions row">
-          <li className="personal-letter">私信</li>
+          <li className="personal-letter"><a href={`./private-msg-send.html?fuid=${props.card.uid}`}>私信</a></li>
           <li className="del" onClick={this.handleDelBizCard.bind(this)}>删除</li>
         </ul>
         <Confirm ref="confirm" confirm={this.handleConfirmDel.bind(this)} />
