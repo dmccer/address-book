@@ -11,6 +11,7 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import querystring from 'querystring';
 
 import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';
@@ -73,11 +74,17 @@ export default class ABApplicationMsgListPage extends React.Component {
 
     if (msgs.length) {
       return msgs.map((msg, index) => {
-        msg.askType = 'ab';
+        let qs = querystring.stringify({
+          uid: msg.uid,
+          cid: msg.cid,
+          askid: msg.askid,
+          askType: 'ab'
+        });
 
         return (
           <MsgItem
             key={`msg-item_${index}`}
+            url={`./biz-card-detail.html?${qs}`}
             {...msg} />
         );
       });

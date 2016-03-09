@@ -11,6 +11,7 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import querystring from 'querystring';
 
 import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';
@@ -73,9 +74,15 @@ export default class ABReplyMsgListPage extends React.Component {
 
     if (msgs.length) {
       return msgs.map((msg, index) => {
+        let qs = querystring.stringify({
+          uid: msg.uid,
+          id: msg.aid
+        });
+
         return (
           <MsgItem
             key={`msg-item_${index}`}
+            url={`./address-book-detail.html?${qs}`}
             {...msg} />
         );
       });

@@ -69,9 +69,15 @@ export default class BizCardReplyMsgListPage extends React.Component {
 
     if (msgs.length) {
       return msgs.map((msg, index) => {
+        let qs = querystring.stringify({
+          uid: msg.uid,
+          cid: msg.cid
+        });
+
         return (
           <MsgItem
             key={`msg-item_${index}`}
+            url={`./biz-card-detail.html?${qs}`}
             {...msg} />
         );
       });

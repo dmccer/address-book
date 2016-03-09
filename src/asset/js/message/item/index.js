@@ -15,7 +15,7 @@ export default class MsgItem extends React.Component {
     let props = this.props;
 
     return (
-      <a className="cell" href={`./biz-card-detail.html?uid=${props.uid}&cid=${props.cid}&askid=${props.askid}&askType=${props.askType}`}>
+      <a className="cell" href={props.url}>
         <div className="weui_cell_hd">
           <img style={{
             width: '50px',
