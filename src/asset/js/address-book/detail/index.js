@@ -251,7 +251,7 @@ export default class ABDetailPage extends React.Component {
             {list}
           </div>
           <div className="pub-ab-btn">
-            <a className="btn block lightBlue" href="./create-ab.html">我也要发布通讯录</a>
+            <a className="btn block lightBlue" href="./select-ab-type.html">我也要发布通讯录</a>
           </div>
           {joinAB}
           <Prompt
@@ -387,7 +387,7 @@ export default class ABDetailPage extends React.Component {
             </div>
             <div className="cell-ft"></div>
           </a>
-          <a className="cell" href="#">
+          <a className="cell" href="javascript:;" onClick={this.handleClickQuitAB.bind(this)}>
             <div className="cell-hd">
               <i className="icon icon-power s15"></i>
             </div>
@@ -504,6 +504,50 @@ export default class ABDetailPage extends React.Component {
     this.toSwapMember = null;
   }
 
+  handleClickQuitAB(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.refs.quit.show({
+      msg: '确认退出该通讯录？'
+    });
+  }
+
+  handleQuitAB() {
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/quit_addlist',
+        type: 'POST',
+        data: {
+          aid: this.state.qs.id
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success('退出通讯录成功');
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(`退出通讯录出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
   renderMemberActions() {
     let activeMember = this.state.activeMember;
 
@@ -563,7 +607,12 @@ export default class ABDetailPage extends React.Component {
         <FixedHolder height="44" />
         <Confirm
           ref="confirm"
-          confirm={this.handleDelAB.bind(this)}/>
+          confirm={this.handleDelAB.bind(this)}
+        />
+        <Confirm
+          ref="quit"
+          confirm={this.handleQuitAB.bind(this)}
+        />
         <Loading ref="loading" />
         <Toast ref="toast" />
         <GoTop />
