@@ -17,7 +17,12 @@ export default class ABMemeber extends React.Component {
       memberTypeDes = '发起人&';
     }
 
-    let visible = props.auth === 0 ? (<i className="capsule lightBlue">可见</i>) : null;
+    let visible = props.shouldShowVisibility && props.auth === 0 ? (<i className="capsule lightBlue">可见</i>) : null;
+    let del = !props.shouldShowVisibility ? (
+      <i
+        className="icon s22 icon-dustbin"
+        onClick={props.onDel}></i>
+    ) : null
 
     return (
       <a className="cell" href="javascript:;" onClick={props.onView}>
@@ -28,7 +33,10 @@ export default class ABMemeber extends React.Component {
           <h3>{props.nikename} ({`${memberTypeDes}${(props.ctype === 1 ? '车主' : '货主')}`})</h3>
           <p>{props.desc}</p>
         </div>
-        <div className="cell-ft">{visible}</div>
+        <div className="cell-ft">
+          {visible}
+          {del}
+        </div>
       </a>
     );
   }

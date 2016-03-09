@@ -23,6 +23,7 @@ import FixedHolder from '../../fixed-holder/';
 import Toast from '../../toast/';
 import Log from '../../log/';
 import AB_TYPES from '../../const/abtype';
+import GoTop from '../../gotop/';
 
 export default class ABDetailPage extends React.Component {
 
@@ -126,7 +127,7 @@ export default class ABDetailPage extends React.Component {
     e.stopPropagation();
 
     this.refs.confirm.show({
-      msg: '确定删除整个通讯录？'
+      msg: '确定删除整个通讯录，删除后将无法恢复？'
     });
   }
 
@@ -204,7 +205,7 @@ export default class ABDetailPage extends React.Component {
       if (err && err instanceof Error) {
         Log.error(err);
 
-        this.refs.toast.warn(`加入该通讯录成功,${err.message}`);
+        this.refs.toast.warn(`加入该通讯录出错,${err.message}`);
       }
     }).done(() => {
       this.refs.loading.close();
@@ -225,7 +226,9 @@ export default class ABDetailPage extends React.Component {
           <ABMember
             key={`member-item_${index}`}
             {...member}
+            shouldShowVisibility={!abInfo.group_holder_flag}
             onView={this.handleToggleActiveMember.bind(this, member)}
+            onDel={this.handleClickRemoveMember.bind(this, member)}
           />
         );
       });
@@ -247,7 +250,6 @@ export default class ABDetailPage extends React.Component {
           <div className="ab-member-list cells cells-access">
             {list}
           </div>
-          <a className="more-list">点击查看更多</a>
           <div className="pub-ab-btn">
             <a className="btn block lightBlue" href="./create-ab.html">我也要发布通讯录</a>
           </div>
@@ -256,11 +258,69 @@ export default class ABDetailPage extends React.Component {
             ref="prompt"
             confirm={this.handleJoinAB.bind(this)}
           />
+          <Confirm
+            ref="swapBizCard"
+            confirm={this.handleSwapBizCard.bind(this)}
+            cancel={this.handleCancelSwapBizCard.bind(this)}
+          />
+          <Confirm
+            ref="removeMember"
+            confirm={this.handleRemoveMember.bind(this)}
+            cancel={this.handleCancelRemoveMember.bind(this)}
+          />
           {this.renderMemberActions()}
-          <FixedHolder height="44" />
         </div>
       );
     }
+  }
+
+  handleCancelRemoveMember() {
+    this.toRemoveMember = null;
+  }
+
+  handleRemoveMember() {
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/del_addlist_card',
+        type: 'POST',
+        data: {
+          aid: this.state.qs.id,
+          uid: this.toRemoveMember.uid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success('删除成员成功');
+        this.fetch();
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(`删除成员出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  handleClickRemoveMember(member: Object, e: Object) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.toRemoveMember = member;
+
+    this.refs.removeMember.show({
+      msg: '确认要删除该成员吗？'
+    });
   }
 
   renderABCreated() {
@@ -385,6 +445,15 @@ export default class ABDetailPage extends React.Component {
     e.preventDefault();
     e.stopPropagation();
 
+    if (member.auth === 1) {
+      this.refs.swapBizCard.show({
+        msg: '您暂无权查看,请先交换名片'
+      });
+
+      this.toSwapMember = member;
+      return;
+    }
+
     let activeMember = this.state.activeMember;
     if (activeMember === member) {
       this.setState({
@@ -397,6 +466,42 @@ export default class ABDetailPage extends React.Component {
     this.setState({
       activeMember: member
     });
+  }
+
+  handleSwapBizCard() {
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/swap_card',
+        type: 'POST',
+        data: {
+          friendly_uid: this.toSwapMember.uid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success(res.msg);
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(`交换名片出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  handleCancelSwapBizCard() {
+    this.toSwapMember = null;
   }
 
   renderMemberActions() {
@@ -455,11 +560,13 @@ export default class ABDetailPage extends React.Component {
           {this.renderSetting()}
         </section>
         <Prviate />
+        <FixedHolder height="44" />
         <Confirm
           ref="confirm"
           confirm={this.handleDelAB.bind(this)}/>
         <Loading ref="loading" />
         <Toast ref="toast" />
+        <GoTop />
       </section>
     );
   }
