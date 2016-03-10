@@ -61,7 +61,10 @@ export default class MyPage extends React.Component {
         this.setState({
           signinable: false
         });
+
         this.refs.popover.success('签到成功');
+
+        this.getUser();
 
         return;
       }
