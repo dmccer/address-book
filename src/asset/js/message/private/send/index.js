@@ -66,9 +66,10 @@ export default class PrivateMsgSendPage extends React.Component {
         this.setState({
           msgs: res.piv_msg_data_list
         }, () => {
-          this.bottom();
+          setTimeout(() => {
+            this.bottom();
+          }, 100);
         });
-
 
         return;
       }
@@ -112,7 +113,6 @@ export default class PrivateMsgSendPage extends React.Component {
       });
     }).then((res) => {
       if (res.retcode === 0) {
-        this.refs.toast.success('发送成功');
         this.props.clear('msg');
         this.fetch();
 
