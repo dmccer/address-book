@@ -24,6 +24,15 @@ export default class Nav extends React.Component {
     super();
   }
 
+  handleChangeTab(menu: Object, e: Object) {
+    if (menu.id === this.props.on) {
+      e.stopPropagation();
+      e.preventDefault();
+      
+      return;
+    }
+  }
+
   render() {
     let menuList = MENUS.map((menu, index) => {
       let on = menu.id === this.props.on ? 'on' : '';
@@ -32,7 +41,7 @@ export default class Nav extends React.Component {
 
       return (
         <div className={menuClassNames} key={'menu_' + index}>
-          <a href={menu.url}>
+          <a href={menu.url} onClick={this.handleChangeTab.bind(this, menu)}>
             <i className={iconClassNames}></i>
             <span>{menu.name}</span>
           </a>

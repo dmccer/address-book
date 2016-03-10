@@ -56,7 +56,8 @@ export default class BizCardMyPage extends React.Component {
 
         this.setState({
           groups: groups,
-          myBizCard: args[0]
+          myBizCard: args[0],
+          loaded: true
         });
       })
       .catch((err) => {
@@ -145,10 +146,13 @@ export default class BizCardMyPage extends React.Component {
 
   renderMyBizCard() {
     let myBizCard = this.state.myBizCard;
-
-    if (myBizCard) {
+    let loaded = this.state.loaded;
+    
+    if (loaded && myBizCard) {
       return <MainMiniCard {...myBizCard} />;
-    } else {
+    }
+
+    if (loaded) {
       return (
         <a href="./biz-card-create.html" className="btn block green add-btn">
           <i className="icon s12 icon-plus"></i>

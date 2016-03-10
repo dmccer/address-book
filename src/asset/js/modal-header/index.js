@@ -12,8 +12,6 @@ export default class ModalHeader extends React.Component {
     history.back();
   }
 
-
-
   render() {
     return (
       <header className="header row">
