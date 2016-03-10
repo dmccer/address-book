@@ -14,6 +14,7 @@ export default class BizCardGroupList extends React.Component {
         <BizCardGroupItem
           {...item}
           key={`biz-card-group_${index}`}
+          onDelBizCard={this.props.onDelBizCard}
         />
       );
     });

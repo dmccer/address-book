@@ -1,5 +1,12 @@
 import React from 'react';
 
+var rAF = window.requestAnimationFrame	||
+	window.webkitRequestAnimationFrame	||
+	window.mozRequestAnimationFrame		||
+	window.oRequestAnimationFrame		||
+	window.msRequestAnimationFrame		||
+	function (callback) { window.setTimeout(callback, 1000 / 60); };
+
 export var DrawerEnhance = ComposedComponent => class extends React.Component {
   static displayName = 'ComponentEnhancedWithDrawerEventHandler';
 
@@ -81,6 +88,8 @@ export var DrawerEnhance = ComposedComponent => class extends React.Component {
     }
 
     let nextLeft = curLeft + touches.direction * touches.swipeLength;
+
+		console.log('next: ' + nextLeft);
 
     this.setState({
       touches: touches,

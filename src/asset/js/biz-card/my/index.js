@@ -16,6 +16,7 @@ import Header from '../../header/';
 import Nav from '../../nav/';
 import MainMiniCard from '../mini-card/main/';
 import BizCardGroupList from '../group-list/';
+import Confirm from '../../confirm/';
 
 import Loading from '../../loading/';
 import Toast from '../../toast/';
@@ -147,7 +148,7 @@ export default class BizCardMyPage extends React.Component {
   renderMyBizCard() {
     let myBizCard = this.state.myBizCard;
     let loaded = this.state.loaded;
-    
+
     if (loaded && myBizCard) {
       return <MainMiniCard {...myBizCard} />;
     }
@@ -160,6 +161,54 @@ export default class BizCardMyPage extends React.Component {
         </a>
       );
     }
+  }
+
+  handleClickDelBizCard(card: Object, e: Object) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    this.toRemoveBizCard = card;
+
+    this.refs.delBizCard.show({
+      msg: `是否移除名片好友${card.nikename}`
+    });
+  }
+
+  handleDelBizCard() {
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/del_my_card_friend',
+        type: 'GET',
+        cache: false,
+        data: {
+          friendly_uid: this.toRemoveBizCard.uid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success('删除名片好友成功');
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(`删除名片好友出错, ${err.message}`)
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  handleCancelDelBizCard() {
+    this.toRemoveBizCard = null;
   }
 
   render() {
@@ -179,10 +228,15 @@ export default class BizCardMyPage extends React.Component {
             </a>
           </div>
           <div className="divide"></div>
-          <BizCardGroupList items={this.state.groups} />
+          <BizCardGroupList items={this.state.groups} onDelBizCard={this.handleClickDelBizCard.bind(this)} />
           <div className="fixed-holder"></div>
         </div>
         <Nav on="biz-card" />
+        <Confirm
+          ref="delBizCard"
+          confirm={this.handleDelBizCard.bind(this)}
+          cancel={this.handleCancelDelBizCard.bind(this)}
+        />
         <Loading ref="loading" />
         <Toast ref="toast" />
       </section>

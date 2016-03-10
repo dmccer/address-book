@@ -29,7 +29,10 @@ export default class MainMiniCard extends React.Component {
         <div
           className="row cnt"
           style={{
-            left: props.left + 'px'
+            transform: `translate3d(${props.left}px, 0px, 0px)`,
+            WebkitTransform: `translate3d(${props.left}px, 0px, 0px)`,
+            transition: `transform 100ms ease`,
+            WebkitTransition: `-webkit-transform 100ms ease`
           }}
           onTouchStart={props.touchstart}
           onTouchMove={props.touchmove}

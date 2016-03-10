@@ -16,27 +16,32 @@ export default class ManageMyMiniCard extends React.Component {
   }
 
   render() {
+    let props = this.props;
+
     return (
       <div className="item">
         <div
           className="row cnt"
           style={{
-            left: this.props.left + 'px'
+            transform: `translate3d(${props.left}px, 0px, 0px)`,
+            WebkitTransform: `translate3d(${props.left}px, 0px, 0px)`,
+            transition: `transform 100ms ease`,
+            WebkitTransition: `-webkit-transform 100ms ease`
           }}
-          onTouchStart={this.props.touchstart}
-          onTouchMove={this.props.touchmove}
-          onTouchEnd={this.props.touchend}
+          onTouchStart={props.touchstart}
+          onTouchMove={props.touchmove}
+          onTouchEnd={props.touchend}
         >
-          <div className="action" onClick={this.props.onDel}>
+          <div className="action" onClick={props.onDel}>
             <i className="icon s16 icon-del"></i>
           </div>
           <div className="biz-card">
-            <MiniCard {...this.props} />
+            <MiniCard {...props} />
           </div>
         </div>
         <ul className="actions row">
           <li className="share">分享</li>
-          <li className="set-main-card" onClick={this.props.onSetMainBizCard}>设为主名片</li>
+          <li className="set-main-card" onClick={props.onSetMainBizCard}>设为主名片</li>
         </ul>
       </div>
     );

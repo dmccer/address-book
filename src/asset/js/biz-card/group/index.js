@@ -60,7 +60,12 @@ export default class BizCardGroupItem extends React.Component {
 
   renderMiniCardList() {
     if (this.state.opened) {
-      return <ManageOtherMiniCardList items={this.state.bizCards} />
+      return (
+        <ManageOtherMiniCardList
+          items={this.state.bizCards}
+          onDelBizCard={this.props.onDelBizCard}
+        />
+      );
     }
   }
 

@@ -17,6 +17,7 @@ import Promise from 'promise';
 import {FieldChangeEnhance} from '../enhance/field-change';
 import AjaxError from '../ajax-err/';
 import Validator from '../validator/';
+import TinyHeader from '../tiny-header/';
 import Loading from '../loading/';
 import Toast from '../toast/';
 import Log from '../log/';
@@ -215,7 +216,7 @@ export default class LoginPage extends React.Component {
 
     return (
       <section className="login-page">
-        <header className="header">登录</header>
+        <TinyHeader title="登录" />
         <form className="form login" onSubmit={this.handleSubmit.bind(this)}>
           <div className="field">
             <label className="icon icon-phone"></label>

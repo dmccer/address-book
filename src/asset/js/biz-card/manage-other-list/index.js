@@ -21,6 +21,7 @@ export default class ManageOtherMiniCardList extends React.Component {
         <ManageOtherMiniCard
           key={`min-card_${index}`}
           card={item}
+          onDelBizCard={this.props.onDelBizCard.bind(this, item)}
         />
       );
     });

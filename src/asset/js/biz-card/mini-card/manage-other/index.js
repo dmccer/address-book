@@ -7,7 +7,6 @@ import './index.less';
 
 import React from 'react';
 import MiniCard from '../';
-import Confirm from '../../../confirm/';
 import {DrawerEnhance} from '../../../enhance/drawer';
 
 @DrawerEnhance
@@ -24,21 +23,6 @@ export default class ManageOtherMiniCard extends React.Component {
     this.props.maxLeft(this.state.maxLeft);
   }
 
-  handleDelBizCard(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    this.refs.confirm.show({
-      msg: `是否移除${this.props.card.name}`
-    });
-  }
-
-  handleConfirmDel() {
-    // TODO
-    // 1. ajax del card
-    // 2. tip for result
-  }
-
   render() {
     let props = this.props;
 
@@ -47,7 +31,10 @@ export default class ManageOtherMiniCard extends React.Component {
         <div
           className="row cnt"
           style={{
-            left: props.left + 'px'
+            transform: `translate3d(${props.left}px, 0px, 0px)`,
+            WebkitTransform: `translate3d(${props.left}px, 0px, 0px)`,
+            transition: `transform 100ms ease`,
+            WebkitTransition: `-webkit-transform 100ms ease`
           }}
           onTouchStart={props.touchstart}
           onTouchMove={props.touchmove}
@@ -59,9 +46,8 @@ export default class ManageOtherMiniCard extends React.Component {
         </div>
         <ul className="actions row">
           <li className="personal-letter"><a href={`./private-msg-send.html?fuid=${props.card.uid}`}>私信</a></li>
-          <li className="del" onClick={this.handleDelBizCard.bind(this)}>删除</li>
+          <li className="del" onClick={props.onDelBizCard}>删除</li>
         </ul>
-        <Confirm ref="confirm" confirm={this.handleConfirmDel.bind(this)} />
       </div>
     );
   }
