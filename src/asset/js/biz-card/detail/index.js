@@ -482,7 +482,7 @@ export default class BizCardDetailPage extends React.Component {
 
     return (
       <section className="biz-card-detail-page">
-        <SubHeader title={`${bizCard.nikename}的名片`} />
+        <SubHeader title={`${bizCard.nikename || ''}的名片`} />
         <div className="profile">
           <div className="avatar">
             <a href="#" style={{

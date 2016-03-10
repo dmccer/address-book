@@ -5,12 +5,16 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Promise from 'promise';
 
+import AjaxError from '../ajax-err/';
 import WXVerify from '../wx-verify/';
 import SubHeader from '../sub-header/';
 import Share from '../share/';
 import Private from '../private/';
 import Config from '../config';
+import Loading from '../loading/';
+import Toast from '../toast/';
 
 export default class ScoreRulePage extends React.Component {
   constructor() {
@@ -36,8 +40,71 @@ export default class ScoreRulePage extends React.Component {
     });
   }
 
+  componentDidMount() {
+    this.getHistoryScore();
+  }
+
+  getHistoryScore() {
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/pim_score_list',
+        type: 'GET',
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.setState({
+          historyScoreList: res.pim_score_list
+        });
+        return;
+      }
+
+      this.refs.toast.error(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.error(`加载最近积分记录出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
   share() {
     this.refs.share.show();
+  }
+
+  zero(n) {
+    return n >= 10 ? n : `0${n}`;
+  }
+
+  formatTime(d) {
+    let mm = this.zero(d.getMonth() + 1);
+    let dd = this.zero(d.getDate());
+    let HH = this.zero(d.getHours());
+    let MM = this.zero(d.getMinutes());
+
+    return `${mm}-${dd} ${HH}:${MM}`;
+  }
+
+  renderHistoryScoreList() {
+    let list = this.state.historyScoreList;
+
+    if (list && list.length) {
+      return list.map((item, index) => {
+        return (
+          <tr key={`score-item_${index}`}>
+            <td>{this.formatTime(new Date(item.createtime))}</td>
+            <td>{item.desc}</td>
+            <td>{item.score}</td>
+          </tr>
+        );
+      });
+    }
   }
 
   render() {
@@ -96,14 +163,14 @@ export default class ScoreRulePage extends React.Component {
                 </td>
               </tr>
               <tr>
-              <td>
-                <h3>VIP 2</h3>
-                <p>600-5999 积分</p>
-              </td>
-              <td>
-                <p>好友上限: 2000 人</p>
-                <p>通讯录上限: 100 个</p>
-              </td>
+                <td>
+                  <h3>VIP 2</h3>
+                  <p>600-5999 积分</p>
+                </td>
+                <td>
+                  <p>好友上限: 2000 人</p>
+                  <p>通讯录上限: 100 个</p>
+                </td>
               </tr>
               <tr>
                 <td>
@@ -127,26 +194,14 @@ export default class ScoreRulePage extends React.Component {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>12-11 10:11</td>
-                <td>名片分享</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>12-10 10:22</td>
-                <td>每日签到</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>12-09 11:31</td>
-                <td>实名认证</td>
-                <td>300</td>
-              </tr>
+              {this.renderHistoryScoreList()}
             </tbody>
           </table>
         </section>
         <Private />
         <Share ref="share" />
+        <Loading ref="loading" />
+        <Toast ref="toast" />
       </section>
     );
   }
