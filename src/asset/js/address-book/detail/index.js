@@ -83,7 +83,7 @@ export default class ABDetailPage extends React.Component {
   getABBaseInfo() {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/addlist_cards_baseinfo',
+        url: '/pim/addlist_cards_baseinfo',
         type: 'GET',
         cache: false,
         data: {
@@ -104,7 +104,7 @@ export default class ABDetailPage extends React.Component {
   getMemberList() {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_addlist_cards',
+        url: '/pim/query_addlist_cards',
         type: 'GET',
         cache: false,
         data: {
@@ -136,7 +136,7 @@ export default class ABDetailPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/del_addlist',
+        url: '/pim/del_addlist',
         type: 'POST',
         data: {
           aid: this.state.qs.id
@@ -199,7 +199,7 @@ export default class ABDetailPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/join_addlist',
+        url: '/pim/join_addlist',
         type: 'POST',
         data: data,
         success: resolve,
@@ -299,7 +299,7 @@ export default class ABDetailPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/del_addlist_card',
+        url: '/pim/del_addlist_card',
         type: 'POST',
         data: {
           aid: this.state.qs.id,
@@ -489,7 +489,7 @@ export default class ABDetailPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/swap_card',
+        url: '/pim/swap_card',
         type: 'POST',
         data: {
           friendly_uid: this.toSwapMember.uid
@@ -534,7 +534,7 @@ export default class ABDetailPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/quit_addlist',
+        url: '/pim/quit_addlist',
         type: 'POST',
         data: {
           aid: this.state.qs.id

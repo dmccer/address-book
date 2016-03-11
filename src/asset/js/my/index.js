@@ -51,7 +51,7 @@ export default class MyPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/book_in',
+        url: '/pim/book_in',
         type: 'POST',
         success: resolve.bind(this),
         error: reject.bind(this)
@@ -86,7 +86,7 @@ export default class MyPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/fetch_uinfo',
+        url: '/pim/fetch_uinfo',
         type: 'POST',
         success: resolve.bind(this),
         error: reject.bind(this)

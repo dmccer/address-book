@@ -108,7 +108,7 @@ export default class BizCardMyPage extends React.Component {
   getMyBizCard() {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_user_card_desc',
+        url: '/pim/query_user_card_desc',
         type: 'GET',
         cache: false,
         success: resolve.bind(this),
@@ -130,7 +130,7 @@ export default class BizCardMyPage extends React.Component {
   getGroups() {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_my_card_groups',
+        url: '/pim/query_my_card_groups',
         type: 'GET',
         cache: false,
         success: resolve.bind(this),
@@ -179,7 +179,7 @@ export default class BizCardMyPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/del_my_card_friend',
+        url: '/pim/del_my_card_friend',
         type: 'GET',
         cache: false,
         data: {

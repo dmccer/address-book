@@ -49,7 +49,7 @@ export default class ScoreRulePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/pim_score_list',
+        url: '/pim/pim_score_list',
         type: 'GET',
         success: resolve,
         error: reject

@@ -22,12 +22,12 @@ import FixedHolder from '../../fixed-holder/';
 
 const ASK_URL = {
   bc: {
-    get: '/mvc/pim/query_card_askfor',
-    handle: '/mvc/pim/handle_card_askfor'
+    get: '/pim/query_card_askfor',
+    handle: '/pim/handle_card_askfor'
   },
   ab: {
-    get: '/mvc/pim/query_addlist_askfor',
-    handle: '/mvc/pim/handle_addlist_askfor'
+    get: '/pim/query_addlist_askfor',
+    handle: '/pim/handle_addlist_askfor'
   }
 };
 
@@ -159,7 +159,7 @@ export default class BizCardDetailPage extends React.Component {
       }
 
       $.ajax({
-        url: '/mvc/pim/query_user_card_desc',
+        url: '/pim/query_user_card_desc',
         type: 'GET',
         cache: false,
         data: data,
@@ -179,7 +179,7 @@ export default class BizCardDetailPage extends React.Component {
   getBizCard() {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_card_desc',
+        url: '/pim/query_card_desc',
         type: 'GET',
         data: {
           cid: this.state.qs.cid
@@ -205,7 +205,7 @@ export default class BizCardDetailPage extends React.Component {
 
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_my_card_groups',
+        url: '/pim/query_my_card_groups',
         type: 'GET',
         cache: false,
         success: resolve,
@@ -260,7 +260,7 @@ export default class BizCardDetailPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/move_my_card_friend',
+        url: '/pim/move_my_card_friend',
         type: 'POST',
         data: {
           friendly_uid: this.state.qs.uid,
@@ -299,7 +299,7 @@ export default class BizCardDetailPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/del_my_card_friend',
+        url: '/pim/del_my_card_friend',
         type: 'POST',
         data: {
           friendly_uid: this.state.qs.uid,
@@ -345,7 +345,7 @@ export default class BizCardDetailPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/set_main_card',
+        url: '/pim/set_main_card',
         type: 'POST',
         data: {
           cid: this.state.bizCard.id
@@ -380,7 +380,7 @@ export default class BizCardDetailPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/del_my_card',
+        url: '/pim/del_my_card',
         type: 'POST',
         data: {
           cid: this.state.bizCard.id

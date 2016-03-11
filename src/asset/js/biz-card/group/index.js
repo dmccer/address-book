@@ -28,7 +28,7 @@ export default class BizCardGroupItem extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_card_friends',
+        url: '/pim/query_card_friends',
         type: 'GET',
         cache: false,
         data: {

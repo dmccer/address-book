@@ -39,7 +39,7 @@ export default class BizCardManagePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_user_cards',
+        url: '/pim/query_user_cards',
         type: 'GET',
         cache: false,
         success: resolve.bind(this),
@@ -81,7 +81,7 @@ export default class BizCardManagePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/del_my_card',
+        url: '/pim/del_my_card',
         type: 'POST',
         data: {
           cid: this.confirmTempData.cid
@@ -130,7 +130,7 @@ export default class BizCardManagePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/set_main_card',
+        url: '/pim/set_main_card',
         type: 'POST',
         data: {
           cid: this.confirmTempData.cid

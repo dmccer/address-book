@@ -43,7 +43,7 @@ export default class ABPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/main_addlist_info',
+        url: '/pim/main_addlist_info',
         type: 'GET',
         cache: false,
         success: resolve.bind(this),

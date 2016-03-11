@@ -38,7 +38,7 @@ export default class MessagePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_msgs_count',
+        url: '/pim/query_msgs_count',
         type: 'GET',
         cache: false,
         success: resolve,

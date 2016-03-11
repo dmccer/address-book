@@ -52,7 +52,7 @@ export default class PrivateMsgSendPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_piv_msg',
+        url: '/pim/query_piv_msg',
         type: 'GET',
         cache: false,
         data: {
@@ -102,7 +102,7 @@ export default class PrivateMsgSendPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/send_piv_msg',
+        url: '/pim/send_piv_msg',
         type: 'POST',
         data: {
           friendly_uid: this.state.qs.fuid,

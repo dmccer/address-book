@@ -64,7 +64,7 @@ export default class LoginPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/login',
+        url: '/pim/login',
         type: 'POST',
         data: {
           tel: this.props.tel,
@@ -156,7 +156,7 @@ export default class LoginPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/send_verify_code',
+        url: '/pim/send_verify_code',
         type: 'POST',
         data: {
           tel: this.props.tel

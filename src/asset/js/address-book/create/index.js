@@ -74,7 +74,7 @@ export default class ABCreatePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/create_addlist',
+        url: '/pim/create_addlist',
         type: 'POST',
         data: {
           atype: this.state.qs.atype,

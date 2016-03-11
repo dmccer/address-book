@@ -35,7 +35,7 @@ export default class BizCardApplicationMsgListPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_notice_list',
+        url: '/pim/query_notice_list',
         type: 'GET',
         cache: false,
         data: {

@@ -62,7 +62,7 @@ export default class BizCardSwapPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_user_card_desc',
+        url: '/pim/query_user_card_desc',
         type: 'GET',
         cache: false,
         success: resolve,

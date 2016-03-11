@@ -108,7 +108,7 @@ export default class CreateBizCardPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_card_desc',
+        url: '/pim/query_card_desc',
         type: 'GET',
         data: {
           cid: this.state.qs.cid
@@ -187,7 +187,7 @@ export default class CreateBizCardPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: this.state.editMod ? '/mvc/pim/edit_card' : '/mvc/pim/create_card',
+        url: this.state.editMod ? '/pim/edit_card' : '/pim/create_card',
         type: 'POST',
         data: this.buildData(),
         success: resolve,

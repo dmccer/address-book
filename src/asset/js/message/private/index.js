@@ -34,7 +34,7 @@ export default class PrivateMsgListPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_pivmsg_list',
+        url: '/pim/query_pivmsg_list',
         type: 'GET',
         cache: false,
         data: {

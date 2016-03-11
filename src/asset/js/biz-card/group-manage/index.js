@@ -41,7 +41,7 @@ export default class BizCardGroupManagePage extends React.Component {
 
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/query_my_card_groups',
+        url: '/pim/query_my_card_groups',
         type: 'GET',
         cache: false,
         data: {
@@ -83,7 +83,7 @@ export default class BizCardGroupManagePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/create_card_group',
+        url: '/pim/create_card_group',
         type: 'POST',
         data: {
           groupname: val
@@ -125,7 +125,7 @@ export default class BizCardGroupManagePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/rename_card_group',
+        url: '/pim/rename_card_group',
         type: 'POST',
         data: {
           gid: group.id,
@@ -163,7 +163,7 @@ export default class BizCardGroupManagePage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/del_my_card_group',
+        url: '/pim/del_my_card_group',
         type: 'POST',
         data: {
           gid: group.id

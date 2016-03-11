@@ -53,7 +53,7 @@ export default class SearchBizCardPage extends React.Component {
   query() {
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/search_my_card_friends',
+        url: '/pim/search_my_card_friends',
         type: 'GET',
         cache: false,
         data: {
