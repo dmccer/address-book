@@ -423,6 +423,7 @@ export default class BizCardDetailPage extends React.Component {
           <a href={`./biz-card-certify.html?cid=${this.state.bizCard.id}&uid=${this.state.qs.uid}`} className="btn block lightBlue">名片认证</a>
           <div className="btn block lightBlue" onClick={this.handleClickSetMainBizCard.bind(this)}>设为主名片</div>
           <div className="btn block del-btn" onClick={this.handleClickRemoveMyBizCard.bind(this)}>删除名片</div>
+          <a href={`./biz-card-create.html?cid=${this.state.bizCard.id}`} className="btn block lightBlue">完善我的名片</a>
         </div>
       );
     }
@@ -576,7 +577,6 @@ export default class BizCardDetailPage extends React.Component {
           <div className="actions">
             <div className="btn block lightBlue">名片分享</div>
             {this.renderActions()}
-            <div className="btn block lightBlue">完善我的名片</div>
           </div>
           {this.renderAskActions()}
           <Popover ref="popover" />

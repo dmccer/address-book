@@ -17,6 +17,7 @@ import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';
 import {FieldChangeEnhance} from '../../enhance/field-change';
 import Validator from '../../validator/';
+import find from 'lodash/collection/find';
 import Private from '../../private/';
 import GoTop from '../../gotop/';
 import DropList from '../../droplist/';
@@ -26,58 +27,117 @@ import Loading from '../../loading/';
 import Toast from '../../toast/';
 
 const ALL = '不限';
+const VISIBILITY_ITEMS = [
+  {
+    name: '公开(所有人可见)',
+    id: 0
+  }, {
+    name: '私密(交换名片可见)',
+    id: 1
+  }
+];
+const BIZ_CARD_TYPE_ITEMS = [
+  {
+    name: '车主(我有车)',
+    id: 1
+  }, {
+    name: '货主(我有货)',
+    id: 2
+  }
+];
 
 @FieldChangeEnhance
 export default class CreateBizCardPage extends React.Component {
   state = {
+    visibilityList: VISIBILITY_ITEMS,
+    bizCardTypeList: BIZ_CARD_TYPE_ITEMS,
     dropListData: [],
     visibility: {},
-    bizCardType: {}
+    bizCardType: {},
+    qs: querystring.parse(location.search.substring(1))
   };
 
   constructor() {
     super();
   }
 
+  componentWillMount() {
+    if ($.trim(this.state.qs.cid) !== '') {
+      this.setState({
+        editMod: true
+      });
+    }
+  }
+
   componentDidMount() {
     AjaxError.init(this.refs.toast);
     Validator.config(this.refs.toast);
 
-    let visibilityList = [
-      {
-        name: '公开(所有人可见)',
-        id: 0,
-        selected: true
-      }, {
-        name: '私密(交换名片可见)',
-        id: 1
-      }
-    ];
-    let bizCardTypeList = [
-      {
-        name: '车主(我有车)',
-        id: 1,
-        selected: true
-      }, {
-        name: '货主(我有货)',
-        id: 2
-      }
-    ];
+    if ($.trim(this.state.qs.cid) !== '') {
+      this.getBizCard();
+
+      return;
+    }
+
+    this.setBizCard({
+      auth: 0,
+      ctype: 1
+    });
+  }
+
+  setBizCard(bc) {
+    let visibility = find(VISIBILITY_ITEMS, (item) => {
+      return item.id === bc.auth;
+    });
+    let bizCardType = find(BIZ_CARD_TYPE_ITEMS, (item) => {
+      return item.id === bc.ctype;
+    });
+    let fromCities = bc.start_addr ? bc.start_addr.split(',') : [];
+    let toCities = bc.end_addr ? bc.end_addr.split(',') : [];
 
     this.setState({
-      visibilityList: visibilityList,
-      bizCardTypeList: bizCardTypeList,
-      visibility: visibilityList[0],
-      bizCardType: bizCardTypeList[0],
-      fromCities: [],
-      toCities: []
+      visibility: visibility,
+      bizCardType: bizCardType,
+      fromCities: fromCities,
+      toCities: toCities
     });
+  }
+
+  getBizCard() {
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/mvc/pim/query_card_desc',
+        type: 'GET',
+        data: {
+          cid: this.state.qs.cid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.setBizCard(res.card);
+        this.props.setFields(res.card);
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`加载名片出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });;
   }
 
   validate() {
     let props = this.props;
 
-    return Validator.test('required', '姓名不能为空', props.nickname) &&
+    return Validator.test('required', '姓名不能为空', props.nikename) &&
       Validator.test('required', '手机号不能为空', props.tel) &&
       Validator.test('len', '手机号格式不正确', props.tel, 11);
   }
@@ -89,7 +149,7 @@ export default class CreateBizCardPage extends React.Component {
     let data = {
       ctype: state.bizCardType.id,
       auth: state.visibility.id,
-      nikename: props.nickname,
+      nikename: props.nikename,
       tel: props.tel,
       wechat: props.wechat,
       qq: props.qq,
@@ -127,7 +187,7 @@ export default class CreateBizCardPage extends React.Component {
 
     new Promise((resolve, reject) => {
       $.ajax({
-        url: '/mvc/pim/create_card',
+        url: this.state.editMod ? '/mvc/pim/edit_card' : '/mvc/pim/create_card',
         type: 'POST',
         data: this.buildData(),
         success: resolve,
@@ -160,6 +220,12 @@ export default class CreateBizCardPage extends React.Component {
     });
   }
 
+  toggleMoreFields() {
+    this.setState({
+      showMore: !this.state.showMore
+    });
+  }
+
   toggleDropList(field: String, e: Object) {
     if (field === this.state.currentDropField) {
       this.refs.droplist.cancel();
@@ -173,22 +239,10 @@ export default class CreateBizCardPage extends React.Component {
     });
 
     let offset = $(e.currentTarget).offset();
-    this.refs.droplist.show(offset.top + offset.height + 1);
-  }
-
-  toggleMoreFields() {
-    this.setState({
-      showMore: !this.state.showMore
-    });
+    this.refs.droplist.show(offset.top + offset.height + 1, this.state[field]);
   }
 
   handleDropListSelect(item: Object) {
-    this.state.dropListData.forEach((item) => {
-      item.selected = false;
-    });
-
-    item.selected = true;
-
     this.setState({
       [this.state.currentDropField]: item
     });
@@ -204,9 +258,7 @@ export default class CreateBizCardPage extends React.Component {
     let selected = args.filter((arg) => {
       return !!arg;
     });
-
     let lastIndex = selected.length - 1;
-
     if (selected[lastIndex] === ALL) {
       selected.splice(lastIndex, 1);
     }
@@ -216,15 +268,12 @@ export default class CreateBizCardPage extends React.Component {
 
   handleSelectedAddress(...args) {
     let address = this.formatAddress(args);
-
     if (address === '') {
       return;
     }
 
     let field = this.state.currentSelectAddressField;
-
     let addresses = this.state[field];
-
     if (addresses.indexOf(address) === -1) {
       addresses.push(address);
 
@@ -358,8 +407,8 @@ export default class CreateBizCardPage extends React.Component {
                 type="text"
                 className="control"
                 placeholder="姓名"
-                value={props.nickname}
-                onChange={props.handleStrChange.bind(this, 'nickname')} />
+                value={props.nikename}
+                onChange={props.handleStrChange.bind(this, 'nikename')} />
               <i className="star">*</i>
             </div>
             <div className="field required">
