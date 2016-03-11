@@ -101,6 +101,10 @@ export var FieldChangeEnhance = ComposedComponent => class extends React.Compone
     });
   }
 
+  setFields(fields: Object) {
+    this.setState(fields);
+  }
+
   clear(field: String) {
     this.setState({
       [field]: null
@@ -119,6 +123,7 @@ export var FieldChangeEnhance = ComposedComponent => class extends React.Compone
         handleLimitStrChange={this.handleLimitStrChange.bind(this)}
         clear={this.clear.bind(this)}
         set={this.set.bind(this)}
+        setFields={this.setFields.bind(this)}
       />
     );
   }

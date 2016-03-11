@@ -16,6 +16,7 @@
     "react-dom": "^0.14.5",
     "react-iscroll": "^1.0.0",
     "react-slick": "^0.9.3",
+    "react-swipeable": "^3.1.0",
     "react-tap-event-plugin": "^0.2.2",
     "zepto": "https://github.com/madrobby/zepto/tarball/v1.1.6"
   },

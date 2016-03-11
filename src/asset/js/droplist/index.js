@@ -22,10 +22,11 @@ export default class DropList extends React.Component {
     super();
   }
 
-  show(top: Number) {
+  show(top: Number, selected: Object) {
     this.setState({
       top: top,
-      on: true
+      on: true,
+      selected: selected
     });
   }
 
@@ -44,16 +45,25 @@ export default class DropList extends React.Component {
   }
 
   handleSelect(item: Object) {
+    if (item === this.state.selected) {
+      return;
+    }
+
+    this.setState({
+      selected: item
+    });
+
     this.props.onSelect(item);
     this.close();
   }
 
   render() {
     let top = this.state.top;
+    let selectedDropItem = this.state.selected || {};
     let cxs = cx('droplist', this.state.on ? 'on' : '');
 
     let list = this.props.items.map((item) => {
-      let selected = item.selected ? <i className="icon icon-tick"></i> : null;
+      let selected = selectedDropItem.id === item.id ? <i className="icon icon-tick"></i> : null;
 
       return (
         <div
