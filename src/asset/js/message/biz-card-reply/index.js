@@ -8,6 +8,7 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import querystring from 'querystring';
 
 import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';

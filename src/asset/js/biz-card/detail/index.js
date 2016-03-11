@@ -450,7 +450,7 @@ export default class BizCardDetailPage extends React.Component {
       this.refs.toast.warn(res.msg);
     }).catch((err) => {
       if (err && err instanceof Error) {
-        this.refs.toast.warn(`加载名片认证信息出错,${err.message}`);
+        this.refs.toast.warn(`加载实名认证信息出错,${err.message}`);
       }
     }).done(() => {
       this.refs.loading.close();
@@ -473,7 +473,7 @@ export default class BizCardDetailPage extends React.Component {
     if (account.holder_flag) {
       return (
         <div>
-          <a href={`./biz-card-certify.html?cid=${this.state.bizCard.id}&uid=${this.state.qs.uid}`} className="btn block lightBlue">名片认证</a>
+          <a href={`./biz-card-certify.html?cid=${this.state.bizCard.id}&uid=${this.state.qs.uid}`} className="btn block lightBlue">实名认证</a>
           <div className="btn block lightBlue" onClick={this.handleClickSetMainBizCard.bind(this)}>设为主名片</div>
           <div className="btn block del-btn" onClick={this.handleClickRemoveMyBizCard.bind(this)}>删除名片</div>
           <a href={`./biz-card-create.html?cid=${this.state.bizCard.id}`} className="btn block lightBlue">完善我的名片</a>

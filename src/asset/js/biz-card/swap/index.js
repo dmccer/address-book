@@ -10,6 +10,7 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import querystring from 'querystring';
 
 import AjaxError from '../../ajax-err/';
 import Header from '../../header/';
@@ -99,11 +100,42 @@ export default class BizCardSwapPage extends React.Component {
     wx.scanQRCode({
       needResult: 1,
       scanType: ["qrCode"],
-      success: function (res) {
+      success: (res) => {
         var result = res.resultStr;
-
-        alert(JSON.stringify(res));
+        this.handleSwapBizCard(querystring.parse(result.split('?')[1]).friendly_uid);
       }
+    });
+  }
+
+  handleSwapBizCard(uid) {
+    this.refs.loading.show('请求中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/pim/swap_card',
+        type: 'POST',
+        data: {
+          friendly_uid: uid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.toast.success(res.msg);
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.warn(`交换名片出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
     });
   }
 

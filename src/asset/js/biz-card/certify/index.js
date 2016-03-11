@@ -29,7 +29,7 @@ export default class BizCardCertifyPage extends React.Component {
     WXVerify({
       appId: Config.wxAppId,
       url: Config.wxSignatureUrl,
-      jsApiList: ['uploadImage']
+      jsApiList: ['chooseImage', 'uploadImage']
     }, (err) => {
       if (err) {
         // 微信验证失败处理
@@ -55,8 +55,13 @@ export default class BizCardCertifyPage extends React.Component {
     wx.chooseImage({
       success: (res) => {
         if (res.localIds && res.localIds.length) {
-          this.setState({
-            [field]: res.localIds[0]
+          wx.uploadImage({
+            localId: res.localIds[0],
+            success: (res) => {
+              this.setState({
+                [field]: res.serverId
+              });
+            }
           });
         }
       }
@@ -106,7 +111,7 @@ export default class BizCardCertifyPage extends React.Component {
   render() {
     return (
       <section className="biz-card-certify-page mini-page">
-        <SubHeader title="名片认证" />
+        <SubHeader title="实名认证" />
 
         <div className="biz-card-certify">
           <div className={cx('field', this.state.bizCard ? 'on' : '')}>
@@ -131,7 +136,7 @@ export default class BizCardCertifyPage extends React.Component {
             <button
               type="button"
               className="btn block green"
-              onClick={this.handleSubmit.bind(this)}>申请名片认证</button>
+              onClick={this.handleSubmit.bind(this)}>申请实名认证</button>
           </div>
         </div>
         <Private />

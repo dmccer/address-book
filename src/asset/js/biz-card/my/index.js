@@ -191,6 +191,7 @@ export default class BizCardMyPage extends React.Component {
     }).then((res) => {
       if (res.retcode === 0) {
         this.refs.toast.success('删除名片好友成功');
+        this.fetch();
 
         return;
       }

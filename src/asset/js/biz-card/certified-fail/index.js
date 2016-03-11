@@ -16,7 +16,7 @@ export default class BizCardCertifiedFailPage extends React.Component {
   render() {
     return (
       <section className="biz-card-certified-fail-page mini-page">
-        <SubHeader title="名片认证" />
+        <SubHeader title="实名认证" />
         <div className="biz-card-certified-fail">
           <div className="certified-fail-tip">
             <i className="icon s32 icon-popover-error"></i>

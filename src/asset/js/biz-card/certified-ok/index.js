@@ -41,7 +41,7 @@ export default class BizCardCertifiedOKPage extends React.Component {
       });
     }).then((res) => {
       if (res.retcode === 0) {
-        // 设置名片认证通过时间
+        // 设置实名认证通过时间
 
         return;
       }
@@ -59,7 +59,7 @@ export default class BizCardCertifiedOKPage extends React.Component {
   render() {
     return (
       <section className="biz-card-certified-ok-page mini-page">
-        <SubHeader title="名片认证" />
+        <SubHeader title="实名认证" />
         <div className="biz-card-certified-ok">
           <div className="certified-ok-tip">
             <i className="icon s32 icon-popover-success"></i>

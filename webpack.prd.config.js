@@ -90,7 +90,7 @@ module.exports = {
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
-      title: '名片认证 - 货运通讯录',
+      title: '实名认证 - 货运通讯录',
       template: './src/page/index.html',
       filename: 'biz-card-certify.html',
       chunks: ['lib-react', 'zepto', 'biz-card-certify'],

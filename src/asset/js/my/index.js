@@ -112,6 +112,39 @@ export default class MyPage extends React.Component {
     });
   }
 
+  renderCertify() {
+    let verifyFlag = this.state.account.verifyFlag;
+
+    if (this.state.account.verifyFlag === 3) {
+      return (
+        <button className="btn line blue" disabled type="button">已实名认证</button>
+      );
+    }
+
+    let url;
+    switch (verifyFlag) {
+      case 0:
+        url = '/biz-card-certify.html';
+        break;
+      case 1:
+        url = '/biz-card-certified.html';
+        break;
+      case 2:
+        url = '/biz-card-certified-ok.html';
+        break;
+      default:
+        url = '/biz-card-certify.html';
+    }
+
+    let qs = querystring.stringify({
+      uid: this.state.account.id
+    });
+
+    return (
+      <a href={`${url}?${qs}`} className="btn line blue" type="button">实名认证</a>
+    );
+  }
+
   render() {
     let account = this.state.account;
     return (
@@ -140,9 +173,7 @@ export default class MyPage extends React.Component {
               type="button"
               disabled={!this.state.signinable}
               onClick={this.handleSignin.bind(this)}>{this.state.signinable ? '签到' : '已签到'}</button>
-            {
-              // <button className="btn line blue" type="button">退出账号</button>
-            }
+            {this.renderCertify()}
           </div>
           <Popover ref="popover" />
         </section>
