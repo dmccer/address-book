@@ -404,6 +404,59 @@ export default class BizCardDetailPage extends React.Component {
     });
   }
 
+  certify() {
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/pim/query_my_card_verify',
+        type: 'GET',
+        data: {
+          cid: this.state.bizCard.id
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        let qs = querystring.stringify({
+          cid: this.state.bizCard.id,
+          uid: this.state.qs.uid
+        });
+
+        let page;
+
+        switch (res.verifyFlag) {
+          case 0:
+            page = '/biz-card-certify.html';
+            break;
+          case 1:
+            page = '/biz-card-certified.html';
+            break;
+          case 2:
+            page = '/biz-card-certified-ok.html';
+            break;
+          case 3:
+            page = '/biz-card-certified-fail.html';
+            break;
+          default:
+            page = '/biz-card-certify.html';
+        }
+
+        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `${page}?${qs}`);
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`加载名片认证信息出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
   renderRoutes(routes) {
     if (routes && routes.length) {
       return routes.map((route, index) => {

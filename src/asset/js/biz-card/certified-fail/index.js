@@ -24,7 +24,7 @@ export default class BizCardCertifiedFailPage extends React.Component {
           </div>
           <p className="certified-fail-msg">认证没有通过，请上传真实清晰的证件照片！</p>
 
-          <button className="btn block lightBlue">重新上传资料</button>
+          <a href={`./biz-card-certify.html?${location.search.substring(1)}`} className="btn block lightBlue">重新上传资料</a>
         </div>
 
         <Private />

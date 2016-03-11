@@ -313,6 +313,11 @@ module.exports = {
         target: 'http://localhost:3000',
         secure: false
       },
+      '/pim/*': {
+        // target: 'http://m.yqkyun.com/',
+        target: 'http://api.ttyhuo.com:83/mvc/',
+        secure: false
+      },
       '/mvc/pim/*': {
         target: 'http://api.ttyhuo.com:83',
         secure: false
