@@ -172,12 +172,27 @@ export default class ABDetailPage extends React.Component {
       this.refs.prompt.show({
         title: question
       });
+
+      this.question = true;
+      return;
     }
+
+    this.refs.joinAB.show({
+      msg: '是否加入该通讯录?'
+    });
   }
 
   handleJoinAB(val) {
-    if (val === '') {
-      return;
+    let data = {
+      aid: this.state.qs.id
+    }
+
+    if (this.question) {
+      if (val === '') {
+        return;
+      }
+
+      data.answer = val;
     }
 
     this.refs.loading.show('请求中...');
@@ -186,10 +201,7 @@ export default class ABDetailPage extends React.Component {
       $.ajax({
         url: '/mvc/pim/join_addlist',
         type: 'POST',
-        data: {
-          aid: this.state.qs.id,
-          answer: val
-        },
+        data: data,
         success: resolve,
         error: reject
       });
@@ -256,6 +268,10 @@ export default class ABDetailPage extends React.Component {
           {joinAB}
           <Prompt
             ref="prompt"
+            confirm={this.handleJoinAB.bind(this)}
+          />
+          <Confirm
+            ref="joinAB"
             confirm={this.handleJoinAB.bind(this)}
           />
           <Confirm
@@ -408,7 +424,7 @@ export default class ABDetailPage extends React.Component {
           {this.renderABCreated()}
           {this.renderABMembers()}
           <h2 className="accordion-hd">疑难帮助</h2>
-          <div className="help accordion access">
+          <div className="help accordion">
             <div className="media-box">
               <h3 className="media-box-title">
                 <i className="icon green icon-dot"></i>
