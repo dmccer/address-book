@@ -147,13 +147,21 @@ body {
   z-index: 10;
 }
 
+.member-actions-wrapper {
+  display: none;
+
+  &.on {
+    display: block;
+  }
+}
+
 .member-actions {
   position: fixed;
   bottom: 0;
   width: 100%;
   left: 0;
-  opacity: .8;
-  z-index: 10;
+  opacity: .9;
+  z-index: 101;
 
   .btn {
     border-radius: 0;
@@ -163,7 +171,17 @@ body {
     }
   }
 
-  > div:first-child {
+  > div {
     border-right: 1px solid @c_black;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+}
+
+.cells {
+  .my-profile {
+    background-color: @white;
   }
 }
