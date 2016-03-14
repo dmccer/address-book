@@ -2,6 +2,8 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Promise from 'promise';
+import Log from '../log/';
 
 export default class Header extends React.Component {
   constructor() {
@@ -10,10 +12,39 @@ export default class Header extends React.Component {
     this.state = {};
   }
 
+  componentWillMount() {
+    this.fetchMsgCount();
+  }
+
   handleAdd() {
     this.setState({
       adding: !this.state.adding
     });
+  }
+
+  fetchMsgCount() {
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/pim/query_msgs_count',
+        type: 'GET',
+        cache: false,
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.setState({
+          hasMsg: res.total_count > 0
+        })
+        return;
+      }
+    }).catch((err) => {
+      Log.error(err);
+    });
+
+    setTimeout(() => {
+      this.fetchMsgCount();
+    }, 30*1000);
   }
 
   renderAddActions() {
@@ -30,7 +61,12 @@ export default class Header extends React.Component {
   render() {
     return (
       <header className="header row">
-        <section className="left"><a href="./message.html"><i className="icon icon-mail"></i></a></section>
+        <section className="left">
+          <a href="./message.html">
+            <i className="icon icon-mail"></i>
+          </a>
+          <i className="icon icon-dot s12"></i>
+        </section>
         <section className="center">{this.props.title}</section>
         <section className="right" onClick={this.handleAdd.bind(this)}>
           <i className="icon s20 icon-plus"></i>
