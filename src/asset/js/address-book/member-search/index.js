@@ -27,6 +27,7 @@ export default class MemberSearchPage extends React.Component {
   }
 
   componentDidMount() {
+    AjaxError.init(this.refs.toast);
     this.query();
   }
 
@@ -51,8 +52,6 @@ export default class MemberSearchPage extends React.Component {
   }
 
   query() {
-    this.refs.loading.show('加载中...');
-
     new Promise((resolve, reject) => {
       $.ajax({
         url: '/pim/query_addlist_cards',
@@ -81,8 +80,6 @@ export default class MemberSearchPage extends React.Component {
 
         this.refs.toast.warn(`加载数据出错,${err.message}`);
       }
-    }).done(() => {
-      this.refs.loading.close();
     });
   }
 
