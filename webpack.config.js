@@ -314,8 +314,8 @@ module.exports = {
         secure: false
       },
       '/pim/*': {
-        // target: 'http://m.yqkyun.com/',
-        target: 'http://api.ttyhuo.com:83/mvc/',
+        target: 'http://m.yqkyun.com/',
+        // target: 'http://api.ttyhuo.com:83/mvc/',
         secure: false
       },
       '/mvc/pim/*': {

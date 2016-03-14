@@ -124,16 +124,16 @@ export default class MyPage extends React.Component {
     let url;
     switch (verifyFlag) {
       case 0:
-        url = '/biz-card-certify.html';
+        url = './biz-card-certify.html';
         break;
       case 1:
-        url = '/biz-card-certified.html';
+        url = './biz-card-certified.html';
         break;
       case 2:
-        url = '/biz-card-certified-ok.html';
+        url = './biz-card-certified-ok.html';
         break;
       default:
-        url = '/biz-card-certify.html';
+        url = './biz-card-certify.html';
     }
 
     let qs = querystring.stringify({
