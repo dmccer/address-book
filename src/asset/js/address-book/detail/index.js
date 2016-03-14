@@ -11,9 +11,10 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise';
 import querystring from 'querystring';
 import find from 'lodash/collection/find';
+import cx from 'classnames';
 
 import AjaxError from '../../ajax-err/';
-import ABMember from '../member/';
+import ABMember from '../../biz-card/mini-card/';
 import SubHeader from '../../sub-header/';
 import Loading from '../../loading/';
 import Confirm from '../../confirm/';
@@ -24,6 +25,7 @@ import Toast from '../../toast/';
 import Log from '../../log/';
 import AB_TYPES from '../../const/abtype';
 import GoTop from '../../gotop/';
+import Mask from '../../mask/';
 
 export default class ABDetailPage extends React.Component {
 
@@ -149,7 +151,7 @@ export default class ABDetailPage extends React.Component {
         this.refs.toast.success('删除通讯录成功');
         setTimeout(() => {
           history.back();
-        }, 2000);
+        }, 1000);
         return;
       }
 
@@ -224,7 +226,13 @@ export default class ABDetailPage extends React.Component {
     });
   }
 
+  handleChangeLogo() {}
+
   renderABMembers() {
+    if (this.state.qs.create == 1) {
+      return;
+    }
+
     let memberList = this.state.memberList;
     let abInfo = this.state.abInfo;
 
@@ -238,9 +246,7 @@ export default class ABDetailPage extends React.Component {
           <ABMember
             key={`member-item_${index}`}
             {...member}
-            shouldShowVisibility={!abInfo.group_holder_flag}
             onView={this.handleToggleActiveMember.bind(this, member)}
-            onDel={this.handleClickRemoveMember.bind(this, member)}
           />
         );
       });
@@ -254,7 +260,7 @@ export default class ABDetailPage extends React.Component {
 
       return (
         <div className="member">
-          <a className="search" href="./ab-member-search.html">
+          <a className="search" href={`./ab-member-search.html?aid=${this.state.qs.id}`}>
             <i className="icon s14 icon-search"></i>
             <span>通讯录共有 {memberList.length} 人</span>
           </a>
@@ -342,7 +348,7 @@ export default class ABDetailPage extends React.Component {
   renderABCreated() {
     let memberList = this.state.memberList;
 
-    if (this.state.qs.create == 1) {
+    if (this.state.qs.create == 1 && memberList.length) {
       let member = memberList[0];
       let abInfo = this.state.abInfo;
 
@@ -367,15 +373,26 @@ export default class ABDetailPage extends React.Component {
 
   renderSetting() {
     if (this.state.atab === 'setting') {
+      let abInfo = this.state.abInfo;
+
       if (this.state.abInfo.group_holder_flag) {
         return (
           <div className="ab-setting cells cells-access">
-            <a className="cell" href="#">
+            <a className="cell" href={`./create-ab.html?aid=${this.state.qs.id}&atype=4`}>
               <div className="cell-hd">
                 <i className="icon icon-ab-edit s15"></i>
               </div>
               <div className="cell-bd">
                 <h3>修改通讯录</h3>
+              </div>
+              <div className="cell-ft"></div>
+            </a>
+            <a className="cell" href="javascript:;" onClick={this.handleChangeLogo.bind(this)}>
+              <div className="cell-hd">
+                <i className="icon icon-ab-edit s15"></i>
+              </div>
+              <div className="cell-bd">
+                <h3>更换LOGO</h3>
               </div>
               <div className="cell-ft"></div>
             </a>
@@ -473,7 +490,7 @@ export default class ABDetailPage extends React.Component {
     let activeMember = this.state.activeMember;
     if (activeMember === member) {
       this.setState({
-        activeMember: null
+        activeMember: null,
       });
 
       return;
@@ -564,20 +581,30 @@ export default class ABDetailPage extends React.Component {
     });
   }
 
+  closeMemberActions() {
+    this.setState({
+      activeMember: null
+    });
+  }
+
   renderMemberActions() {
     let activeMember = this.state.activeMember;
+    let qs;
 
     if (activeMember) {
-      let qs = querystring.stringify({
+       qs = querystring.stringify({
         cid: activeMember.cid,
         uid: activeMember.uid
       });
+    }
 
-      return (
+    return (
+      <div className={cx('member-actions-wrapper', activeMember ? 'on' : '')}>
+        <Mask type="black" click={this.closeMemberActions.bind(this)} />
         <div className="member-actions row">
           <div>
             <a
-              href={`tel:${activeMember.tel}`}
+              href={`tel:${activeMember && activeMember.tel}`}
               className="btn block lightBlue">
               拨打电话
             </a>
@@ -589,9 +616,17 @@ export default class ABDetailPage extends React.Component {
               查看详细信息
             </a>
           </div>
+          <div>
+            <a
+              href="javascript:;"
+              onClick={this.handleClickRemoveMember.bind(this, activeMember)}
+              className="btn block lightBlue">
+              删除
+            </a>
+          </div>
         </div>
-      );
-    }
+      </div>
+    );
   }
 
   render() {
