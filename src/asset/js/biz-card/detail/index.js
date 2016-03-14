@@ -568,7 +568,7 @@ export default class BizCardDetailPage extends React.Component {
           </h2>
           <dl className="info-list inline basic-info">
             <dt>手机号码:</dt>
-            <dd className="tel">{bizCard.tel}</dd>
+            <dd><a className="tel" href={`tel:${bizCard.tel}`}>{bizCard.tel}</a></dd>
           </dl>
           <dl className="info-list inline basic-info">
             <dt>微信账号:</dt>
