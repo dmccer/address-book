@@ -74,6 +74,54 @@ export default class ScoreRulePage extends React.Component {
     });
   }
 
+  certify(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/pim/query_my_card_verify',
+        type: 'GET',
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        let page;
+
+        switch (res.verifyFlag) {
+          case 0:
+            page = '/biz-card-certify.html';
+            break;
+          case 1:
+            page = '/biz-card-certified.html';
+            break;
+          case 2:
+            page = '/biz-card-certified-ok.html';
+            break;
+          case 3:
+            page = '/biz-card-certified-fail.html';
+            break;
+          default:
+            page = '/biz-card-certify.html';
+        }
+
+        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `${page}?${qs}`);
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`加载实名认证信息出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
   share() {
     this.refs.share.show();
   }
@@ -125,21 +173,21 @@ export default class ScoreRulePage extends React.Component {
             <li>
               <i className="icon s12 icon-li"></i>
               <p>
-                <a href="#" onClick={this.share.bind(this)}>分享主名片</a>
+                <a href="javascript:;" onClick={this.share.bind(this)}>分享主名片</a>
                 <span>，可获得 1 积分，每天最多 10 积分</span>
               </p>
             </li>
             <li>
               <i className="icon s12 icon-li"></i>
               <p>
-                <a href="#">实名认证</a>
+                <a href="javascript:;" onClick={this.certify.bind(this)}>实名认证</a>
                 <span>并通过，可获得 300 积分，每个用户只能获取一次</span>
               </p>
             </li>
             <li>
               <i className="icon s12 icon-li"></i>
               <p>
-                <a href="#">新建名片</a>
+                <a href="./biz-card-create.html">新建名片</a>
                 <span>，资料填写完整度 100%，可获得 200 积分，每个用户只能获取一次</span>
               </p>
             </li>

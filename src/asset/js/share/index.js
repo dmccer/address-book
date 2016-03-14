@@ -111,26 +111,9 @@ export default class Share extends React.Component {
     let shareClassNames = cx('share', this.state.on ? 'on' : '');
 
     return this.state.on ? (
-      <div className={shareClassNames}>
-        <Mask type="black" click={this.handleMaskClick.bind(this)} />
-        <ul className="share-list grid">
-          <li onClick={this.shareToWeiXin.bind(this)}>
-            <i className="icon s44 icon-weixin"></i>
-            <span>微信</span>
-          </li>
-          <li onClick={this.shareToPengYouQuan.bind(this)}>
-            <i className="icon s44 icon-pengyouquan"></i>
-            <span>朋友圈</span>
-          </li>
-          <li onClick={this.shareToQQ.bind(this)}>
-            <i className="icon s44 icon-qq"></i>
-            <span>QQ</span>
-          </li>
-          <li onClick={this.shareToQzone.bind(this)}>
-            <i className="icon s44 icon-qzone"></i>
-            <span>QQ空间</span>
-          </li>
-        </ul>
+      <div className={shareClassNames} onClick={this.handleMaskClick.bind(this)}>
+        <Mask type="white" />
+        <div className="tip"></div>
       </div>
     ) : null;
   }
