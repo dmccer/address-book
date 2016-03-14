@@ -589,13 +589,24 @@ export default class ABDetailPage extends React.Component {
 
   renderMemberActions() {
     let activeMember = this.state.activeMember;
-    let qs;
+    let qs, del;
 
     if (activeMember) {
        qs = querystring.stringify({
         cid: activeMember.cid,
         uid: activeMember.uid
       });
+
+      del = this.state.abInfo.group_holder_flag ? (
+        <div>
+          <a
+            href="javascript:;"
+            onClick={this.handleClickRemoveMember.bind(this, activeMember)}
+            className="btn block lightBlue">
+            删除
+          </a>
+        </div>
+      ) : null;
     }
 
     return (
@@ -616,14 +627,7 @@ export default class ABDetailPage extends React.Component {
               查看详细信息
             </a>
           </div>
-          <div>
-            <a
-              href="javascript:;"
-              onClick={this.handleClickRemoveMember.bind(this, activeMember)}
-              className="btn block lightBlue">
-              删除
-            </a>
-          </div>
+          {del}
         </div>
       </div>
     );
