@@ -157,16 +157,18 @@ export default class MyPage extends React.Component {
               backgroundSize: 'contain'
             }}></a>
           </div>
-          <ul className="vip-score grid">
-            <li className="vip">
-              <span>当前等级:</span>
-              <b>VIP {account.level}</b>
-            </li>
-            <li className="score">
-              <span>您的积分:</span>
-              <b><a href="./score-rule.html">{account.score}</a></b>
-            </li>
-          </ul>
+          <a href="./score-rule.html" className="vip-score-link">
+            <ul className="vip-score grid">
+              <li className="vip">
+                <span>当前等级:</span>
+                <b>VIP {account.level}</b>
+              </li>
+              <li className="score">
+                <span>您的积分:</span>
+                <b>{account.score}</b>
+              </li>
+            </ul>
+          </a>
           <div className="btns">
             <button
               className="btn block red sigin-btn"
