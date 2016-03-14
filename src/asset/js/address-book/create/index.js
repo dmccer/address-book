@@ -22,6 +22,7 @@ import Loading from '../../loading/';
 import Private from '../../private/';
 import Toast from '../../toast/';
 import Log from '../../log/';
+import FixedHolder from '../../fixed-holder/';
 
 @FieldChangeEnhance
 export default class ABCreatePage extends React.Component {
@@ -49,8 +50,68 @@ export default class ABCreatePage extends React.Component {
     super();
   }
 
+  componentWillMount() {
+    this.setState({
+      editMod: $.trim(this.state.qs.aid) !== ''
+    });
+  }
+
   componentDidMount() {
     AjaxError.init(this.refs.toast);
+
+    if (this.state.editMod) {
+      this.fetch();
+    }
+  }
+
+  fetch() {
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/pim/addlist_cards_baseinfo',
+        type: 'GET',
+        cache: false,
+        data: {
+          aid: this.state.qs.aid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        let abInfo = res.addlist_card;
+
+        this.props.setFields({
+          aname: abInfo.aname,
+          adesc: abInfo.adesc,
+          aquestion: abInfo.aquestion
+        });
+
+        let bizCardFields = this.state.bizCardFields;
+        bizCardFields.forEach((field) => {
+          if (abInfo.arequires.indexOf(field.value) !== -1) {
+            field.selected = true;
+          }
+        });
+        this.setState({
+          abInfo: abInfo,
+          bizCardFields: bizCardFields
+        });
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+        if (err && err instanceof Error) {
+          Log.error(err);
+
+          this.refs.toast.warn(`加载数据出错,${err.message}`);
+        }
+    }).done(() => {
+        this.refs.loading.close();
+    });
   }
 
   validate() {
@@ -152,7 +213,7 @@ export default class ABCreatePage extends React.Component {
 
     return (
       <section className="ab-create-page">
-        <SubHeader title="新建通讯录" />
+        <SubHeader title={`${this.state.editMod ? '编辑' : '新建'}通讯录`} />
         <div className="ab-create">
           <form className="form" onSubmit={this.handleSubmit.bind(this)}>
             <div className="ab-name field">
@@ -197,6 +258,7 @@ export default class ABCreatePage extends React.Component {
           </form>
         </div>
         <Private />
+        <FixedHolder height="44" />
         <Loading ref="loading" />
         <Toast ref="toast" />
       </section>
