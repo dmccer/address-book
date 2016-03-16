@@ -53,19 +53,21 @@ export default class Header extends React.Component {
         <ul className="actions">
           <li><a href="./select-ab-type.html">新建通讯录</a></li>
           <li><a href="./biz-card-create.html">新建名片</a></li>
+          <li><a href="./biz-card-manage.html">名片管理</a></li>
         </ul>
       );
     }
   }
 
   render() {
+    let msgCountTip = this.state.hasMsg ? <i className="icon icon-dot s12"></i> : null;
     return (
       <header className="header row">
         <section className="left">
           <a href="./message.html">
             <i className="icon icon-mail"></i>
           </a>
-          <i className="icon icon-dot s12"></i>
+          {msgCountTip}
         </section>
         <section className="center">{this.props.title}</section>
         <section className="right" onClick={this.handleAdd.bind(this)}>
