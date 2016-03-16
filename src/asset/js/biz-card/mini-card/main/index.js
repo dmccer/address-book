@@ -26,19 +26,16 @@ export default class MainMiniCard extends React.Component {
     this.props.maxLeft(this.maxLeft);
   }
 
-  handleSwiping(e, deltax) {
-    console.log(deltax);
-  }
-
   render() {
     let props = this.props;
+    // onSwipedLeft={props.swipedLeft}
+    // onSwipedRight={props.swipedRight}
 
     return (
       <div className="item">
         <Swipeable
-          onSwipedLeft={props.swipedLeft}
-          onSwipedRight={props.swipedRight}
-          onSwipingLeft={this.handleSwiping.bind(this)}
+          onSwipingLeft={props.swipedLeft.bind(this)}
+          onSwipingRight={props.swipedRight.bind(this)}
           delta={3}>
           <div
             className="row cnt"
