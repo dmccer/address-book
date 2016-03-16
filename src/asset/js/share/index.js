@@ -20,25 +20,33 @@ export default class Share extends React.Component {
     });
   }
 
-  shareToWeiXin() {
+  /**
+   * [shareToWeiXin description]
+   * @param  {[type]} opts={} [description]
+   * @return
+   *
+   * {
+     title: '', // 分享标题
+     desc: '', // 分享描述
+     link: '', // 分享链接
+     imgUrl: '', // 分享图标
+     type: '', // 分享类型,music、video或link，不填默认为link
+     dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+     success: function () {
+       // 用户确认分享后执行的回调函数
+     },
+     cancel: function () {
+       // 用户取消分享后执行的回调函数
+     }
+   }
+   *
+   */
+  shareToWeiXin(opts={}) {
     if (!this.props.wxReady) {
       return;
     }
 
-    wx.onMenuShareAppMessage({
-      title: '', // 分享标题
-      desc: '', // 分享描述
-      link: '', // 分享链接
-      imgUrl: '', // 分享图标
-      type: '', // 分享类型,music、video或link，不填默认为link
-      dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-      success: function () {
-        // 用户确认分享后执行的回调函数
-      },
-      cancel: function () {
-        // 用户取消分享后执行的回调函数
-      }
-    });
+    wx.onMenuShareAppMessage(opts);
   }
 
   shareToPengYouQuan() {

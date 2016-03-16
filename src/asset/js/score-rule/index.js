@@ -17,10 +17,10 @@ import Loading from '../loading/';
 import Toast from '../toast/';
 
 export default class ScoreRulePage extends React.Component {
+  state = {};
+
   constructor() {
     super();
-
-    this.state = {};
   }
 
   componentWillMount() {
@@ -42,6 +42,37 @@ export default class ScoreRulePage extends React.Component {
 
   componentDidMount() {
     this.getHistoryScore();
+  }
+
+  getMainBizCardInfo() {
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/pim/query_user_card_desc',
+        type: 'GET',
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.setState({
+          card: res.card
+        });
+
+        return;
+      }
+
+      this.refs.toast.error(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        Log.error(err);
+
+        this.refs.toast.error(`加载主名片信息出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
   }
 
   getHistoryScore() {
@@ -124,6 +155,8 @@ export default class ScoreRulePage extends React.Component {
 
   share() {
     this.refs.share.show();
+
+    this.getMainBizCardInfo();
   }
 
   zero(n) {
@@ -202,31 +235,31 @@ export default class ScoreRulePage extends React.Component {
             <tbody>
               <tr className="on">
                 <td>
-                  <h3>VIP 1</h3>
+                  <h3><i className="icon icon-vip-1"></i></h3>
                   <p>0-599 积分</p>
                 </td>
                 <td>
-                  <p>好友上限: 500 人</p>
+                  <p>好友上限: 100 人</p>
                   <p>通讯录上限: 10 个</p>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <h3>VIP 2</h3>
+                  <h3><i className="icon icon-vip-2"></i></h3>
                   <p>600-5999 积分</p>
                 </td>
                 <td>
-                  <p>好友上限: 2000 人</p>
-                  <p>通讯录上限: 100 个</p>
+                  <p>好友上限: 200 人</p>
+                  <p>通讯录上限: 20 个</p>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <h3>VIP 3</h3>
+                  <h3><i className="icon icon-vip-3"></i></h3>
                   <p>6000+ 积分</p>
                 </td>
                 <td>
-                  <p>好友上限: 10000 人</p>
+                  <p>好友上限: 1000 人</p>
                   <p>通讯录上限: 800 个</p>
                 </td>
               </tr>
