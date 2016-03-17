@@ -135,7 +135,7 @@ export default class MessagePage extends React.Component {
           <div className="cells cells-access">
             <a className="cell" href="./private-msg-list.html">
               <div className="cell-bd cell_primary">
-                <p>名片好友</p>
+                <p>好友私信</p>
               </div>
               <div className="cell-ft">
               {this.renderMsgCount(5)}
