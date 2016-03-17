@@ -21,6 +21,13 @@ let Validator = {
     return s.length === size;
   },
 
+  licenseplate: (s) => {
+    s = $.trim(s);
+    let re = /^[\u4E00-\u9FA5]{1}[A-Z0-9]{6}$/;
+
+    return re.test(s);
+  },
+
   test: (rule, msg, ...args) => {
     let r = Validator[rule].apply(Validator, args);
 

@@ -153,7 +153,7 @@ export default class MyPage extends React.Component {
         <section className="my">
           <div className="avatar">
             <a href="#" style={{
-              backgroundImage: `url(${account.photo || 'http://imgsize.ph.126.net/?imgurl=http://img1.ph.126.net/3rXw868LDcauo0vm_tcVtQ==/6598101108623504221.jpg_188x188x1.jpg'})`,
+              backgroundImage: `url(${account.photo})`,
               backgroundSize: 'contain'
             }}></a>
           </div>
@@ -161,7 +161,7 @@ export default class MyPage extends React.Component {
             <ul className="vip-score grid">
               <li className="vip">
                 <span>当前等级:</span>
-                <b>VIP {account.level}</b>
+                <i className={`icon icon-vip-${account.level}`}></i>
               </li>
               <li className="score">
                 <span>您的积分:</span>

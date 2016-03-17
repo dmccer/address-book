@@ -11,7 +11,6 @@ import querystring from 'querystring';
 import AjaxError from '../ajax-err/';
 import WXVerify from '../wx-verify/';
 import SubHeader from '../sub-header/';
-
 import Private from '../private/';
 import Config from '../config';
 import Loading from '../loading/';
@@ -52,48 +51,6 @@ export default class ScoreRulePage extends React.Component {
     this.getHistoryScore();
   }
 
-  getBizCardDetail(user) {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_card_desc',
-        type: 'GET',
-        cache: false,
-        data: {
-          cid: user.cid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        return {
-          user: user,
-          card: res.card
-        };
-      }
-
-      this.refs.toast.warn(res.msg);
-    });
-  }
-
-  getMainBizCardMin() {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_user_card_desc',
-        type: 'GET',
-        cache: false,
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        return res.card;
-      }
-
-      this.refs.toast.error(res.msg);
-    });
-  }
-
   getHistoryScore() {
     this.ajaxHelper.one(MyRecentScoreActionList, res => {
       this.setState({
@@ -131,6 +88,11 @@ export default class ScoreRulePage extends React.Component {
   }
 
   share() {
+    if (!this.state.wxReady) {
+      this.refs.toast.warn('等待微信验证...');
+      return;
+    }
+
     this.ajaxHelper.one(MainBizCard, res => {
       let user = res.card;
 
@@ -282,6 +244,5 @@ export default class ScoreRulePage extends React.Component {
     );
   }
 }
-
 
 ReactDOM.render(<ScoreRulePage />, document.querySelector('.page'));
