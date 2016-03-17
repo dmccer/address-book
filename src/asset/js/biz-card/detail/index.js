@@ -8,8 +8,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import querystring from 'querystring';
 import Promise from 'promise';
+import cx from 'classnames';
 
+import AjaxHelper from '../../ajax-helper/';
 import AjaxError from '../../ajax-err/';
+import Config from '../../config';
+import WXVerify from '../../wx-verify/';
 import SubHeader from '../../sub-header/';
 import Private from '../../private/';
 import Selector from '../../selector/';
@@ -18,7 +22,20 @@ import Popover from '../../popover/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
 import Log from '../../log/';
+import Share from '../../share/';
 import FixedHolder from '../../fixed-holder/';
+import {
+  MainBizCard,
+  BizCardDetail,
+  BizCardAskStatus,
+  HandleBizCardAsk,
+  ChangeGroupOfFriend,
+  BizCardGroups,
+  SetMainBizCard,
+  RemoveFriendBizCard,
+  DelMyBizCard
+} from '../model/';
+import {MyVerifyInfo} from '../../my/model/';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // 因为 iscroll 禁用了 click 事件，
 // 若启用 iscroll click, 会对其他默认滚动列表，滚动时触发 click
@@ -49,67 +66,55 @@ export default class BizCardDetailPage extends React.Component {
     super();
   }
 
+  componentWillMount() {
+    WXVerify({
+      appId: Config.wxAppId,
+      url: Config.wxSignatureUrl,
+      jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone']
+    }, (err) => {
+      if (err) {
+        // 微信验证失败处理
+        return;
+      }
+
+      this.setState({
+        wxReady: true
+      });
+    });
+  }
+
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
 
     this.fetch();
   }
 
   fetch() {
-    this.refs.loading.show('加载中...');
-
-    let reqs = [this.getAccountInfo(), this.getBizCard()];
+    let qs = this.state.qs;
+    let reqs = [MainBizCard, BizCardDetail];
+    let params = [[qs.uid], [qs.cid]];
 
     // 消息审核状态
-    if (this.state.qs.askid) {
-      reqs.push(this.getAskStatus());
+    if (qs.askid) {
+      reqs.push(BizCardAskStatus);
+      params.push([qs.askType, qs.askid]);
     }
 
-    Promise
-      .all(reqs)
-      .then((args) => {
-        let state = {
-          account: args[0],
-          bizCard: args[1]
-        };
+    this.ajaxHelper.all(reqs, res => {
+      let account = res[0].card;
+      account.holder_flag = res[0].holder_flag;
 
-        if (args[2]) {
-          state.askfor = args[2];
-        }
+      let r = {
+        account: account,
+        bizCard: res[1].card
+      };
 
-        this.setState(state);
-      })
-      .catch((err) => {
-        if (err && err instanceof Error) {
-          this.refs.toast.warn(`加载数据出错,${err.message}`);
-        }
-      })
-      .done(() => {
-        this.refs.loading.close();
-      });
-  }
-
-  getAskStatus() {
-    let askType = this.state.qs.askType;
-
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: ASK_URL[askType].get,
-        type: 'GET',
-        cache: false,
-        data: {
-          askfor: this.state.qs.askid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        return res.ask_for;
+      if (res[2] && res[2].ask_for) {
+        r.askfor = res[2].ask_for;
       }
 
-      this.refs.toast.warn(res.msg);
-    });
+      this.setState(r);
+    }, ...params);
   }
 
   handleClickAsk(val) {
@@ -121,84 +126,11 @@ export default class BizCardDetailPage extends React.Component {
   }
 
   handleAsk() {
-    this.refs.loading.show('请求中...');
-
-    let askType = this.state.qs.askType;
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: ASK_URL[askType].handle,
-        type: 'POST',
-        data: {
-          askfor: this.state.qs.askid,
-          status: this.askHandleVal
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('处理申请完成');
-        this.fetch();
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    })
-    .catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`处理申请出错,${err.message}`);
-      }
-    })
-    .done(() => {
-      this.refs.loading.close();
-    });
-  }
-
-  getAccountInfo() {
-    return new Promise((resolve, reject) => {
-      let data = {};
-
-      if (this.state.qs.uid){
-        data.uid = this.state.qs.uid;
-      }
-
-      $.ajax({
-        url: '/pim/query_user_card_desc',
-        type: 'GET',
-        cache: false,
-        data: data,
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        res.card.holder_flag = res.holder_flag;
-        return res.card;
-      }
-
-      this.refs.toast.warn(res.msg);
-    });
-  }
-
-  getBizCard() {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_card_desc',
-        type: 'GET',
-        data: {
-          cid: this.state.qs.cid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        return res.card;
-      }
-
-      this.refs.toast.warn(res.msg);
-    });
+    let qs = this.state.qs;
+    this.ajaxHelper.one(HandleBizCardAsk, res => {
+      this.refs.toast.success('处理申请完成');
+      this.fetch();
+    }, qs.askType, qs.askid, this.askHandleVal);
   }
 
   /**
@@ -206,38 +138,17 @@ export default class BizCardDetailPage extends React.Component {
    * @return {Promise}
    */
   getGroups() {
-    this.refs.loading.show('加载中...');
-
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_my_card_groups',
-        type: 'GET',
-        cache: false,
-        success: resolve,
-        error: reject
+    this.ajaxHelper.one(BizCardGroups, res => {
+      let groups = res.pimCardGroups.map((group) => {
+        return {
+          id: group.id,
+          name: group.groupname
+        };
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        let groups = res.pimCardGroups.map((group) => {
-          return {
-            id: group.id,
-            name: group.groupname
-          };
-        });
 
-        this.setState({
-          selectorData: groups
-        });
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`加载名片分组出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
+      this.setState({
+        selectorData: groups
+      });
     });
   }
 
@@ -261,36 +172,9 @@ export default class BizCardDetailPage extends React.Component {
   handleSelectedGroup(group: Object) {
     this.setSelectedGroup(group);
 
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/move_my_card_friend',
-        type: 'POST',
-        data: {
-          friendly_uid: this.state.qs.uid,
-          gid: group.id
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.popover.success(`名片好友成功移动到${group.name}`);
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.error(`移动好友出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(ChangeGroupOfFriend, res => {
+      this.refs.popover.success(`已将名片好友移动到${group.name}`);
+    }, this.state.qs.uid, group.id);
   }
 
   handleClickRemoveFriend() {
@@ -300,78 +184,29 @@ export default class BizCardDetailPage extends React.Component {
   }
 
   handleRemoveFriend() {
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/del_my_card_friend',
-        type: 'POST',
-        data: {
-          friendly_uid: this.state.qs.uid,
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.popover.success(`删除名片好友成功`);
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.error(`删除名片好友出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(RemoveFriendBizCard, res => {
+      this.refs.popover.success(`删除名片好友成功`);
+    }, this.state.qs.uid);
   }
 
   handleClickSetMainBizCard() {
     let bizCard = this.state.bizCard;
 
     if (bizCard.main_card === 1) {
-      this.refs.toast.warn('当前名片已是主名片');
+      this.refs.toast.warn('当前名片已是默认名片');
 
       return;
     }
 
     this.refs.setMainBizCardConfirm.show({
-      msg: '确认设置为主名片?'
+      msg: '确认设置为默认名片?'
     });
   }
 
   handleSetMainBizCard() {
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/set_main_card',
-        type: 'POST',
-        data: {
-          cid: this.state.bizCard.id
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.popover.success('设置主名片成功');
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`设置主名片出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(SetMainBizCard, res => {
+      this.refs.popover.success('设置默认名片成功');
+    }, this.state.bizCard.id);
   }
 
   handleClickRemoveMyBizCard() {
@@ -381,85 +216,67 @@ export default class BizCardDetailPage extends React.Component {
   }
 
   handleRemoveMyBizCard() {
-    this.refs.loading.show('删除中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/del_my_card',
-        type: 'POST',
-        data: {
-          cid: this.state.bizCard.id
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.popover.success('删除名片成功');
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`删除名片出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(DelMyBizCard, res => {
+      this.refs.popover.success('删除名片成功');
+      setTimeout(() => {
+        history.back();
+      }, 1500);
+    }, this.state.bizCard.id);
   }
 
   certify() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_my_card_verify',
-        type: 'GET',
-        data: {
-          cid: this.state.bizCard.id
-        },
-        success: resolve,
-        error: reject
+    this.ajaxHelper.one(MyVerifyInfo, res => {
+      let qs = querystring.stringify({
+        cid: this.state.bizCard.id,
+        uid: this.state.qs.uid
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        let qs = querystring.stringify({
-          cid: this.state.bizCard.id,
-          uid: this.state.qs.uid
-        });
 
-        let page;
+      let page;
 
-        switch (res.verifyFlag) {
-          case 0:
-            page = '/biz-card-certify.html';
-            break;
-          case 1:
-            page = '/biz-card-certified.html';
-            break;
-          case 2:
-            page = '/biz-card-certified-ok.html';
-            break;
-          case 3:
-            page = '/biz-card-certified-fail.html';
-            break;
-          default:
-            page = '/biz-card-certify.html';
-        }
-
-        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `${page}?${qs}`);
-        return;
+      switch (res.verifyFlag) {
+        case 0:
+          page = '/biz-card-certify.html';
+          break;
+        case 1:
+          page = '/biz-card-certified.html';
+          break;
+        case 2:
+          page = '/biz-card-certified-ok.html';
+          break;
+        case 3:
+          page = '/biz-card-certified-fail.html';
+          break;
+        default:
+          page = '/biz-card-certify.html';
       }
 
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`加载实名认证信息出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
+      location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `${page}?${qs}`);
+    }, this.state.bizCard.id);
+  }
+
+  handleShare() {
+    if (!this.state.wxReady) {
+      this.refs.toast.warn('等待微信验证...');
+      return;
+    }
+
+    let card = this.state.bizCard;
+    let user = this.state.account;
+
+    let qs = querystring.stringify({
+      cid: card.id,
+      uid: card.uid
     });
+    let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
+
+    this.refs.share.toAll({
+      title: card.share_title || `${user.nikename}的名片`,
+      desc: card.share_desc || user.desc,
+      link: url,
+      imgUrl: user.photo
+    });
+
+    this.refs.share.show();
   }
 
   renderRoutes(routes) {
@@ -469,6 +286,35 @@ export default class BizCardDetailPage extends React.Component {
           <p key={`route-item_${index}`}>{route}</p>
         );
       });
+    }
+  }
+
+  renderRoutesPanel() {
+    let bizCard = this.state.bizCard;
+    let fromCities = bizCard.start_addr ? bizCard.start_addr.split(',') : [];
+    let toCities = bizCard.end_addr ? bizCard.end_addr.split(',') : [];
+
+    if (fromCities.length || toCities.length) {
+      return (
+        <div className="group">
+          <h2>
+            <i className="icon icon-route s15"></i>
+            <span>专线路线</span>
+          </h2>
+          <dl className={cx('info-list private-route', fromCities.length ? '' : 'off')}>
+            <dt>出发地:</dt>
+            <dd>
+              {this.renderRoutes(fromCities)}
+            </dd>
+          </dl>
+          <dl className={cx('info-list private-route', toCities.length ? '' : 'off')}>
+            <dt>到达地:</dt>
+            <dd>
+              {this.renderRoutes(toCities)}
+            </dd>
+          </dl>
+        </div>
+      );
     }
   }
 
@@ -539,8 +385,6 @@ export default class BizCardDetailPage extends React.Component {
     let bizCard = this.state.bizCard;
     let account = this.state.account;
     let accountType = bizCard.ctype === 1 ? <i className="icon icon-account-type-truck"></i> : <i className="icon icon-account-type-package"></i>;
-    let fromCities = bizCard.start_addr ? bizCard.start_addr.split(',') : [];
-    let toCities = bizCard.end_addr ? bizCard.end_addr.split(',') : [];
 
     return (
       <section className="biz-card-detail-page">
@@ -558,17 +402,19 @@ export default class BizCardDetailPage extends React.Component {
           </p>
           <p className="company">{bizCard.com_name}</p>
         </div>
-        <ul className="vip-score grid">
-          <li className="vip">
-            <i className="icon s14 icon-certificate"></i>
-            {accountType}
-            <b>VIP 1</b>
-          </li>
-          <li className="score">
-            <span>人脉:</span>
-            <b><a href="#">357</a></b>
-          </li>
-        </ul>
+        <a href="./score-rule.html" className="vip-score-link">
+          <ul className="vip-score grid">
+            <li className="vip">
+              <i className="icon s14 icon-certificate"></i>
+              {accountType}
+              <i className={`icon icon-vip-${account.level}`}></i>
+            </li>
+            <li className="score">
+              <span>人脉:</span>
+              <b>357</b>
+            </li>
+          </ul>
+        </a>
         <section className="info">
           <h2>
             <i className="icon icon-account-profile s15"></i>
@@ -578,65 +424,56 @@ export default class BizCardDetailPage extends React.Component {
             <dt>手机号码:</dt>
             <dd><a className="tel" href={`tel:${bizCard.tel}`}>{bizCard.tel}</a></dd>
           </dl>
-          <dl className="info-list inline basic-info">
+          <dl className={cx('info-list inline basic-info', bizCard.wechat ? '' : 'off')}>
             <dt>微信账号:</dt>
             <dd>{bizCard.wechat}</dd>
           </dl>
-          <dl className="info-list inline basic-info">
+          <dl className={cx('info-list inline basic-info', bizCard.qq ? '' : 'off')}>
             <dt>QQ 账号:</dt>
             <dd>{bizCard.qq}</dd>
           </dl>
-          <h2>
-            <i className="icon icon-route s15"></i>
-            <span>专线路线</span>
-          </h2>
-          <dl className="info-list private-route">
-            <dt>出发地:</dt>
-            <dd>
-              {this.renderRoutes(fromCities)}
-            </dd>
-          </dl>
-          <dl className="info-list private-route">
-            <dt>到达地:</dt>
-            <dd>
-              {this.renderRoutes(toCities)}
-            </dd>
-          </dl>
-          <h2>
-            <i className="icon icon-truck-info s15"></i>
-            <span>车辆信息</span>
-          </h2>
-          <dl className="info-list inline truck-info">
-            <dt>车 型:</dt>
-            <dd>{bizCard.trucktype}</dd>
-          </dl>
-          <dl className="info-list inline truck-info">
-            <dt>车 长:</dt>
-            <dd>{bizCard.trucklength}米</dd>
-          </dl>
-          <dl className="info-list inline truck-info">
-            <dt>载 重:</dt>
-            <dd>{bizCard.loadlimit}吨</dd>
-          </dl>
-          <dl className="info-list inline truck-info">
-            <dt>车牌号:</dt>
-            <dd>{bizCard.licenseplate}</dd>
-          </dl>
-          <h2>
-            <i className="icon icon-other-info s15"></i>
-            <span>其他信息</span>
-          </h2>
-          <dl className="info-list inline other-info">
-            <dt>地址:</dt>
-            <dd>{bizCard.com_addr}</dd>
-          </dl>
-          <dl className="info-list inline other-info">
-            <dt>业务介绍:</dt>
-            <dd>{bizCard.service_desc}</dd>
-          </dl>
+          {this.renderRoutesPanel()}
+
+          <div className={cx('group', bizCard.trucktypeStr || bizCard.trucklength || bizCard.loadlimit || bizCard.licenseplate ? '' : 'off')}>
+            <h2>
+              <i className="icon icon-truck-info s15"></i>
+              <span>车辆信息</span>
+            </h2>
+            <dl className={cx('info-list inline truck-info', bizCard.trucktypeStr ? '' : 'off')}>
+              <dt>车 型:</dt>
+              <dd>{bizCard.trucktypeStr}</dd>
+            </dl>
+            <dl className={cx('info-list inline truck-info', bizCard.trucklength ? '' : 'off')}>
+              <dt>车 长:</dt>
+              <dd>{bizCard.trucklength}米</dd>
+            </dl>
+            <dl className={cx('info-list inline truck-info', bizCard.loadlimit ? '' : 'off')}>
+              <dt>载 重:</dt>
+              <dd>{bizCard.loadlimit}吨</dd>
+            </dl>
+            <dl className={cx('info-list inline truck-info', bizCard.licenseplate ? '' : 'off')}>
+              <dt>车牌号:</dt>
+              <dd>{bizCard.licenseplate}</dd>
+            </dl>
+          </div>
+
+          <div className={cx('group', bizCard.com_addr || bizCard.service_desc ? '' : 'off')}>
+            <h2>
+              <i className="icon icon-other-info s15"></i>
+              <span>其他信息</span>
+            </h2>
+            <dl className={cx('info-list inline other-info', bizCard.com_addr ? '' : 'off')}>
+              <dt>地址:</dt>
+              <dd>{bizCard.com_addr}</dd>
+            </dl>
+            <dl className={cx('info-list inline other-info', bizCard.service_desc ? '' : 'off')}>
+              <dt>业务介绍:</dt>
+              <dd>{bizCard.service_desc}</dd>
+            </dl>
+          </div>
 
           <div className="actions">
-            <div className="btn block lightBlue">名片分享</div>
+            <div className="btn block lightBlue" onClick={this.handleShare.bind(this)}>名片分享</div>
             {this.renderActions()}
           </div>
           {this.renderAskActions()}
@@ -667,6 +504,7 @@ export default class BizCardDetailPage extends React.Component {
         <FixedHolder height="44" />
         <Loading ref="loading" />
         <Toast ref="toast" />
+        <Share ref="share" />
       </section>
     );
   }
