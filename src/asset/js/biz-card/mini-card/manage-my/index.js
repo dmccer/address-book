@@ -7,9 +7,10 @@ import './index.less';
 
 import React from 'react';
 import Swipeable from 'react-swipeable';
+import querystring from 'querystring';
+
 import {SwipeEnhance} from '../../../enhance/swipe';
 import MiniCard from '../';
-
 
 @SwipeEnhance
 export default class ManageMyMiniCard extends React.Component {
@@ -50,7 +51,7 @@ export default class ManageMyMiniCard extends React.Component {
           </div>
         </Swipeable>
         <ul className="actions row">
-          <li className="share">分享</li>
+          <li className="share-btn" onClick={props.onShare}>分享</li>
           <li className="set-main-card" onClick={props.onSetMainBizCard}>设为默认</li>
         </ul>
       </div>
