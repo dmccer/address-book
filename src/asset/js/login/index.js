@@ -69,6 +69,7 @@ export default class LoginPage extends React.Component {
         data: {
           tel: this.props.tel,
           code: this.props.code,
+          wx_code: this.state.qs.code,
           source: 'h5'
         },
         success: resolve.bind(this),
