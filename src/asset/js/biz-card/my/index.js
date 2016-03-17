@@ -11,16 +11,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
 
+import Config from '../../config';
 import AjaxError from '../../ajax-err/';
 import Header from '../../header/';
 import Nav from '../../nav/';
 import MainMiniCard from '../mini-card/main/';
 import BizCardGroupList from '../group-list/';
 import Confirm from '../../confirm/';
-
+import WXVerify from '../../wx-verify/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
 import Log from '../../log/';
+import AjaxHelper from '../../ajax-helper/';
+import {MainBizCard, BizCardGroups, RemoveFriendBizCard} from '../model/';
 
 export default class BizCardMyPage extends React.Component {
   state = {
@@ -32,8 +35,26 @@ export default class BizCardMyPage extends React.Component {
     super();
   }
 
+  componentWillMount() {
+    WXVerify({
+      appId: Config.wxAppId,
+      url: Config.wxSignatureUrl,
+      jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone']
+    }, (err) => {
+      if (err) {
+        // 微信验证失败处理
+        return;
+      }
+
+      this.setState({
+        wxReady: true
+      });
+    });
+  }
+
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
+
     this.fetch();
   }
 
@@ -42,35 +63,23 @@ export default class BizCardMyPage extends React.Component {
    * @return
    */
   fetch() {
-    this.refs.loading.show('加载中...');
+    this.ajaxHelper.all([MainBizCard, BizCardGroups], res => {
+      let bizCard = res[0].card;
+      let groups = res[1].pimCardGroups;
 
-    Promise
-      .all([this.getMyBizCard(), this.getGroups()])
-      .then((args) => {
-        this.calcFriendsCount(args[1]);
-        let groups = args[1];
+      this.calcFriendsCount(groups);
 
-        groups.push({
-          groupname: '管理群组',
-          extra: true
-        });
-
-        this.setState({
-          groups: groups,
-          myBizCard: args[0],
-          loaded: true
-        });
-      })
-      .catch((err) => {
-        if (err && err instanceof Error) {
-          Log.error(err);
-
-          this.refs.toast.warn(`加载页面失败,${err.message}`);
-        }
-      })
-      .done(() => {
-        this.refs.loading.close();
+      groups.push({
+        groupname: '管理群组',
+        extra: true
       });
+
+      this.setState({
+        groups: groups,
+        myBizCard: bizCard,
+        loaded: true
+      });
+    });
   }
 
   /**
@@ -101,56 +110,12 @@ export default class BizCardMyPage extends React.Component {
     });
   }
 
-  /**
-   * getMyBizCard 获取我的主名片信息
-   * @return {Promise}
-   */
-  getMyBizCard() {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_user_card_desc',
-        type: 'GET',
-        cache: false,
-        success: resolve.bind(this),
-        error: reject.bind(this)
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        return res.card;
-      }
-
-      this.refs.toast.warn(res.msg);
-    });
-  }
-
-  /**
-   * getGroups 获取我的名片分组
-   * @return {Promise}
-   */
-  getGroups() {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_my_card_groups',
-        type: 'GET',
-        cache: false,
-        success: resolve.bind(this),
-        error: reject.bind(this)
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        return res.pimCardGroups;
-      }
-
-      this.refs.toast.warn(res.msg);
-    });
-  }
-
   renderMyBizCard() {
     let myBizCard = this.state.myBizCard;
     let loaded = this.state.loaded;
 
     if (loaded && myBizCard) {
-      return <MainMiniCard {...myBizCard} />;
+      return <MainMiniCard wxReady={this.state.wxReady} {...myBizCard} />;
     }
 
     if (loaded) {
@@ -175,37 +140,10 @@ export default class BizCardMyPage extends React.Component {
   }
 
   handleDelBizCard() {
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/del_my_card_friend',
-        type: 'GET',
-        cache: false,
-        data: {
-          friendly_uid: this.toRemoveBizCard.uid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('删除名片好友成功');
-        this.fetch();
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`删除名片好友出错, ${err.message}`)
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(RemoveFriendBizCard, res => {
+      this.refs.toast.success('删除名片好友成功');
+      location.reload();
+    }, this.toRemoveBizCard.uid);
   }
 
   handleCancelDelBizCard() {
