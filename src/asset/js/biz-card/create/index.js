@@ -12,19 +12,26 @@ import ReactDOM from 'react-dom';
 import cx from 'classnames';
 import Promise from 'promise';
 import querystring from 'querystring';
+import find from 'lodash/collection/find';
+import keys from 'lodash/object/keys';
 
 import AjaxError from '../../ajax-err/';
 import SubHeader from '../../sub-header/';
 import {FieldChangeEnhance} from '../../enhance/field-change';
 import Validator from '../../validator/';
-import find from 'lodash/collection/find';
 import Private from '../../private/';
 import GoTop from '../../gotop/';
 import DropList from '../../droplist/';
 import Modal from '../../modal/';
 import AddressSelector from '../../address-selector/'
+import Selector from '../../selector/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+// 因为 iscroll 禁用了 click 事件，
+// 若启用 iscroll click, 会对其他默认滚动列表，滚动时触发 click
+// 启用 tap 事件
+injectTapEventPlugin();
 
 const ALL = '不限';
 const VISIBILITY_ITEMS = [
@@ -52,8 +59,10 @@ export default class CreateBizCardPage extends React.Component {
     visibilityList: VISIBILITY_ITEMS,
     bizCardTypeList: BIZ_CARD_TYPE_ITEMS,
     dropListData: [],
+    selectorData: [],
     visibility: {},
     bizCardType: {},
+    truckType: {},
     qs: querystring.parse(location.search.substring(1))
   };
 
@@ -110,6 +119,7 @@ export default class CreateBizCardPage extends React.Component {
       $.ajax({
         url: '/pim/query_card_desc',
         type: 'GET',
+        cache: false,
         data: {
           cid: this.state.qs.cid
         },
@@ -131,7 +141,7 @@ export default class CreateBizCardPage extends React.Component {
       }
     }).done(() => {
       this.refs.loading.close();
-    });;
+    });
   }
 
   validate() {
@@ -168,7 +178,7 @@ export default class CreateBizCardPage extends React.Component {
         licenseplate: props.licenseplate,
         truckLength: props.truckLength,
         loadlimit: props.loadlimit,
-        trucktype: props.truckType
+        trucktype: this.state.truckType.id || null
       });
     }
 
@@ -314,6 +324,56 @@ export default class CreateBizCardPage extends React.Component {
     this.currentRemoveItem = null;
   }
 
+  handleClickTruckType() {
+    this.refs.loading.show('加载中...');
+
+    new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/pim/all_trucks',
+        type: 'GET',
+        cache: false,
+        data: {
+          cid: this.state.qs.cid
+        },
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        this.refs.selector.show();
+        let trucks = res.trucks;
+        let truckList = keys(trucks).map((key) => {
+          return {
+            id: key,
+            name: trucks[key]
+          };
+        });
+
+        this.setState({
+          selectorData: truckList
+        });
+
+        return;
+      }
+
+      this.refs.toast.warn(res.msg);
+    }).catch((err) => {
+      if (err && err instanceof Error) {
+        this.refs.toast.warn(`加载车型出错,${err.message}`);
+      }
+    }).done(() => {
+      this.refs.loading.close();
+    });
+  }
+
+  handleSelectorSelected(truckType: Object) {
+    this.setState({
+      truckType: truckType
+    });
+  }
+
+  handleSelectorCancel() {}
+
   showTruckFields() {
     if (this.state.bizCardType.id === 1) {
       let props = this.props;
@@ -322,15 +382,16 @@ export default class CreateBizCardPage extends React.Component {
         <div>
           <div className="field">
             <input
+              readOnly
               type="text"
               className="control"
               placeholder="车型"
-              value={props.truckType}
-              onChange={props.handleStrChange.bind(this, 'truckType')} />
+              value={this.state.truckType.name}
+              onClick={this.handleClickTruckType.bind(this)} />
           </div>
           <div className="field">
             <input
-              type="number"
+              type="tel"
               className="control"
               placeholder="载重(吨)"
               value={props.loadlimit}
@@ -338,7 +399,7 @@ export default class CreateBizCardPage extends React.Component {
           </div>
           <div className="field">
             <input
-              type="number"
+              type="tel"
               className="control"
               placeholder="车长(米)"
               value={props.truckLength}
@@ -348,7 +409,7 @@ export default class CreateBizCardPage extends React.Component {
             <input
               type="text"
               className="control"
-              placeholder="车牌号"
+              placeholder="车牌号, 如: 沪W12333"
               value={props.licenseplate}
               onChange={props.handleStrChange.bind(this, 'licenseplate')} />
           </div>
@@ -542,6 +603,12 @@ export default class CreateBizCardPage extends React.Component {
         <AddressSelector
           ref="addressSelector"
           done={this.handleSelectedAddress.bind(this)}
+        />
+        <Selector
+          ref="selector"
+          items={this.state.selectorData}
+          onSelect={this.handleSelectorSelected.bind(this)}
+          onCancel={this.handleSelectorCancel.bind(this)}
         />
         <Loading ref="loading" />
         <Toast ref="toast" />
