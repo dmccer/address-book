@@ -6,15 +6,21 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import querystring from 'querystring';
 
 import AjaxError from '../ajax-err/';
 import WXVerify from '../wx-verify/';
 import SubHeader from '../sub-header/';
-import Share from '../share/';
+
 import Private from '../private/';
 import Config from '../config';
 import Loading from '../loading/';
 import Toast from '../toast/';
+import Log from '../log/';
+import Share from '../share/';
+import AjaxHelper from '../ajax-helper/';
+import {MyRecentScoreActionList, MyVerifyInfo} from '../my/model/';
+import {MainBizCard, BizCardDetail} from '../biz-card/model/';
 
 export default class ScoreRulePage extends React.Component {
   state = {};
@@ -41,67 +47,58 @@ export default class ScoreRulePage extends React.Component {
   }
 
   componentDidMount() {
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
+
     this.getHistoryScore();
   }
 
-  getMainBizCardInfo() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
+  getBizCardDetail(user) {
+    return new Promise((resolve, reject) => {
       $.ajax({
-        url: '/pim/query_user_card_desc',
+        url: '/pim/query_card_desc',
         type: 'GET',
+        cache: false,
+        data: {
+          cid: user.cid
+        },
         success: resolve,
         error: reject
       });
     }).then((res) => {
       if (res.retcode === 0) {
-        this.setState({
+        return {
+          user: user,
           card: res.card
-        });
+        };
+      }
 
-        return;
+      this.refs.toast.warn(res.msg);
+    });
+  }
+
+  getMainBizCardMin() {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: '/pim/query_user_card_desc',
+        type: 'GET',
+        cache: false,
+        success: resolve,
+        error: reject
+      });
+    }).then((res) => {
+      if (res.retcode === 0) {
+        return res.card;
       }
 
       this.refs.toast.error(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.error(`加载主名片信息出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
     });
   }
 
   getHistoryScore() {
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/pim_score_list',
-        type: 'GET',
-        success: resolve,
-        error: reject
+    this.ajaxHelper.one(MyRecentScoreActionList, res => {
+      this.setState({
+        historyScoreList: res.pim_score_list
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          historyScoreList: res.pim_score_list
-        });
-        return;
-      }
-
-      this.refs.toast.error(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.error(`加载最近积分记录出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
     });
   }
 
@@ -109,54 +106,52 @@ export default class ScoreRulePage extends React.Component {
     e.stopPropagation();
     e.preventDefault();
 
-    this.refs.loading.show('加载中...');
+    this.ajaxHelper.one(MyVerifyInfo, res => {
+      let page;
 
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_my_card_verify',
-        type: 'GET',
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        let page;
-
-        switch (res.verifyFlag) {
-          case 0:
-            page = '/biz-card-certify.html';
-            break;
-          case 1:
-            page = '/biz-card-certified.html';
-            break;
-          case 2:
-            page = '/biz-card-certified-ok.html';
-            break;
-          case 3:
-            page = '/biz-card-certified-fail.html';
-            break;
-          default:
-            page = '/biz-card-certify.html';
-        }
-
-        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `${page}?${qs}`);
-        return;
+      switch (res.verifyFlag) {
+        case 0:
+          page = '/biz-card-certify.html';
+          break;
+        case 1:
+          page = '/biz-card-certified.html';
+          break;
+        case 2:
+          page = '/biz-card-certified-ok.html';
+          break;
+        case 3:
+          page = '/biz-card-certified-fail.html';
+          break;
+        default:
+          page = '/biz-card-certify.html';
       }
 
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`加载实名认证信息出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
+      location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `${page}?${qs}`);
     });
   }
 
   share() {
-    this.refs.share.show();
+    this.ajaxHelper.one(MainBizCard, res => {
+      let user = res.card;
 
-    this.getMainBizCardInfo();
+      this.ajaxHelper.one(BizCardDetail, res => {
+        let card = res.card;
+        let qs = querystring.stringify({
+          cid: card.id,
+          uid: card.uid
+        });
+        let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
+
+        this.refs.share.toAll({
+          title: card.share_title || `${user.nikename}的名片`,
+          desc: card.share_desc || user.desc,
+          link: url,
+          imgUrl: user.photo
+        });
+
+        this.refs.share.show();
+      }, user.cid)
+    });
   }
 
   zero(n) {

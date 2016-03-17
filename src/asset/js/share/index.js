@@ -20,6 +20,13 @@ export default class Share extends React.Component {
     });
   }
 
+  toAll(opts={}) {
+    this.shareToWeiXin(opts);
+    this.shareToQQ(opts);
+    this.shareToPengYouQuan(opts);
+    this.shareToQzone(opts);
+  }
+
   /**
    * [shareToWeiXin description]
    * @param  {[type]} opts={} [description]
@@ -54,17 +61,7 @@ export default class Share extends React.Component {
       return;
     }
 
-    wx.onMenuShareTimeline({
-      title: '', // 分享标题
-      link: '', // 分享链接
-      imgUrl: '', // 分享图标
-      success: function () {
-        // 用户确认分享后执行的回调函数
-      },
-      cancel: function () {
-        // 用户取消分享后执行的回调函数
-      }
-    });
+    wx.onMenuShareTimeline(opts);
   }
 
   shareToQQ() {
@@ -72,18 +69,7 @@ export default class Share extends React.Component {
       return;
     }
 
-    wx.onMenuShareQQ({
-      title: '', // 分享标题
-      desc: '', // 分享描述
-      link: '', // 分享链接
-      imgUrl: '', // 分享图标
-      success: function () {
-        // 用户确认分享后执行的回调函数
-      },
-      cancel: function () {
-        // 用户取消分享后执行的回调函数
-      }
-    });
+    wx.onMenuShareQQ(opts);
   }
 
   shareToQzone() {
@@ -91,18 +77,7 @@ export default class Share extends React.Component {
       return;
     }
 
-    wx.onMenuShareQZone({
-      title: '', // 分享标题
-      desc: '', // 分享描述
-      link: '', // 分享链接
-      imgUrl: '', // 分享图标
-      success: function () {
-        // 用户确认分享后执行的回调函数
-      },
-      cancel: function () {
-        // 用户取消分享后执行的回调函数
-      }
-    });
+    wx.onMenuShareQZone(opts);
   }
 
   close() {
@@ -120,7 +95,7 @@ export default class Share extends React.Component {
 
     return this.state.on ? (
       <div className={shareClassNames} onClick={this.handleMaskClick.bind(this)}>
-        <Mask type="white" />
+        <Mask type="black" />
         <div className="tip"></div>
       </div>
     ) : null;
