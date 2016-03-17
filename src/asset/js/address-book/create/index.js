@@ -161,6 +161,8 @@ export default class ABCreatePage extends React.Component {
         }, 2000);
         return;
       }
+
+      this.refs.toast.warn(res.msg);
     }).catch((err) => {
       if (err && err instanceof Error) {
         this.refs.toast.warn(`发起通讯录出错,${err.message}`);
@@ -223,6 +225,7 @@ export default class ABCreatePage extends React.Component {
                 placeholder="这里输入通讯录名称"
                 value={props.aname}
                 onChange={props.handleStrChange.bind(this, 'aname')} />
+              <i className="star">*</i>
             </div>
             <div className="panel-field">
               <p>申请加入通讯录，需提供的名片必须信息:</p>
@@ -239,6 +242,7 @@ export default class ABCreatePage extends React.Component {
                   placeholder="这里输入对通讯录的描述..."
                   value={props.adesc}
                   onChange={props.handleLimitStrChange.bind(this, 'adesc', this.state.maxAdescLength)}></textarea>
+                <i className="star">*</i>
                 <span className="char-count">{props.adesc && props.adesc.length || 0}/{this.state.maxAdescLength}</span>
               </div>
             </div>
