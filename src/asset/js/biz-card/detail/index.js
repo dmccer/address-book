@@ -19,6 +19,11 @@ import Loading from '../../loading/';
 import Toast from '../../toast/';
 import Log from '../../log/';
 import FixedHolder from '../../fixed-holder/';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+// 因为 iscroll 禁用了 click 事件，
+// 若启用 iscroll click, 会对其他默认滚动列表，滚动时触发 click
+// 启用 tap 事件
+injectTapEventPlugin();
 
 const ASK_URL = {
   bc: {
