@@ -6,7 +6,7 @@ import cx from 'classnames';
 import ReactIScroll from 'react-iscroll';
 import IScroll from 'iscroll/build/iscroll';
 import Promise from 'promise';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+// import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import find from 'lodash/collection/find';
 import Loading from '../loading/';
@@ -16,7 +16,7 @@ import Log from '../log/';
 // 因为 iscroll 禁用了 click 事件，
 // 若启用 iscroll click, 会对其他默认滚动列表，滚动时触发 click
 // 启用 tap 事件
-injectTapEventPlugin();
+// injectTapEventPlugin();
 
 const ALL = '不限';
 
