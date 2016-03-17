@@ -464,8 +464,13 @@ export default class ABDetailPage extends React.Component {
 
   handleTabChange(tab: String) {
     let last = this.state.atab;
+    let joined = this.state.abInfo.joined_flag;
 
     if (tab === last) {
+      return;
+    }
+
+    if (!joined && tab === 'setting') {
       return;
     }
 
