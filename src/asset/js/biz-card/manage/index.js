@@ -10,15 +10,17 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import querystring from 'querystring';
 
-import AjaxError from '../../ajax-err/';
 import ModalHeader from '../../modal-header/';
 import ManageMyMiniCard from '../mini-card/manage-my/';
 import Private from '../../private/';
 import Confirm from '../../confirm/';
 import Toast from '../../toast/';
 import Loading from '../../loading/';
-import Log from '../../log/';
+import Share from '../../share/';
+import AjaxHelper from '../../ajax-helper/';
+import {BizCardDetail, MyBizCardList, DelMyBizCard, SetMainBizCard} from '../model/';
 
 export default class BizCardManagePage extends React.Component {
   state = {
@@ -30,37 +32,16 @@ export default class BizCardManagePage extends React.Component {
   }
 
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
+
     this.getMyBizCards();
   }
 
   getMyBizCards() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_user_cards',
-        type: 'GET',
-        cache: false,
-        success: resolve.bind(this),
-        error: reject.bind(this)
+    this.ajaxHelper.one(MyBizCardList, res => {
+      this.setState({
+        bizCards: res.cards
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          bizCards: res.cards
-        });
-
-        return;
-      }
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`加载我的名片出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
     });
   }
 
@@ -77,32 +58,10 @@ export default class BizCardManagePage extends React.Component {
   }
 
   removeBizCard() {
-    this.refs.loading.show('删除中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/del_my_card',
-        type: 'POST',
-        data: {
-          cid: this.confirmTempData.cid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('删除名片成功');
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`删除名片出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(DelMyBizCard, res => {
+      this.refs.toast.success('删除名片成功');
+      this.getMyBizCards();
+    }, this.confirmTempData.cid);
   }
 
   handleCancelRemoveBizCard() {
@@ -126,32 +85,29 @@ export default class BizCardManagePage extends React.Component {
   }
 
   setMainBizCard() {
-    this.refs.loading.show('请求中...');
+    this.ajaxHelper.one(SetMainBizCard, res => {
+      this.refs.toast.success('设置默认名片片成功');
+    }, this.confirmTempData.cid);
+  }
 
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/set_main_card',
-        type: 'POST',
-        data: {
-          cid: this.confirmTempData.cid
-        },
-        success: resolve,
-        error: reject
+  handleShare(user: Object) {
+    this.ajaxHelper.one(BizCardDetail, res => {
+      let card = res.card;
+
+      let qs = querystring.stringify({
+        cid: user.cid,
+        uid: user.uid
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('设置主名片成功');
-        return;
-      }
+      let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
 
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`设置主名片出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+      this.refs.share.toAll({
+        title: card.share_title || `${user.nikename}的名片`,
+        desc: card.share_desc || user.desc,
+        link: url,
+        imgUrl: user.photo,
+      });
+      this.refs.share.show();
+    }, user.cid);
   }
 
   renderMyBizCards() {
@@ -163,6 +119,7 @@ export default class BizCardManagePage extends React.Component {
           key={`biz-card-item_${index}`}
           onDel={this.handleRemove.bind(this, bizCard)}
           onSetMainBizCard={this.handleSetMainBizCard.bind(this, bizCard)}
+          onShare={this.handleShare.bind(this, bizCard)}
           {...bizCard} />;
       });
     }
@@ -188,6 +145,7 @@ export default class BizCardManagePage extends React.Component {
           cancel={this.handleCancelRemoveBizCard.bind(this)} />
         <Loading ref="loading" />
         <Toast ref="toast" />
+        <Share ref="share" />
       </section>
     );
   }
