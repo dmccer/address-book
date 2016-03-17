@@ -14,6 +14,8 @@ import querystring from 'querystring';
 
 import ModalHeader from '../../modal-header/';
 import ManageMyMiniCard from '../mini-card/manage-my/';
+import Config from '../../config';
+import WXVerify from '../../wx-verify/';
 import Private from '../../private/';
 import Confirm from '../../confirm/';
 import Toast from '../../toast/';
@@ -29,6 +31,23 @@ export default class BizCardManagePage extends React.Component {
 
   constructor() {
     super();
+  }
+
+  componentWillMount() {
+    WXVerify({
+      appId: Config.wxAppId,
+      url: Config.wxSignatureUrl,
+      jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone']
+    }, (err) => {
+      if (err) {
+        // 微信验证失败处理
+        return;
+      }
+
+      this.setState({
+        wxReady: true
+      });
+    });
   }
 
   componentDidMount() {
@@ -71,7 +90,7 @@ export default class BizCardManagePage extends React.Component {
 
   handleSetMainBizCard(bizCard) {
     if (bizCard.main_card === 1) {
-      this.refs.toast.warn('当前名片已是主名片');
+      this.refs.toast.warn('当前名片已是默认名片');
 
       return;
     }
@@ -80,17 +99,24 @@ export default class BizCardManagePage extends React.Component {
     this.confirmTempData = bizCard;
 
     this.refs.confirm.show({
-      msg: '确认设置为主名片?'
+      msg: '确认设置为默认名片?'
     });
   }
 
   setMainBizCard() {
     this.ajaxHelper.one(SetMainBizCard, res => {
       this.refs.toast.success('设置默认名片片成功');
+      this.getMyBizCards();
     }, this.confirmTempData.cid);
   }
 
   handleShare(user: Object) {
+    if (!this.state.wxReady) {
+      this.refs.toast.warn('等待微信验证...');
+
+      return;
+    }
+
     this.ajaxHelper.one(BizCardDetail, res => {
       let card = res.card;
 
