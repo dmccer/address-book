@@ -1,3 +1,24 @@
+/**
+ * AjaxHelper
+ *
+ * @Author xiaoyunhua@ttyhuo.cn
+ *
+ * Usage:
+ *
+ * componentDidMount() {
+ * 		this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
+ * }
+ *
+ * fetch() {
+ * 		this.ajaxHelper.one(MainBizCard, res => {
+ * 			// code
+ * 		}, uid);
+ *
+ * 		this.ajaxHelper.all([MainBizCard, BizCardDetail], res => {
+ * 			// code
+ * 		}, [uid, cid]);
+ * }
+ */
 import Promise from 'promise';
 import AjaxError from '../ajax-err/';
 import Log from '../log/';
