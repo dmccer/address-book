@@ -36,6 +36,12 @@ export default class MainMiniCard extends React.Component {
   handleShare() {
     let user = this.props;
 
+    if (!user.wxReady) {
+      this.refs.toast.warn('等待微信验证...');
+
+      return;
+    }
+
     this.ajaxHelper.one(BizCardDetail, res => {
       let card = res.card;
 
