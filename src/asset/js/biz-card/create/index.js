@@ -149,7 +149,8 @@ export default class CreateBizCardPage extends React.Component {
 
     return Validator.test('required', '姓名不能为空', props.nikename) &&
       Validator.test('required', '手机号不能为空', props.tel) &&
-      Validator.test('len', '手机号格式不正确', props.tel, 11);
+      Validator.test('len', '手机号格式不正确', props.tel, 11) &&
+      (Validator.empty(props.licenseplate) || Validator.test('licenseplate', '车牌号格式不正确', props.licenseplate));
   }
 
   buildData() {
@@ -176,7 +177,7 @@ export default class CreateBizCardPage extends React.Component {
     if (state.bizCardType.id === 1) {
       $.extend(data, {
         licenseplate: props.licenseplate,
-        truckLength: props.truckLength,
+        trucklength: props.truckLength,
         loadlimit: props.loadlimit,
         trucktype: this.state.truckType.id || null
       });
