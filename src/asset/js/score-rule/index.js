@@ -237,7 +237,7 @@ export default class ScoreRulePage extends React.Component {
           </table>
         </section>
         <Private />
-        <Share ref="share" />
+        <Share ref="share" wxReady={this.state.wxReady} />
         <Loading ref="loading" />
         <Toast ref="toast" />
       </section>

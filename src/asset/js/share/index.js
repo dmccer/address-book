@@ -56,7 +56,7 @@ export default class Share extends React.Component {
     wx.onMenuShareAppMessage(opts);
   }
 
-  shareToPengYouQuan() {
+  shareToPengYouQuan(opts={}) {
     if (!this.props.wxReady) {
       return;
     }
@@ -64,7 +64,7 @@ export default class Share extends React.Component {
     wx.onMenuShareTimeline(opts);
   }
 
-  shareToQQ() {
+  shareToQQ(opts={}) {
     if (!this.props.wxReady) {
       return;
     }
@@ -72,7 +72,7 @@ export default class Share extends React.Component {
     wx.onMenuShareQQ(opts);
   }
 
-  shareToQzone() {
+  shareToQzone(opts={}) {
     if (!this.props.wxReady) {
       return;
     }
