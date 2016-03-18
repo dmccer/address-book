@@ -1,6 +1,51 @@
 import Promise from 'promise';
 
 /**
+ * 获取用户信息
+ * @return {Promise}
+ */
+export var UserInfo = () => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/fetch_uinfo',
+      type: 'GET',
+      cache: false,
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+export var UpdateUserAvatar = (avatar) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/upload_user_photo',
+      type: 'POST',
+      data: {
+        uphoto_mid: avatar
+      },
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
+ * 签到
+ * @return {Promise}
+ */
+export var Signin = () => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/book_in',
+      type: 'POST',
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
  * 查询最近积分记录
  * @return {Promise}
  */
@@ -32,6 +77,10 @@ export var MyVerifyInfo = () => {
   });
 }
 
+/**
+ * 撤销名片认证
+ * @return {Promise}
+ */
 export var RevokeMyVerify = () => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -43,6 +92,12 @@ export var RevokeMyVerify = () => {
   });
 }
 
+/**
+ * 申请名片认证
+ * @param  {String} bizCard 名片或工牌图片微信 media_id
+ * @param  {String} IDCard  身份证图片微信 media_id
+ * @return {Promise}
+ */
 export var UploadMyVerify = (bizCard, IDCard) => {
   return new Promise((resolve, reject) => {
     $.ajax({

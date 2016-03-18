@@ -14,13 +14,15 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise';
 import querystring from 'querystring';
 
-import AjaxError from '../ajax-err/';
+import AjaxHelper from '../ajax-helper/';
 import Header from '../header/';
 import Nav from '../nav/';
-import Loading from '../loading/';
 import Popover from '../popover/';
+import Loading from '../loading/';
 import Toast from '../toast/';
-import Log from '../log/';
+import Config from '../config';
+import WXVerify from '../wx-verify/';
+import {UserInfo, UpdateUserAvatar, Signin} from './model/';
 
 export default class MyPage extends React.Component {
   state = {
@@ -32,10 +34,43 @@ export default class MyPage extends React.Component {
     super();
   }
 
+  componentWillMount() {
+    WXVerify({
+      appId: Config.wxAppId,
+      url: Config.wxSignatureUrl,
+      jsApiList: [
+        'chooseImage',
+        'uploadImage',
+        'onMenuShareTimeline',
+        'onMenuShareAppMessage',
+        'onMenuShareQQ',
+        'onMenuShareQZone'
+      ]
+    }, (err) => {
+      if (err) {
+        // 微信验证失败处理
+        return;
+      }
+
+      this.setState({
+        wxReady: true
+      });
+    });
+  }
+
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
 
     this.getUser();
+  }
+
+  getUser() {
+    this.ajaxHelper.one(UserInfo, res => {
+      this.setState({
+        signinable: !res.book_in,
+        account: res.userInfo
+      });
+    });
   }
 
   /**
@@ -47,73 +82,55 @@ export default class MyPage extends React.Component {
     e.preventDefault();
     e.stopPropagation();
 
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/book_in',
-        type: 'POST',
-        success: resolve.bind(this),
-        error: reject.bind(this)
+    this.ajaxHelper.one(Signin, res => {
+      this.setState({
+        signinable: false
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          signinable: false
-        });
 
-        this.refs.popover.success('签到成功');
-
-        this.getUser();
-
-        return;
-      }
-
-      this.refs.toast.error(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.error(`签到出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
+      this.refs.popover.success('签到成功');
+      this.getUser();
     });
   }
 
-  getUser() {
-    this.refs.loading.show('加载中...');
+  handleUpdateAvatar(e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/fetch_uinfo',
-        type: 'POST',
-        success: resolve.bind(this),
-        error: reject.bind(this)
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          signinable: !res.book_in,
-          account: res.userInfo
+    if (!this.state.wxReady) {
+      this.refs.toast.warn('等待微信验证...');
+      return;
+    }
+
+    wx.chooseImage({
+      success: (res) => {
+        let localIds = res.localIds;
+        let len = localIds.length;
+
+        if (len === 0) {
+          this.refs.toast.warn('请选择一张图片');
+          return;
+        }
+
+        if (len > 1) {
+          this.refs.toast.warn('只能选择一张图片');
+          return;
+        }
+
+        wx.uploadImage({
+          localId: localIds[0],
+          success: (res) => {
+            this.ajaxHelper.one(UpdateUserAvatar, res => {
+              this.refs.toast.success('更换头像成功');
+              this.getUser();
+            }, res.serverId);
+          }
         });
-
-        return;
       }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-        this.refs.toast.error(`加载用户信息出错, ${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
     });
   }
 
   renderCertify() {
-    let verifyFlag = this.state.account.verifyFlag;
+    let verifyFlag = this.state.account.verify_flag;
 
     if (this.state.account.verifyFlag === 3) {
       return (
@@ -152,10 +169,13 @@ export default class MyPage extends React.Component {
         <Header title="我的" />
         <section className="my">
           <div className="avatar">
-            <a href="#" style={{
-              backgroundImage: `url(${account.photo})`,
-              backgroundSize: 'contain'
-            }}></a>
+            <a
+              href="javascript:;"
+              style={{
+                backgroundImage: `url(${account.photo})`,
+                backgroundSize: 'cover'
+              }}
+              onClick={this.handleUpdateAvatar.bind(this)}></a>
           </div>
           <a href="./score-rule.html" className="vip-score-link">
             <ul className="vip-score grid">
