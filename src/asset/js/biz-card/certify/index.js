@@ -59,16 +59,27 @@ export default class BizCardCertifyPage extends React.Component {
 
     wx.chooseImage({
       success: (res) => {
-        if (res.localIds && res.localIds.length) {
-          wx.uploadImage({
-            localId: res.localIds[0],
-            success: (res) => {
-              this.setState({
-                [field]: res.serverId
-              });
-            }
-          });
+        let localIds = res.localIds;
+        let len = localIds.length;
+
+        if (len === 0) {
+          this.refs.toast.warn('请选择一张图片');
+          return;
         }
+
+        if (len > 1) {
+          this.refs.toast.warn('只能选择一张图片');
+          return;
+        }
+
+        wx.uploadImage({
+          localId: localIds[0],
+          success: (res) => {
+            this.setState({
+              [field]: res.serverId
+            });
+          }
+        });
       }
     });
   }
