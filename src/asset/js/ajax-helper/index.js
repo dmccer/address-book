@@ -25,12 +25,20 @@ import Log from '../log/';
 
 export default class AjaxHelper {
   constructor(loading, toast) {
+    if (!loading && !toast) {
+      this.silent = true;
+
+      return;
+    }
+
     this.loading = loading;
     this.toast = toast;
   }
 
   all(models: Array<Object>, cb: Function, ...args) {
-    this.loading.show('请求中...');
+    if (!this.silent) {
+      this.loading.show('请求中...');
+    }
 
     let ps = models.map((model, index) => {
       return model.apply(this, args[index]).then(res => {
@@ -38,7 +46,9 @@ export default class AjaxHelper {
           return res;
         }
 
-        this.toast.warn(res.msg);
+        if (!this.silent) {
+          this.toast.warn(res.msg);
+        }
       });
     });
 
@@ -47,16 +57,24 @@ export default class AjaxHelper {
       .then(cb)
       .catch(err => {
         if (err && err instanceof Error) {
-          this.toast.warn(`有点不对劲,${err.message}`);
+          Log.error(err);
+
+          if (!this.silent) {
+            this.toast.warn(`有点不对劲,${err.message}`);
+          }
         }
       })
       .done(() => {
-        this.loading.close();
+        if (!this.silent) {
+          this.loading.close();
+        }
       });
   }
 
   one(model: Object, cb: Function, ...args) {
-    this.loading.show('请求中...');
+    if (!this.silent) {
+      this.loading.show('请求中...');
+    }
 
     model.apply(this, args)
       .then(res => {
@@ -64,15 +82,22 @@ export default class AjaxHelper {
           return cb(res);
         }
 
-        this.toast.warn(res.msg);
+        if (!this.silent) {
+          this.toast.warn(res.msg);
+        }
       })
       .catch(err => {
         if (err && err instanceof Error) {
-          this.toast.warn(`有点不对劲,${err.message}`);
+          Log.error(err);
+          if (!this.silent) {
+            this.toast.warn(`有点不对劲,${err.message}`);
+          }
         }
       })
       .done(() => {
-        this.loading.close();
+        if (!this.silent) {
+          this.loading.close();
+        }
       });
   }
 }
