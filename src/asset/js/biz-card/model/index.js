@@ -1,6 +1,56 @@
 import Promise from 'promise';
 
 /**
+ * 创建名片
+ * @param  {Object} params 名片字段
+ * @return {Promise}
+ */
+export var CreateBizCard = (params) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/create_card',
+      type: 'POST',
+      data: params,
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
+ * 修改名片信息
+ * @param  {Object} params 名片字段，必须包含 cid
+ * @return {Promise}
+ */
+export var UpdateBizCard = (params) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/edit_card',
+      type: 'POST',
+      data: params,
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
+ * 车型列表
+ * @return {Promise}
+ */
+export var AllTrucks = () => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/all_trucks',
+      type: 'GET',
+      cache: false,
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
  * 获取名片和用户简介
  * @param  {String} uid 可选
  * @return {Promise}
@@ -207,6 +257,11 @@ export var HandleBizCardAsk = (asktype, askfor, status) => {
   })
 }
 
+/**
+ * 交换名片
+ * @param  {String} fid 名片好友 uid
+ * @return {Promise}
+ */
 export var SwapBizCard = (fid) => {
   return new Promise((resolve, reject) => {
     $.ajax({
