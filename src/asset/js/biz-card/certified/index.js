@@ -50,9 +50,6 @@ export default class BizCardCertifiedPage extends React.Component {
           </div>
 
           <div className="field">
-            <a href={`./biz-card-detail.html?${location.search.substring(1)}`} className="btn block lightBlue">返回名片</a>
-          </div>
-          <div className="field">
             <button onClick={this.handleCancelCertify.bind(this)} type="button" className="btn block lightBlue">撤销认证</button>
           </div>
         </div>
