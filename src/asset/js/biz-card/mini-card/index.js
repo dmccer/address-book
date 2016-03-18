@@ -22,8 +22,8 @@ export default class MiniCard extends React.Component {
 		return (
 			<a className="cell my-profile" onClick={props.onView} href={`./biz-card-detail.html?cid=${props.cid}&uid=${props.uid}`}>
 		    <div className="avatar" style={{
-		      backgroundImage: `url(${props.photo})`
-		    }}></div>
+					backgroundImage: `url(${props.photo})`,
+				}}></div>
 		    <div className="profile">
 		      <p className="my">
 		        <span>{props.nikename}</span>
