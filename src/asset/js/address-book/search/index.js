@@ -16,6 +16,8 @@ import debounce from 'lodash/function/debounce';
 
 import TinyHeader from '../../tiny-header/';
 import ABList from '../list/';
+import AjaxHelper from '../../ajax-helper/';
+import {SearchAB} from '../model/';
 
 export default class SearchABPage extends React.Component {
   state = {
@@ -24,6 +26,10 @@ export default class SearchABPage extends React.Component {
 
   constructor() {
     super();
+  }
+
+  componentDidMount() {
+    this.ajaxHelper = new AjaxHelper();
   }
 
   /**
@@ -51,32 +57,11 @@ export default class SearchABPage extends React.Component {
    * @return
    */
   query() {
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/search_addlist',
-        type: 'GET',
-        cache: false,
-        data: {
-          keyword: this.state.keyword
-        },
-        success: resolve.bind(this),
-        error: reject.bind(this)
+    this.ajaxHelper.one(SearchAB, res => {
+      this.setState({
+        abList: res.join_addlist
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          abList: res.join_addlist
-        });
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      Log.error(err);
-
-      this.refs.toast.warn(`搜索通讯录出错，${err.message}`);
-    });
+    }, this.state.keyword);
   }
 
   /**

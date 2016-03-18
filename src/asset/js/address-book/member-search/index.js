@@ -9,12 +9,11 @@ import querystring from 'querystring';
 import Promise from 'promise';
 import debounce from 'lodash/function/debounce';
 
+import AjaxHelper from '../../ajax-helper/';
+import {SearchABMember} from '../model/';
 import SubHeader from '../../sub-header/';
 import ABMember from '../../biz-card/mini-card/';
-import AjaxError from '../../ajax-err/';
-import Loading from '../../loading/';
 import Toast from '../../toast/';
-import Log from '../../log/';
 
 export default class MemberSearchPage extends React.Component {
   state = {
@@ -27,7 +26,8 @@ export default class MemberSearchPage extends React.Component {
   }
 
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper();
+
     this.query();
   }
 
@@ -52,35 +52,21 @@ export default class MemberSearchPage extends React.Component {
   }
 
   query() {
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_addlist_cards',
-        type: 'GET',
-        cache: false,
-        data: {
-          aid: this.state.qs.aid,
-          keyword: this.state.keyword
-        },
-        success: resolve,
-        error: reject
+    this.ajaxHelper.one(SearchABMember, res => {
+      this.setState({
+        memberList: res.addlist_cards
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          memberList: res.addlist_cards
-        });
+    }, this.state.qs.aid, this.state.keyword);
+  }
 
-        return;
-      }
+  handleToggleActiveMember(member: Object, e: Object) {
+    if (member.auth === 1) {
+      e.preventDefault();
+      e.stopPropagation();
 
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`加载数据出错,${err.message}`);
-      }
-    });
+      this.refs.toast.warn('不是您的名片好友,无权查看');
+      return;
+    }
   }
 
   renderList() {
@@ -89,7 +75,10 @@ export default class MemberSearchPage extends React.Component {
     if (memberList && memberList.length) {
       return memberList.map((member, index) => {
         return (
-          <ABMember key={`member-item_${index}`} {...member} />
+          <ABMember
+            key={`member-item_${index}`}
+            onView={this.handleToggleActiveMember.bind(this, member)}
+            {...member} />
         );
       });
     } else {
@@ -118,7 +107,6 @@ export default class MemberSearchPage extends React.Component {
             {this.renderList()}
           </div>
         </div>
-        <Loading ref="loading" />
         <Toast ref="toast" />
       </section>
     );

@@ -13,7 +13,11 @@ export default class ABMiniItem extends React.Component {
     return (
       <li>
         <a href={`./address-book-detail.html?id=${props.id}`}>
-          <img className="cover" src={props.photo} />
+          <div
+            className="cover"
+            style={{
+              backgroundImage: `url(${props.photo})`
+            }}></div>
           <div className="ab-profile">
             <h3>{props.name}</h3>
             <div>
