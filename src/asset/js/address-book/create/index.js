@@ -14,15 +14,15 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise';
 import querystring from 'querystring';
 
-import AjaxError from '../../ajax-err/';
+import AjaxHelper from '../../ajax-helper/';
 import {FieldChangeEnhance} from '../../enhance/field-change';
 import Validator from '../../validator/';
 import SubHeader from '../../sub-header/';
 import Loading from '../../loading/';
 import Private from '../../private/';
 import Toast from '../../toast/';
-import Log from '../../log/';
 import FixedHolder from '../../fixed-holder/';
+import {ABBaseInfo, UpdateAB, CreateAB} from '../model/';
 
 @FieldChangeEnhance
 export default class ABCreatePage extends React.Component {
@@ -57,7 +57,7 @@ export default class ABCreatePage extends React.Component {
   }
 
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
 
     if (this.state.editMod) {
       this.fetch();
@@ -65,53 +65,26 @@ export default class ABCreatePage extends React.Component {
   }
 
   fetch() {
-    this.refs.loading.show('加载中...');
+    this.ajaxHelper.one(ABBaseInfo, res => {
+      let abInfo = res.addlist_card;
 
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/addlist_cards_baseinfo',
-        type: 'GET',
-        cache: false,
-        data: {
-          aid: this.state.qs.aid
-        },
-        success: resolve,
-        error: reject
+      this.props.setFields({
+        aname: abInfo.aname,
+        adesc: abInfo.adesc,
+        aquestion: abInfo.aquestion
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        let abInfo = res.addlist_card;
 
-        this.props.setFields({
-          aname: abInfo.aname,
-          adesc: abInfo.adesc,
-          aquestion: abInfo.aquestion
-        });
-
-        let bizCardFields = this.state.bizCardFields;
-        bizCardFields.forEach((field) => {
-          if (abInfo.arequires.indexOf(field.value) !== -1) {
-            field.selected = true;
-          }
-        });
-        this.setState({
-          abInfo: abInfo,
-          bizCardFields: bizCardFields
-        });
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-        if (err && err instanceof Error) {
-          Log.error(err);
-
-          this.refs.toast.warn(`加载数据出错,${err.message}`);
+      let bizCardFields = this.state.bizCardFields;
+      bizCardFields.forEach((field) => {
+        if (abInfo.arequires.indexOf(field.value) !== -1) {
+          field.selected = true;
         }
-    }).done(() => {
-        this.refs.loading.close();
-    });
+      });
+      this.setState({
+        abInfo: abInfo,
+        bizCardFields: bizCardFields
+      });
+    }, this.state.qs.aid);
   }
 
   validate() {
@@ -131,45 +104,42 @@ export default class ABCreatePage extends React.Component {
       return;
     }
 
-    this.refs.loading.show('保存中...');
+    let params = {
+      atype: this.state.qs.atype,
+      aname: this.props.aname,
+      arequires: this.getSelectedBizCardFieldVals(),
+      adesc: this.props.adesc,
+      aquestion: this.props.aquestion
+    };
 
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/create_addlist',
-        type: 'POST',
-        data: {
-          atype: this.state.qs.atype,
-          aname: this.props.aname,
-          arequires: this.getSelectedBizCardFieldVals(),
-          adesc: this.props.adesc,
-          aquestion: this.props.aquestion
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('发起通讯录成功');
+    if (this.state.editMod) {
+      params.aid = this.state.qs.aid;
+
+      return this.ajaxHelper.one(UpdateAB, res => {
+        this.refs.toast.success('编辑通讯录成功');
 
         setTimeout(() => {
           let qs = querystring.stringify({
-            id: res.aid,
-            create: 1
+            id: res.aid
           });
 
           location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
         }, 2000);
-        return;
-      }
+      }, params);
+    }
 
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`发起通讯录出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(CreateAB, res => {
+      this.refs.toast.success('发起通讯录成功');
+
+      setTimeout(() => {
+        let qs = querystring.stringify({
+          id: res.aid,
+          create: 1
+        });
+
+        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
+      }, 2000);
+    }, params);
   }
 
   handleToggleSelectBizCardField(field: Object) {
