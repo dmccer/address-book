@@ -40,7 +40,9 @@ export default class ManageMyMiniCard extends React.Component {
             onTouchEnd={props.touchend}
           >
             <div className="action" onClick={props.onDel}>
-              <i className="icon s16 icon-del"></i>
+              <div className="del-box">
+                <i className="icon s16 icon-del"></i>
+              </div>
             </div>
             <div className="biz-card">
               <div className="add-box" onClick={props.onSetMainBizCard}>
