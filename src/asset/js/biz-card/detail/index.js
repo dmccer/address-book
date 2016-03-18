@@ -66,33 +66,41 @@ export default class BizCardDetailPage extends React.Component {
     super();
   }
 
-  componentWillMount() {
-    WXVerify({
-      appId: Config.wxAppId,
-      url: Config.wxSignatureUrl,
-      jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone']
-    }, (err) => {
-      if (err) {
-        // 微信验证失败处理
-        return;
-      }
-
-      this.setState({
-        wxReady: true
-      });
-    });
-  }
-
   componentDidMount() {
     this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
 
     this.fetch();
   }
 
+  verifyWX() {
+    return new Promise((resolve, reject) => {
+      const OK = {
+        retcode: 0
+      };
+
+      if (this.state.wxReady) {
+        resolve(OK);
+      }
+
+      WXVerify({
+        appId: Config.wxAppId,
+        url: Config.wxSignatureUrl,
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone']
+      }, (err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve(OK);
+      });
+    });
+  }
+
   fetch() {
     let qs = this.state.qs;
-    let reqs = [MainBizCard, BizCardDetail];
-    let params = [[qs.uid], [qs.cid]];
+    let reqs = [MainBizCard, BizCardDetail, this.verifyWX.bind(this)];
+    let params = [[qs.uid], [qs.cid], []];
 
     // 消息审核状态
     if (qs.askid) {
@@ -102,18 +110,33 @@ export default class BizCardDetailPage extends React.Component {
 
     this.ajaxHelper.all(reqs, res => {
       let account = res[0].card;
+      let card = res[1].card;
       account.holder_flag = res[0].holder_flag;
 
       let r = {
         account: account,
-        bizCard: res[1].card
+        bizCard: card,
+        wxReady: true
       };
 
-      if (res[2] && res[2].ask_for) {
-        r.askfor = res[2].ask_for;
+      if (res[3] && res[3].ask_for) {
+        r.askfor = res[3].ask_for;
       }
 
       this.setState(r);
+
+      let qs = querystring.stringify({
+        cid: card.id,
+        uid: card.uid
+      });
+      let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
+
+      this.refs.share.toAll({
+        title: card.share_title || `${account.nikename}的名片`,
+        desc: card.share_desc || account.desc,
+        link: url,
+        imgUrl: account.photo
+      });
     }, ...params);
   }
 
@@ -224,7 +247,10 @@ export default class BizCardDetailPage extends React.Component {
     }, this.state.bizCard.id);
   }
 
-  certify() {
+  certify(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
     this.ajaxHelper.one(MyVerifyInfo, res => {
       let qs = querystring.stringify({
         cid: this.state.bizCard.id,
@@ -233,7 +259,7 @@ export default class BizCardDetailPage extends React.Component {
 
       let page;
 
-      switch (res.verifyFlag) {
+      switch (res.verifyflag) {
         case 0:
           page = '/biz-card-certify.html';
           break;
@@ -255,27 +281,6 @@ export default class BizCardDetailPage extends React.Component {
   }
 
   handleShare() {
-    if (!this.state.wxReady) {
-      this.refs.toast.warn('等待微信验证...');
-      return;
-    }
-
-    let card = this.state.bizCard;
-    let user = this.state.account;
-
-    let qs = querystring.stringify({
-      cid: card.id,
-      uid: card.uid
-    });
-    let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
-
-    this.refs.share.toAll({
-      title: card.share_title || `${user.nikename}的名片`,
-      desc: card.share_desc || user.desc,
-      link: url,
-      imgUrl: user.photo
-    });
-
     this.refs.share.show();
   }
 
@@ -324,7 +329,7 @@ export default class BizCardDetailPage extends React.Component {
     if (account.holder_flag) {
       return (
         <div>
-          <a href={`./biz-card-certify.html?cid=${this.state.bizCard.id}&uid=${this.state.qs.uid}`} className="btn block lightBlue">实名认证</a>
+          <a href="javascript:;" onClick={this.certify.bind(this)} className="btn block lightBlue">实名认证</a>
           <div className="btn block lightBlue" onClick={this.handleClickSetMainBizCard.bind(this)}>设为默认名片</div>
           <div className="grid">
             <div className="btn block del-btn" onClick={this.handleClickRemoveMyBizCard.bind(this)}>删除名片</div>
@@ -391,9 +396,9 @@ export default class BizCardDetailPage extends React.Component {
         <SubHeader title={`${bizCard.nikename || ''}的名片`} />
         <div className="profile">
           <div className="avatar">
-            <a href="#" style={{
+            <a href="javascript:;" style={{
               backgroundImage: `url(${account.photo})`,
-              backgroundSize: 'contain'
+              backgroundSize: 'cover'
             }}></a>
           </div>
           <p>
