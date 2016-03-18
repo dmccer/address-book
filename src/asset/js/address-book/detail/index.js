@@ -13,19 +13,32 @@ import querystring from 'querystring';
 import find from 'lodash/collection/find';
 import cx from 'classnames';
 
-import AjaxError from '../../ajax-err/';
 import ABMember from '../../biz-card/mini-card/';
 import SubHeader from '../../sub-header/';
-import Loading from '../../loading/';
 import Confirm from '../../confirm/';
 import Prompt from '../../prompt/';
 import Prviate from '../../private/';
 import FixedHolder from '../../fixed-holder/';
-import Toast from '../../toast/';
-import Log from '../../log/';
 import AB_TYPES from '../../const/abtype';
 import GoTop from '../../gotop/';
 import Mask from '../../mask/';
+import Config from '../../config';
+import Share from '../../share/';
+import WXVerify from '../../wx-verify/';
+import AjaxHelper from '../../ajax-helper/';
+import {
+  ABBaseInfo,
+  ABMemberList,
+  UpdateABLogo,
+  JoinAB,
+  DelAB,
+  DelABMember,
+  QuitAB
+} from '../model/';
+import {SwapBizCard} from '../../biz-card/model/';
+
+import Loading from '../../loading/';
+import Toast from '../../toast/';
 
 export default class ABDetailPage extends React.Component {
 
@@ -45,83 +58,68 @@ export default class ABDetailPage extends React.Component {
     });
   }
 
+  verifyWX() {
+    return new Promise((resolve, reject) => {
+      const OK = {
+        retcode: 0
+      };
+
+      if (this.state.wxReady) {
+        resolve(OK);
+      }
+
+      WXVerify({
+        appId: Config.wxAppId,
+        url: Config.wxSignatureUrl,
+        jsApiList: ['chooseImage', 'uploadImage', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone']
+      }, (err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve(OK);
+      });
+    });
+  }
+
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
 
     this.fetch();
   }
 
   fetch() {
-    this.refs.loading.show('加载中...');
+    let aid = this.state.qs.id;
 
-    Promise
-      .all([this.getABBaseInfo(), this.getMemberList()])
-      .then((args) => {
-        let abInfo = args[0];
+    this.ajaxHelper.all([ABBaseInfo, ABMemberList, this.verifyWX.bind(this)], res => {
+      let abInfo = res[0].addlist_card;
+      let memberList = res[1].addlist_cards;
 
-        let abType = find(AB_TYPES, (abType) => {
-          return abType.id === abInfo.atype;
-        });
-
-        abInfo.abTypeText = abType.name;
-
-        this.setState({
-          abInfo: abInfo,
-          memberList: args[1]
-        });
-      })
-      .catch((err) => {
-        if (err && err instanceof Error) {
-          Log.error(err);
-
-          this.refs.toast.warn(`加载数据出错,${err.message}`);
-        }
-      })
-      .done(() => {
-        this.refs.loading.close();
+      let abType = find(AB_TYPES, (abType) => {
+        return abType.id === abInfo.atype;
       });
-  }
 
-  getABBaseInfo() {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/addlist_cards_baseinfo',
-        type: 'GET',
-        cache: false,
-        data: {
-          aid: this.state.qs.id
-        },
-        success: resolve,
-        error: reject
+      abInfo.abTypeText = abType.name;
+
+      this.setState({
+        abInfo: abInfo,
+        memberList: memberList,
+        wxReady: true
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        return res.addlist_card;
-      }
 
-      this.refs.toast.warn(res.msg);
-    });
-  }
-
-  getMemberList() {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_addlist_cards',
-        type: 'GET',
-        cache: false,
-        data: {
-          aid: this.state.qs.id
-        },
-        success: resolve,
-        error: reject
+      let qs = querystring.stringify({
+        id: this.state.qs.id
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        return res.addlist_cards;
-      }
+      let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
 
-      this.refs.toast.warn(res.msg);
-    });
+      this.refs.share.toAll({
+        title: `${abInfo.aname}-物流通讯录`,
+        desc: abInfo.adesc || `${abInfo.group_holder}诚挚邀请您加入通讯录"${abInfo.name}"`,
+        link: url,
+        imgUrl: abInfo.photo
+      });
+    }, [aid], [aid], []);
   }
 
   handleClickDelAB(e) {
@@ -134,37 +132,13 @@ export default class ABDetailPage extends React.Component {
   }
 
   handleDelAB() {
-    this.refs.loading.show('请求中...');
+    this.ajaxHelper.one(DelAB, res => {
+      this.refs.toast.success('删除通讯录成功');
 
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/del_addlist',
-        type: 'POST',
-        data: {
-          aid: this.state.qs.id
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('删除通讯录成功');
-        setTimeout(() => {
-          history.back();
-        }, 1000);
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`删除通讯录出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+      setTimeout(() => {
+        history.back();
+      }, 1000);
+    }, this.state.qs.id);
   }
 
   handleClickJoinAB() {
@@ -184,49 +158,53 @@ export default class ABDetailPage extends React.Component {
     });
   }
 
-  handleJoinAB(val) {
-    let data = {
-      aid: this.state.qs.id
-    }
+  handleJoinAB(arg) {
+    let answer;
 
     if (this.question) {
-      if (val === '') {
+      if (arg == null || arg === '') {
         return;
       }
 
-      data.answer = val;
+      answer = arg;
     }
 
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/join_addlist',
-        type: 'POST',
-        data: data,
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success(res.msg);
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`加入该通讯录出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(JoinAB, res => {
+      this.refs.toast.success(res.msg);
+    }, this.state.qs.id, answer);
   }
 
-  handleChangeLogo() {}
+  handleShareAB() {
+    this.refs.share.show();
+  }
+
+  handleChangeLogo() {
+    wx.chooseImage({
+      success: (res) => {
+        let localIds = res.localIds;
+        let len = localIds.length;
+
+        if (len === 0) {
+          this.refs.toast.warn('请选择一张图片');
+          return;
+        }
+
+        if (len > 1) {
+          this.refs.toast.warn('只能选择一张图片');
+          return;
+        }
+
+        wx.uploadImage({
+          localId: localIds[0],
+          success: (res) => {
+            this.ajaxHelper.one(UpdateABLogo, res => {
+              this.refs.toast.success('更换LOGO成功');
+            }, this.state.qs.id, res.serverId);
+          }
+        });
+      }
+    });
+  }
 
   renderABMembers() {
     if (this.state.qs.create == 1) {
@@ -301,37 +279,10 @@ export default class ABDetailPage extends React.Component {
   }
 
   handleRemoveMember() {
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/del_addlist_card',
-        type: 'POST',
-        data: {
-          aid: this.state.qs.id,
-          uid: this.toRemoveMember.uid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('删除成员成功');
-        this.fetch();
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`删除成员出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(DelABMember, res => {
+      this.refs.toast.success('删除成员成功');
+      this.fetch();
+    }, this.state.qs.id, this.toRemoveMember.uid);
   }
 
   handleClickRemoveMember(member: Object, e: Object) {
@@ -360,7 +311,9 @@ export default class ABDetailPage extends React.Component {
             <div className="invitation">
               <p>通讯录创建成功</p>
               <p>您可以分享给朋友一起加入通讯录</p>
-              <button className="btn block green">邀请好友</button>
+              <button
+                className="btn block green"
+                onClick={this.handleShareAB.bind(this)}>邀请好友</button>
             </div>
             <div className="ab-member-list cells">
               <ABMember {...member} />
@@ -378,6 +331,15 @@ export default class ABDetailPage extends React.Component {
       if (this.state.abInfo.group_holder_flag) {
         return (
           <div className="ab-setting cells cells-access">
+            <a className="cell" href="javascript:;" onClick={this.handleShareAB.bind(this)}>
+              <div className="cell-hd">
+                <i className="icon icon-recommend-star s15"></i>
+              </div>
+              <div className="cell-bd">
+                <h3>推荐给好友</h3>
+              </div>
+              <div className="cell-ft"></div>
+            </a>
             <a className="cell" href={`./create-ab.html?aid=${this.state.qs.id}&atype=4`}>
               <div className="cell-hd">
                 <i className="icon icon-ab-edit s15"></i>
@@ -389,7 +351,7 @@ export default class ABDetailPage extends React.Component {
             </a>
             <a className="cell" href="javascript:;" onClick={this.handleChangeLogo.bind(this)}>
               <div className="cell-hd">
-                <i className="icon icon-ab-edit s15"></i>
+                <i className="icon icon-change-ab-logo s15"></i>
               </div>
               <div className="cell-bd">
                 <h3>更换LOGO</h3>
@@ -411,7 +373,7 @@ export default class ABDetailPage extends React.Component {
 
       return (
         <div className="ab-setting cells cells-access">
-          <a className="cell" href="#">
+          <a className="cell" href="javascript:;" onClick={this.handleShareAB.bind(this)}>
             <div className="cell-hd">
               <i className="icon icon-recommend-star s15"></i>
             </div>
@@ -507,35 +469,9 @@ export default class ABDetailPage extends React.Component {
   }
 
   handleSwapBizCard() {
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/swap_card',
-        type: 'POST',
-        data: {
-          friendly_uid: this.toSwapMember.uid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success(res.msg);
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`交换名片出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(SwapBizCard, res => {
+      this.refs.toast.success(res.msg);
+    }, this.toSwapMember.uid);
   }
 
   handleCancelSwapBizCard() {
@@ -552,38 +488,13 @@ export default class ABDetailPage extends React.Component {
   }
 
   handleQuitAB() {
-    this.refs.loading.show('请求中...');
+    this.ajaxHelper.one(QuitAB, res => {
+      this.refs.toast.success('退出通讯录成功');
 
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/quit_addlist',
-        type: 'POST',
-        data: {
-          aid: this.state.qs.id
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('退出通讯录成功');
-        setTimeout(() => {
-          location.reload();
-        }, 2000);
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`退出通讯录出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
+    }, this.state.qs.id);
   }
 
   closeMemberActions() {
@@ -675,6 +586,7 @@ export default class ABDetailPage extends React.Component {
         />
         <Loading ref="loading" />
         <Toast ref="toast" />
+        <Share ref="share" wxReady={this.state.wxReady} />
         <GoTop />
       </section>
     );
