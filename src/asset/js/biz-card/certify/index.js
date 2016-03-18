@@ -8,13 +8,14 @@ import querystring from 'querystring';
 import cx from 'classnames';
 import Promise from 'promise';
 
-import AjaxError from '../../ajax-err/';
+import AjaxHelper from '../../ajax-helper/';
 import Config from '../../config';
 import SubHeader from '../../sub-header/';
 import WXVerify from '../../wx-verify/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
 import Private from '../../private/';
+import {UploadMyVerify} from '../../my/model/';
 
 export default class BizCardCertifyPage extends React.Component {
   state = {
@@ -40,6 +41,10 @@ export default class BizCardCertifyPage extends React.Component {
         wxReady: true
       });
     });
+  }
+
+  componentDidMount() {
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
   }
 
   handleUploadImage(field: String, e: Object) {
@@ -77,35 +82,12 @@ export default class BizCardCertifyPage extends React.Component {
       return;
     }
 
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/upload_card_verify',
-        type: 'POST',
-        data: {
-          cid: this.state.qs.cid,
-          vtype: 1,
-          name_card_img: this.state.bizCard,
-          id_card_img: this.state.IDCard
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('已提交认证');
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`提交认证出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(UploadMyVerify, res => {
+      this.refs.toast.success('已提交认证');
+      setTimeout(() => {
+        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, '/biz-card-certified.html');
+      }, 1500);
+    }, this.state.bizCard, this.state.IDCard)
   }
 
   render() {
