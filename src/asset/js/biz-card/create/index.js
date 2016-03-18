@@ -15,7 +15,7 @@ import querystring from 'querystring';
 import find from 'lodash/collection/find';
 import keys from 'lodash/object/keys';
 
-import AjaxError from '../../ajax-err/';
+import AjaxHelper from '../../ajax-helper/';
 import SubHeader from '../../sub-header/';
 import {FieldChangeEnhance} from '../../enhance/field-change';
 import Validator from '../../validator/';
@@ -27,6 +27,11 @@ import AddressSelector from '../../address-selector/'
 import Selector from '../../selector/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
+import {
+  BizCardDetail,
+  UpdateBizCard,
+  CreateBizCard
+} from '../model/';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // 因为 iscroll 禁用了 click 事件，
 // 若启用 iscroll click, 会对其他默认滚动列表，滚动时触发 click
@@ -79,15 +84,16 @@ export default class CreateBizCardPage extends React.Component {
   }
 
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
     Validator.config(this.refs.toast);
 
-    if ($.trim(this.state.qs.cid) !== '') {
+    if (this.state.editMod) {
       this.getBizCard();
 
       return;
     }
 
+    // 新建名片，默认值配置
     this.setBizCard({
       auth: 0,
       ctype: 1
@@ -113,35 +119,10 @@ export default class CreateBizCardPage extends React.Component {
   }
 
   getBizCard() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_card_desc',
-        type: 'GET',
-        cache: false,
-        data: {
-          cid: this.state.qs.cid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setBizCard(res.card);
-        this.props.setFields(res.card);
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`加载名片出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(BizCardDetail, res => {
+      this.setBizCard(res.card);
+      this.props.setFields(res.card);
+    }, this.state.qs.cid);
   }
 
   validate() {
@@ -183,6 +164,10 @@ export default class CreateBizCardPage extends React.Component {
       });
     }
 
+    if (this.state.editMod) {
+      data.cid = this.state.qs.cid;
+    }
+
     return data;
   }
 
@@ -194,41 +179,19 @@ export default class CreateBizCardPage extends React.Component {
       return;
     }
 
-    this.refs.loading.show('保存中...');
+    let params = this.buildData();
 
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: this.state.editMod ? '/pim/edit_card' : '/pim/create_card',
-        type: 'POST',
-        data: this.buildData(),
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.warn('保存名片成功');
+    this.ajaxHelper.one(this.state.editMod ? UpdateBizCard : CreateBizCard, res => {
+      this.refs.toast.warn('保存名片成功');
 
-        setTimeout(() => {
-          let qs = querystring.stringify({
-            cid: res.cid
-          });
-
-          location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
+      setTimeout(() => {
+        let qs = querystring.stringify({
+          cid: res.cid
         });
 
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`保存名片出错, ${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
+      });
+    }, params);
   }
 
   toggleMoreFields() {
@@ -326,44 +289,20 @@ export default class CreateBizCardPage extends React.Component {
   }
 
   handleClickTruckType() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/all_trucks',
-        type: 'GET',
-        cache: false,
-        data: {
-          cid: this.state.qs.cid
-        },
-        success: resolve,
-        error: reject
+    this.ajaxHelper.one(AllTrucks, res => {
+      let trucks = res.trucks;
+      let truckList = keys(trucks).map((key) => {
+        return {
+          id: key,
+          name: trucks[key]
+        };
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
+
+      this.setState({
+        selectorData: truckList
+      }, () => {
         this.refs.selector.show();
-        let trucks = res.trucks;
-        let truckList = keys(trucks).map((key) => {
-          return {
-            id: key,
-            name: trucks[key]
-          };
-        });
-
-        this.setState({
-          selectorData: truckList
-        });
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`加载车型出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
+      });
     });
   }
 
@@ -446,7 +385,7 @@ export default class CreateBizCardPage extends React.Component {
 
     return (
       <div className="create-biz-card-page">
-        <SubHeader title="新建名片" />
+        <SubHeader title={`${this.state.editMod ? '编辑' : '新建'}名片`} />
         <section className="create-biz-card">
           <form className="form" onSubmit={this.handleSubmit.bind(this)}>
             <div className="desc">
