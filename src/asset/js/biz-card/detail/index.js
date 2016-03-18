@@ -504,7 +504,7 @@ export default class BizCardDetailPage extends React.Component {
         <FixedHolder height="44" />
         <Loading ref="loading" />
         <Toast ref="toast" />
-        <Share ref="share" />
+        <Share ref="share" wxReady={this.state.wxReady} />
       </section>
     );
   }
