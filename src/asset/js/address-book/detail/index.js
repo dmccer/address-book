@@ -629,7 +629,7 @@ export default class ABDetailPage extends React.Component {
             <a
               href={`./biz-card-detail.html?${qs}`}
               className="btn block lightBlue">
-              查看详细信息
+              详细信息
             </a>
           </div>
           {del}
