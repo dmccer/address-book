@@ -55,7 +55,7 @@ export default class MainMiniCard extends React.Component {
         title: card.share_title || `${user.nikename}的名片`,
         desc: card.share_desc || user.desc,
         link: url,
-        imgUrl: user.photo,
+        imgUrl: user.photo
       });
       this.refs.share.show();
     }, user.cid);
@@ -91,7 +91,7 @@ export default class MainMiniCard extends React.Component {
         </ul>
         <Loading ref="loading" />
         <Toast ref="toast" />
-        <Share ref="share" />
+        <Share ref="share" wxReady={this.props.wxReady} />
       </div>
     );
   }
