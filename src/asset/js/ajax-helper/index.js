@@ -33,6 +33,8 @@ export default class AjaxHelper {
 
     this.loading = loading;
     this.toast = toast;
+
+    AjaxError.init(this.toast);
   }
 
   all(models: Array<Object>, cb: Function, ...args) {

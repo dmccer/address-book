@@ -325,6 +325,7 @@ export default class BizCardDetailPage extends React.Component {
 
   renderActions() {
     let account = this.state.account;
+    let bizCard = this.state.bizCard;
 
     if (account.holder_flag) {
       return (
@@ -344,13 +345,17 @@ export default class BizCardDetailPage extends React.Component {
       fuid: account.uid
     });
 
+    let moveFriend = bizCard.is_my_friend ? (
+      <div className="btn block lightBlue move-btn" onClick={this.handleMoveFriend.bind(this)}>
+        <span>移动好友到</span>
+        <i className="icon icon-right-triangle white"></i>
+      </div>
+    ) : null;
+
     return (
       <div>
         <a href={`./private-msg-send.html?${qs}`} className="btn block lightBlue">发送私信</a>
-        <div className="btn block lightBlue move-btn" onClick={this.handleMoveFriend.bind(this)}>
-          <span>移动好友到</span>
-          <i className="icon icon-right-triangle white"></i>
-        </div>
+        {moveFriend}
         <div className="btn block del-btn" onClick={this.handleClickRemoveFriend.bind(this)}>删除好友</div>
       </div>
     );
