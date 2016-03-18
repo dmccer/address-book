@@ -171,7 +171,7 @@ export default class BizCardManagePage extends React.Component {
           cancel={this.handleCancelRemoveBizCard.bind(this)} />
         <Loading ref="loading" />
         <Toast ref="toast" />
-        <Share ref="share" />
+        <Share ref="share" wxReady={this.state.wxReady} />
       </section>
     );
   }
