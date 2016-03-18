@@ -8,7 +8,6 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise';
 import querystring from 'querystring';
 
-import AjaxError from '../ajax-err/';
 import WXVerify from '../wx-verify/';
 import SubHeader from '../sub-header/';
 import Private from '../private/';
