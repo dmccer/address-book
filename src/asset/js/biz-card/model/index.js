@@ -164,6 +164,12 @@ const ASK_URL = {
   }
 };
 
+/**
+ * 查询申请状态
+ * @param  {String} asktype 申请类型 'bc' 或 'ab'
+ * @param  {String} askfor 申请 id
+ * @return {Promise}
+ */
 export var BizCardAskStatus = (asktype, askfor) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -179,6 +185,13 @@ export var BizCardAskStatus = (asktype, askfor) => {
   });
 }
 
+/**
+ * 申请处理
+ * @param  {String} asktype 申请类型 'bc' 或 'ab'
+ * @param  {String} askfor  申请 id
+ * @param  {String} status  处理状态
+ * @return {Promise}
+ */
 export var HandleBizCardAsk = (asktype, askfor, status) => {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -192,4 +205,18 @@ export var HandleBizCardAsk = (asktype, askfor, status) => {
       error: reject
     });
   })
+}
+
+export var SwapBizCard = (fid) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/swap_card',
+      type: 'POST',
+      data: {
+        friendly_uid: fid
+      },
+      success: resolve,
+      error: reject
+    });
+  });
 }

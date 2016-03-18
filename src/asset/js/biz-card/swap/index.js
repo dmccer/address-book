@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise';
 import querystring from 'querystring';
 
-import AjaxError from '../../ajax-err/';
+import AjaxHelper from '../../ajax-helper/';
 import Header from '../../header/';
 import Nav from '../../nav/';
 import Config from '../../config';
@@ -20,7 +20,7 @@ import WXVerify from '../../wx-verify/';
 import MiniCard from '../mini-card/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
-import Log from '../../log/';
+import {MainBizCard, SwapBizCard} from '../model/';
 
 export default class BizCardSwapPage extends React.Component {
   state = {
@@ -49,7 +49,7 @@ export default class BizCardSwapPage extends React.Component {
   }
 
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
 
     this.getMyBizCard();
   }
@@ -59,34 +59,14 @@ export default class BizCardSwapPage extends React.Component {
    * @return {Promise}
    */
   getMyBizCard() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_user_card_desc',
-        type: 'GET',
-        cache: false,
-        success: resolve,
-        error: reject
+    this.ajaxHelper.one(MainBizCard, res => {
+      this.setState({
+        bizCard: res.card
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          bizCard: res.card
-        });
 
-        return;
+      if (!res.card.qr_code) {
+        this.refs.toast.warn('您还没有名片');
       }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`加载出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
     });
   }
 
@@ -108,35 +88,9 @@ export default class BizCardSwapPage extends React.Component {
   }
 
   handleSwapBizCard(uid) {
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/swap_card',
-        type: 'POST',
-        data: {
-          friendly_uid: uid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success(res.msg);
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`交换名片出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(SwapBizCard, res => {
+      this.refs.toast.success(res.msg);
+    }, uid);
   }
 
   render() {
