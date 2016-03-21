@@ -49,7 +49,7 @@ body {
     font-size: 13/12rem;
     line-height: 18px;
     margin-bottom: 8px;
-    text-align: left;
+    text-align: center;
   }
 
   .creator {
@@ -66,6 +66,10 @@ body {
     line-height: 40px;
     background-color: @c_lightGrey_5;
     border-right: 1px solid @lightGrey;
+
+    &:last-child {
+      border-right: none;
+    }
 
     &.on {
       border-bottom: 2px solid @c_blue_1;

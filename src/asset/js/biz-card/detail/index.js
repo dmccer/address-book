@@ -33,7 +33,8 @@ import {
   BizCardGroups,
   SetMainBizCard,
   RemoveFriendBizCard,
-  DelMyBizCard
+  DelMyBizCard,
+  AllTrucks
 } from '../model/';
 import {MyVerifyInfo} from '../../my/model/';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -78,6 +79,8 @@ export default class BizCardDetailPage extends React.Component {
         retcode: 0
       };
 
+      resolve(OK);
+
       if (this.state.wxReady) {
         resolve(OK);
       }
@@ -99,8 +102,8 @@ export default class BizCardDetailPage extends React.Component {
 
   fetch() {
     let qs = this.state.qs;
-    let reqs = [MainBizCard, BizCardDetail, this.verifyWX.bind(this)];
-    let params = [[qs.uid], [qs.cid], []];
+    let reqs = [MainBizCard, BizCardDetail, AllTrucks, this.verifyWX.bind(this)];
+    let params = [[qs.uid], [qs.cid], [], []];
 
     // 消息审核状态
     if (qs.askid) {
@@ -111,7 +114,11 @@ export default class BizCardDetailPage extends React.Component {
     this.ajaxHelper.all(reqs, res => {
       let account = res[0].card;
       let card = res[1].card;
+      let trucks = res[2].trucks;
+
       account.holder_flag = res[0].holder_flag;
+      card.is_my_friend = res[1].is_my_friend;
+      card.truckTypeStr = trucks[card.trucktype];
 
       let r = {
         account: account,
@@ -119,8 +126,8 @@ export default class BizCardDetailPage extends React.Component {
         wxReady: true
       };
 
-      if (res[3] && res[3].ask_for) {
-        r.askfor = res[3].ask_for;
+      if (res[4] && res[4].ask_for) {
+        r.askfor = res[4].ask_for;
       }
 
       this.setState(r);
@@ -132,8 +139,8 @@ export default class BizCardDetailPage extends React.Component {
       let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
 
       this.refs.share.toAll({
-        title: card.share_title || `${account.nikename}的名片`,
-        desc: card.share_desc || account.desc,
+        title: card.share_title,
+        desc: card.share_desc,
         link: url,
         imgUrl: account.photo
       });
@@ -153,6 +160,9 @@ export default class BizCardDetailPage extends React.Component {
     this.ajaxHelper.one(HandleBizCardAsk, res => {
       this.refs.toast.success('处理申请完成');
       this.fetch();
+      setTimeout(() => {
+        history.back();
+      }, 1500)
     }, qs.askType, qs.askid, this.askHandleVal);
   }
 
@@ -341,21 +351,21 @@ export default class BizCardDetailPage extends React.Component {
       );
     }
 
+    if (!bizCard.is_my_friend) {
+      return;
+    }
+
     let qs = querystring.stringify({
       fuid: account.uid
     });
 
-    let moveFriend = bizCard.is_my_friend ? (
-      <div className="btn block lightBlue move-btn" onClick={this.handleMoveFriend.bind(this)}>
-        <span>移动好友到</span>
-        <i className="icon icon-right-triangle white"></i>
-      </div>
-    ) : null;
-
     return (
       <div>
         <a href={`./private-msg-send.html?${qs}`} className="btn block lightBlue">发送私信</a>
-        {moveFriend}
+        <div className="btn block lightBlue move-btn" onClick={this.handleMoveFriend.bind(this)}>
+          <span>移动好友到</span>
+          <i className="icon icon-right-triangle white"></i>
+        </div>
         <div className="btn block del-btn" onClick={this.handleClickRemoveFriend.bind(this)}>删除好友</div>
       </div>
     );
@@ -373,8 +383,8 @@ export default class BizCardDetailPage extends React.Component {
               type="button"
               disabled={status}
               className="btn block lightBlue"
-              onClick={this.handleClickAsk.bind(this, 1)}>
-              {status ? '已通过' : '通过'}
+              onClick={this.handleClickAsk.bind(this, 2)}>
+              忽略
             </button>
           </div>
           <div>
@@ -382,8 +392,8 @@ export default class BizCardDetailPage extends React.Component {
               type="button"
               disabled={status}
               className="btn block lightBlue"
-              onClick={this.handleClickAsk.bind(this, 2)}>
-              忽略
+              onClick={this.handleClickAsk.bind(this, 1)}>
+              {status ? '已通过' : '通过'}
             </button>
           </div>
         </div>
@@ -412,19 +422,17 @@ export default class BizCardDetailPage extends React.Component {
           </p>
           <p className="company">{bizCard.com_name}</p>
         </div>
-        <a href="./score-rule.html" className="vip-score-link">
-          <ul className="vip-score grid">
-            <li className="vip">
-              <i className="icon s14 icon-certificate"></i>
-              {accountType}
-              <i className={`icon icon-vip-${account.level}`}></i>
-            </li>
-            <li className="score">
-              <span>人脉:</span>
-              <b>357</b>
-            </li>
-          </ul>
-        </a>
+        <ul className="vip-score grid">
+          <li className="vip">
+            <i className="icon s14 icon-certificate"></i>
+            {accountType}
+            <i className={`icon icon-vip-${account.level}`}></i>
+          </li>
+          <li className="score">
+            <span>人脉:</span>
+            <b>{account.fcount}</b>
+          </li>
+        </ul>
         <section className="info">
           <h2>
             <i className="icon icon-account-profile s15"></i>
@@ -444,14 +452,14 @@ export default class BizCardDetailPage extends React.Component {
           </dl>
           {this.renderRoutesPanel()}
 
-          <div className={cx('group', bizCard.trucktypeStr || bizCard.trucklength || bizCard.loadlimit || bizCard.licenseplate ? '' : 'off')}>
+          <div className={cx('group', bizCard.truckTypeStr || bizCard.trucklength || bizCard.loadlimit || bizCard.licenseplate ? '' : 'off')}>
             <h2>
               <i className="icon icon-truck-info s15"></i>
               <span>车辆信息</span>
             </h2>
-            <dl className={cx('info-list inline truck-info', bizCard.trucktypeStr ? '' : 'off')}>
+            <dl className={cx('info-list inline truck-info', bizCard.truckTypeStr ? '' : 'off')}>
               <dt>车 型:</dt>
-              <dd>{bizCard.trucktypeStr}</dd>
+              <dd>{bizCard.truckTypeStr}</dd>
             </dl>
             <dl className={cx('info-list inline truck-info', bizCard.trucklength ? '' : 'off')}>
               <dt>车 长:</dt>
