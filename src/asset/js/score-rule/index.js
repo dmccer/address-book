@@ -82,7 +82,7 @@ export default class ScoreRulePage extends React.Component {
           page = '/biz-card-certify.html';
       }
 
-      location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `${page}?${qs}`);
+      location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `${page}`);
     });
   }
 
@@ -104,8 +104,8 @@ export default class ScoreRulePage extends React.Component {
         let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
 
         this.refs.share.toAll({
-          title: card.share_title || `${user.nikename}的名片`,
-          desc: card.share_desc || user.desc,
+          title: card.share_title,
+          desc: card.share_desc,
           link: url,
           imgUrl: user.photo
         });

@@ -27,9 +27,9 @@ export default class Prompt extends React.Component {
     }
 
     return (
-      <div className="confirm">
+      <div className="prompt">
         <Mask type="black" />
-        <div className="confirm-panel">
+        <div className="prompt-panel">
           <h2>{props.title}</h2>
           <div className="input">
             <input

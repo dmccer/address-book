@@ -16,14 +16,9 @@ export default class MsgItem extends React.Component {
 
     return (
       <a className="cell" href={props.url}>
-        <div className="weui_cell_hd">
-          <img style={{
-            width: '50px',
-            height: '50px',
-            display: 'block',
-            marginRight: '8px'
-          }} src={props.photo} />
-        </div>
+        <div className="weui_cell_hd avatar" style={{
+          backgroundImage: `url(${props.photo})`
+        }}></div>
         <div className="cell-bd cell_primary">
           <h3>{props.msg}</h3>
           <p>{props.createtime}</p>
