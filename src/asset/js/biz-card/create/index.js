@@ -30,7 +30,8 @@ import Toast from '../../toast/';
 import {
   BizCardDetail,
   UpdateBizCard,
-  CreateBizCard
+  CreateBizCard,
+  AllTrucks
 } from '../model/';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // 因为 iscroll 禁用了 click 事件，
@@ -107,22 +108,50 @@ export default class CreateBizCardPage extends React.Component {
     let bizCardType = find(BIZ_CARD_TYPE_ITEMS, (item) => {
       return item.id === bc.ctype;
     });
+
     let fromCities = bc.start_addr ? bc.start_addr.split(',') : [];
     let toCities = bc.end_addr ? bc.end_addr.split(',') : [];
 
-    this.setState({
+    let defaultData = {
       visibility: visibility,
       bizCardType: bizCardType,
       fromCities: fromCities,
       toCities: toCities
-    });
+    };
+
+    if (bc.trucktype != null) {
+      let truckType = find(this.state.selectorData, (item) => {
+        return item.id == bc.trucktype;
+      });
+
+      if (truckType) {
+        defaultData.truckType = truckType;
+      }
+    }
+
+    this.setState(defaultData);
   }
 
   getBizCard() {
-    this.ajaxHelper.one(BizCardDetail, res => {
-      this.setBizCard(res.card);
-      this.props.setFields(res.card);
-    }, this.state.qs.cid);
+    this.ajaxHelper.all([BizCardDetail, AllTrucks], res => {
+      let card = res[0].card;
+
+      let trucks = res[1].trucks;
+      let truckList = keys(trucks).map((key) => {
+        return {
+          id: key,
+          name: trucks[key]
+        };
+      });
+
+      this.setState({
+        selectorData: truckList
+      }, () => {
+        this.setBizCard(card);
+        this.props.setFields(card);
+      });
+
+    }, [this.state.qs.cid], []);
   }
 
   validate() {

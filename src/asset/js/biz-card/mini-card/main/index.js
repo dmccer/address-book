@@ -52,8 +52,8 @@ export default class MainMiniCard extends React.Component {
       let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
 
       this.refs.share.toAll({
-        title: card.share_title || `${user.nikename}的名片`,
-        desc: card.share_desc || user.desc,
+        title: card.share_title,
+        desc: card.share_desc,
         link: url,
         imgUrl: user.photo
       });
