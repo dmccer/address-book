@@ -12,7 +12,7 @@ let AjaxErrorHandler = {
       Log.error(xhr.responseText);
 
       if (xhr.status === 403) {
-        AjaxErrorHandler.toast.warn('未登录,进入登录页面中...')
+        AjaxErrorHandler.toast.warn('未登录,进入登录页面中...');
 
         setTimeout(() => {
           let qs = querystring.stringify({
