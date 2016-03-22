@@ -1,6 +1,46 @@
 import Promise from 'promise';
 
 /**
+ * 发送验证码
+ * @param  {String} tel 手机号
+ * @return {Promise}
+ */
+export var SendVerifyCode = (tel) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/send_verify_code',
+      type: 'POST',
+      data: {
+        tel: tel
+      },
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
+ * 登录
+ * @param {Object} params
+ * @param {String} params.tel 手机号
+ * @param {String} params.code 验证码
+ * @param {String} params.wx_code 微信中，url 上的查询参数 code
+ * @param {String} params.source 用户登录来源 'h5', 'app' ...
+ * @return {Promise}
+ */
+export var Login = (params) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/login',
+      type: 'POST',
+      data: params,
+      success: resolve.bind(this),
+      error: reject.bind(this)
+    });
+  });
+}
+
+/**
  * 获取用户信息
  * @return {Promise}
  */
@@ -16,6 +56,11 @@ export var UserInfo = () => {
   });
 }
 
+/**
+ * 更换用户头像
+ * @param  {String} avatar 头像微信 media ID
+ * @return {Promise}
+ */
 export var UpdateUserAvatar = (avatar) => {
   return new Promise((resolve, reject) => {
     $.ajax({

@@ -60,7 +60,6 @@ export default class MyPage extends React.Component {
 
   componentDidMount() {
     this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
-
     this.getUser();
   }
 
