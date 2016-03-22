@@ -10,12 +10,12 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise';
 import querystring from 'querystring';
 
-import AjaxError from '../../ajax-err/';
+import AjaxHelper from '../../ajax-helper/';
 import SubHeader from '../../sub-header/';
 import MsgItem from '../item/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
-import Log from '../../log/';
+import {NoticeList} from '../model/';
 
 export default class BizCardReplyMsgListPage extends React.Component {
   state = {
@@ -27,42 +27,17 @@ export default class BizCardReplyMsgListPage extends React.Component {
   }
 
   componentDidMount() {
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
+
     this.fetch();
   }
 
   fetch() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_notice_list',
-        type: 'GET',
-        cache: false,
-        data: {
-          ntype: 4
-        },
-        success: resolve,
-        error: reject
+    this.ajaxHelper.one(NoticeList, res => {
+      this.setState({
+        notices: res.notices
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          notices: res.notices
-        });
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(err.message);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    }, 4);
   }
 
   renderMsg() {

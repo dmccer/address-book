@@ -14,14 +14,14 @@ import Promise from 'promise';
 import querystring from 'querystring';
 import cx from 'classnames';
 
-import AjaxError from '../../../ajax-err/';
+import AjaxHelper from '../../../ajax-helper/';
 import SubHeader from '../../../sub-header/';
 import Loading from '../../../loading/';
 import Toast from '../../../toast/';
 import {FieldChangeEnhance} from '../../../enhance/field-change';
 import Validator from '../../../validator/';
-import Log from '../../../log/';
 import FixedHolder from '../../../fixed-holder/';
+import {PrivateMsgWithFriend, SendPrivateMsg} from '../../model/';
 
 @FieldChangeEnhance
 export default class PrivateMsgSendPage extends React.Component {
@@ -35,7 +35,7 @@ export default class PrivateMsgSendPage extends React.Component {
   }
 
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
 
     this.fetch();
   }
@@ -48,42 +48,15 @@ export default class PrivateMsgSendPage extends React.Component {
   }
 
   fetch() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_piv_msg',
-        type: 'GET',
-        cache: false,
-        data: {
-          friendly_uid: this.state.qs.fuid
-        },
-        success: resolve,
-        error: reject
+    this.ajaxHelper.one(PrivateMsgWithFriend, res => {
+      this.setState({
+        msgs: res.piv_msg_data_list
+      }, () => {
+        setTimeout(() => {
+          this.bottom();
+        }, 100);
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          msgs: res.piv_msg_data_list
-        }, () => {
-          setTimeout(() => {
-            this.bottom();
-          }, 100);
-        });
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(err.message);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    }, this.state.qs.fuid);
   }
 
   post(e) {
@@ -98,37 +71,10 @@ export default class PrivateMsgSendPage extends React.Component {
       return;
     }
 
-    this.refs.loading.show('发送中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/send_piv_msg',
-        type: 'POST',
-        data: {
-          friendly_uid: this.state.qs.fuid,
-          msg: msg
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.props.clear('msg');
-        this.fetch();
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`发送私信出错:${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(SendPrivateMsg, res => {
+      this.props.clear('msg');
+      this.fetch();
+    }, this.state.qs.fuid, msg);
   }
 
   renderMsg() {
@@ -177,7 +123,7 @@ export default class PrivateMsgSendPage extends React.Component {
                   className="control"
                   placeholder="请输入私信内容"
                   value={this.props.msg}
-                  onChange={this.props.handleStrChange.bind(this, 'msg')}
+                  onChange={this.props.handleStrWithEmptyChange.bind(this, 'msg')}
                 />
               </div>
               <div className="send">
