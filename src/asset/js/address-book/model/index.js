@@ -220,3 +220,19 @@ export var QuitAB = (aid) => {
     });
   });
 }
+
+/**
+ * 通讯录分类列表 - 通讯录首页
+ * @return {Promise}
+ */
+export var MainABList = () => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/main_addlist_info',
+      type: 'GET',
+      cache: false,
+      success: resolve,
+      error: reject
+    });
+  });
+}
