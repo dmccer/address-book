@@ -52,8 +52,8 @@ export default class MainMiniCard extends React.Component {
       let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
 
       this.refs.share.toAll({
-        title: card.share_title,
-        desc: card.share_desc,
+        title: card.def_share_title,
+        desc: card.def_share_desc,
         link: url,
         imgUrl: user.photo
       });
