@@ -58,6 +58,10 @@ const BIZ_CARD_TYPE_ITEMS = [
     id: 2
   }
 ];
+const ROUTE_TITLES = {
+  1: '常跑',
+  2: '优势'
+};
 
 @FieldChangeEnhance
 export default class CreateBizCardPage extends React.Component {
@@ -185,12 +189,19 @@ export default class CreateBizCardPage extends React.Component {
     };
 
     if (state.bizCardType.id === 1) {
-      $.extend(data, {
-        licenseplate: props.licenseplate,
-        trucklength: props.truckLength,
-        loadlimit: props.loadlimit,
-        trucktype: this.state.truckType.id || null
-      });
+      data.licenseplate = props.licenseplate;
+
+      if (props.trucklength) {
+        data.trucklength = props.trucklength;
+      }
+
+      if (props.loadlimit) {
+        data.loadlimit = props.loadlimit;
+      }
+
+      if (this.state.truckType.id != null) {
+        data.trucktype = this.state.truckType.id || null;
+      }
     }
 
     if (this.state.editMod) {
@@ -371,8 +382,8 @@ export default class CreateBizCardPage extends React.Component {
               type="tel"
               className="control"
               placeholder="车长(米)"
-              value={props.truckLength}
-              onChange={props.handleFloatChange.bind(this, 'truckLength')} />
+              value={props.trucklength}
+              onChange={props.handleFloatChange.bind(this, 'trucklength')} />
           </div>
           <div className="field">
             <input
@@ -475,7 +486,7 @@ export default class CreateBizCardPage extends React.Component {
             </div>
             <section className={cx('more-fields', this.state.showMore ? '' : 'hide')}>
               <div className="panel routes">
-                <h2>常跑路线</h2>
+                <h2>{`${ROUTE_TITLES[this.state.bizCardType.id]}路线`}</h2>
                 <h3>
                   <span>出发地</span>
                   <i className="icon icon-add s15" onClick={this.handleAddAddress.bind(this, 'fromCities')}></i>
