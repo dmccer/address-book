@@ -50,36 +50,37 @@ export default class ABDetailPage extends React.Component {
 
   constructor() {
     super();
-  }
 
-  componentWillMount() {
-    this.setState({
-      atab: this.state.qs.atab || 'member'
-    });
-  }
-
-  verifyWX() {
-    return new Promise((resolve, reject) => {
-      const OK = {
-        retcode: 0
-      };
-
-      if (this.state.wxReady) {
-        resolve(OK);
-      }
-
+    this.verifyWX = new Promise((resolve, reject) => {
       WXVerify({
         appId: Config.wxAppId,
         url: Config.wxSignatureUrl,
-        jsApiList: ['chooseImage', 'uploadImage', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone']
+        jsApiList: [
+          'chooseImage',
+          'uploadImage',
+          'onMenuShareTimeline',
+          'onMenuShareAppMessage',
+          'onMenuShareQQ',
+          'onMenuShareQZone'
+        ]
       }, (err) => {
         if (err) {
           reject(err);
           return;
         }
 
-        resolve(OK);
+        this.setState({
+          wxReady: true
+        }, () => {
+          resolve();
+        });
       });
+    });
+  }
+
+  componentWillMount() {
+    this.setState({
+      atab: this.state.qs.atab || 'member'
     });
   }
 
@@ -92,7 +93,7 @@ export default class ABDetailPage extends React.Component {
   fetch() {
     let aid = this.state.qs.id;
 
-    this.ajaxHelper.all([ABBaseInfo, ABMemberList, this.verifyWX.bind(this)], res => {
+    this.ajaxHelper.all([ABBaseInfo, ABMemberList], res => {
       let abInfo = res[0].addlist_card;
       let memberList = res[1].addlist_cards;
 
@@ -104,22 +105,23 @@ export default class ABDetailPage extends React.Component {
 
       this.setState({
         abInfo: abInfo,
-        memberList: memberList,
-        wxReady: true
+        memberList: memberList
       });
 
-      let qs = querystring.stringify({
-        id: this.state.qs.id
-      });
-      let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
+      this.verifyWX.then(() => {
+        let qs = querystring.stringify({
+          id: this.state.qs.id
+        });
+        let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
 
-      this.refs.share.toAll({
-        title: `${abInfo.aname}-物流通讯录`,
-        desc: abInfo.adesc || `${abInfo.group_holder}诚挚邀请您加入通讯录"${abInfo.name}"`,
-        link: url,
-        imgUrl: abInfo.photo
+        this.refs.share.toAll({
+          title: `${abInfo.aname}-物流通讯录`,
+          desc: abInfo.adesc || `${abInfo.group_holder}诚挚邀请您加入通讯录"${abInfo.name}"`,
+          link: url,
+          imgUrl: abInfo.photo
+        });
       });
-    }, [aid], [aid], []);
+    }, [aid], [aid]);
   }
 
   handleClickDelAB(e) {
@@ -136,7 +138,7 @@ export default class ABDetailPage extends React.Component {
       this.refs.toast.success('删除通讯录成功');
 
       setTimeout(() => {
-        history.back();
+        location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, '/address-book.html');
       }, 1000);
     }, this.state.qs.id);
   }
@@ -169,8 +171,15 @@ export default class ABDetailPage extends React.Component {
       answer = arg;
     }
 
-    this.ajaxHelper.one(JoinAB, res => {
-      this.refs.toast.success(res.msg);
+    this.ajaxHelper.one(JoinAB, {
+      success: res => {
+        this.refs.toast.success(res.msg);
+      },
+      error: res => {
+        if (res.retcode === 1007) {
+          location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, '/biz-card-create.html');
+        }
+      }
     }, this.state.qs.id, answer);
   }
 
@@ -179,30 +188,34 @@ export default class ABDetailPage extends React.Component {
   }
 
   handleChangeLogo() {
-    wx.chooseImage({
-      success: (res) => {
-        let localIds = res.localIds;
-        let len = localIds.length;
+    this.refs.toast.warn('等待微信验证...');
 
-        if (len === 0) {
-          this.refs.toast.warn('请选择一张图片');
-          return;
-        }
+    this.verifyWX.then(() => {
+      wx.chooseImage({
+        success: (res) => {
+          let localIds = res.localIds;
+          let len = localIds.length;
 
-        if (len > 1) {
-          this.refs.toast.warn('只能选择一张图片');
-          return;
-        }
-
-        wx.uploadImage({
-          localId: localIds[0],
-          success: (res) => {
-            this.ajaxHelper.one(UpdateABLogo, res => {
-              this.refs.toast.success('更换LOGO成功');
-            }, this.state.qs.id, res.serverId);
+          if (len === 0) {
+            this.refs.toast.warn('请选择一张图片');
+            return;
           }
-        });
-      }
+
+          if (len > 1) {
+            this.refs.toast.warn('只能选择一张图片');
+            return;
+          }
+
+          wx.uploadImage({
+            localId: localIds[0],
+            success: (res) => {
+              this.ajaxHelper.one(UpdateABLogo, res => {
+                this.refs.toast.success('更换LOGO成功');
+              }, this.state.qs.id, res.serverId);
+            }
+          });
+        }
+      });
     });
   }
 
@@ -231,7 +244,7 @@ export default class ABDetailPage extends React.Component {
 
       let joinAB = !abInfo.joined_flag ? (
         <div
-          className="btn block lightBlue join-btn"
+          className="btn block green join-btn"
           onClick={this.handleClickJoinAB.bind(this)}
         >加入该通讯录</div>
       ) : null;
