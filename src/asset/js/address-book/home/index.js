@@ -41,7 +41,7 @@ export default class ABPage extends React.Component {
   fetch() {
     this.ajaxHelper.one(MainABList, res => {
       this.setState({
-        createdList: res.created_addlist,
+        createdList: res.create_addlist,
         recommendList: res.recommend_addlist,
         joinedList: res.join_addlist
       });
