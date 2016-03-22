@@ -5,8 +5,6 @@ import Promise from 'promise';
 
 import Confirm from '../../../confirm/';
 import Prompt from '../../../prompt/';
-import Loading from '../../../loading/';
-import Toast from '../../../toast/';
 
 export default class BizCardEditableGroupItem extends React.Component {
   constructor() {
@@ -15,13 +13,13 @@ export default class BizCardEditableGroupItem extends React.Component {
 
   handleDel() {
     this.refs.confirm.show({
-      msg: `删除群组${this.props.groupname}`
+      msg: `删除分组${this.props.groupname}`
     });
   }
 
   handleEdit() {
     this.refs.editModal.show({
-      title: '编辑群组',
+      title: '编辑分组',
       placeholder: this.props.groupname
     });
   }
@@ -50,8 +48,6 @@ export default class BizCardEditableGroupItem extends React.Component {
           ref="editModal"
           confirm={props.onEdit}
         />
-        <Loading ref="loading" />
-        <Toast ref="toast" />
       </div>
     );
   }

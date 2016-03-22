@@ -4,11 +4,11 @@ import React from 'react';
 import cx from 'classnames';
 import Promise from 'promise';
 
-import AjaxError from '../../ajax-err/';
+import AjaxHelper from '../../ajax-helper/';
 import ManageOtherMiniCardList from '../manage-other-list/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
-import Log from '../../log/';
+import {BizCardFriendsOfGroup} from '../model/';
 
 export default class BizCardGroupItem extends React.Component {
   state = {
@@ -20,42 +20,15 @@ export default class BizCardGroupItem extends React.Component {
   }
 
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
   }
 
   getBizCards() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_card_friends',
-        type: 'GET',
-        cache: false,
-        data: {
-          gid: this.props.id
-        },
-        success: resolve.bind(this),
-        error: reject.bind(this)
+    this.ajaxHelper.one(BizCardFriendsOfGroup, res => {
+      this.setState({
+        bizCards: res.cardFriends
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          bizCards: res.cardFriends
-        });
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`获取名片失败, ${err.message}`)
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    }, this.props.id);
   }
 
   renderMiniCardList() {
