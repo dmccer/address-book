@@ -3,16 +3,20 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
-import Log from '../log/';
+
+import AjaxHelper from '../ajax-helper/';
+import {MsgCount} from '../message/model/';
 
 export default class Header extends React.Component {
+  state = {};
+
   constructor() {
     super();
-
-    this.state = {};
   }
 
   componentWillMount() {
+    this.ajaxHelper = new AjaxHelper();
+
     this.fetchMsgCount();
   }
 
@@ -23,23 +27,10 @@ export default class Header extends React.Component {
   }
 
   fetchMsgCount() {
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_msgs_count',
-        type: 'GET',
-        cache: false,
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          hasMsg: res.total_count > 0
-        })
-        return;
-      }
-    }).catch((err) => {
-      Log.error(err);
+    this.ajaxHelper.one(MsgCount, res => {
+      this.setState({
+        hasMsg: res.total_count > 0
+      })
     });
 
     setTimeout(() => {
