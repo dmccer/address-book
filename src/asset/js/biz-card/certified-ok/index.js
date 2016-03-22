@@ -7,11 +7,12 @@ import ReactDOM from 'react-dom';
 import querystring from 'querystring';
 import Promise from 'promise';
 
-import AjaxError from '../../ajax-err/';
+import AjaxHelper from '../../ajax-helper/';
 import SubHeader from '../../sub-header/';
 import Private from '../../private/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
+import {MyVerifyInfo} from '../../my/model/';
 
 export default class BizCardCertifiedOKPage extends React.Component {
   state = {
@@ -23,36 +24,14 @@ export default class BizCardCertifiedOKPage extends React.Component {
   }
 
   componentDidMount() {
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
+
     this.fetch();
   }
 
   fetch() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_my_card_verify',
-        type: 'GET',
-        data: {
-          cid: this.state.qs.cid
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        // 设置实名认证通过时间
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`加载名片信息出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
+    this.ajaxHelper.one(MyVerifyInfo, res => {
+      console.log(res);
     });
   }
 
