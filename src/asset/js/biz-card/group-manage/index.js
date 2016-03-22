@@ -1,5 +1,5 @@
 /**
- * 群组管理页面
+ * 分组管理页面
  */
 import '../../../less/global/global.less';
 import '../../../less/component/form.less';
@@ -10,14 +10,21 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
+import find from 'lodash/collection/find';
 
+import AjaxHelper from '../../ajax-helper/';
 import ModalHeader from '../../modal-header/';
 import BizCardEditableGroupItem from '../group/editable/';
 import Prompt from '../../prompt/';
 import Private from '../../private/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
-import Log from '../../log/';
+import {
+  BizCardGroups,
+  CreateBizCardGroup,
+  RenameBizCardGroup,
+  DelBizCardGroup
+} from '../model/';
 
 export default class BizCardGroupManagePage extends React.Component {
   state = {
@@ -29,6 +36,7 @@ export default class BizCardGroupManagePage extends React.Component {
   }
 
   componentDidMount() {
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
     this.getGroups();
   }
 
@@ -37,42 +45,17 @@ export default class BizCardGroupManagePage extends React.Component {
    * @return {Promise}
    */
   getGroups() {
-    this.refs.loading.show('加载中...');
-
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/query_my_card_groups',
-        type: 'GET',
-        cache: false,
-        data: {
-          no_def: 1
-        },
-        success: resolve,
-        error: reject
+    this.ajaxHelper.one(BizCardGroups, res => {
+      this.setState({
+        groups: res.pimCardGroups
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          groups: res.pimCardGroups
-        });
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.warn(`加载名片分组出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
     });
   }
 
   handleClickAdd() {
     this.refs.editModal.show({
-      title: '添加群组',
-      placeholder: '请输入新群组名称'
+      title: '添加分组',
+      placeholder: '请输入新分组名称'
     });
   }
 
@@ -81,39 +64,17 @@ export default class BizCardGroupManagePage extends React.Component {
       return;
     }
 
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/create_card_group',
-        type: 'POST',
-        data: {
-          groupname: val
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('添加群组成功');
+    this.ajaxHelper.one(CreateBizCardGroup, res => {
+      this.refs.toast.success('添加分组成功');
 
-        this.getGroups();
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.error(`添加群组出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+      this.getGroups();
+    }, val);
   }
 
   /**
-   * handleEditGroupName 修改群组名称
-   * @param  {[type]} group 修改的群组
-   * @param  {[type]} name  新群组名
+   * handleEditGroupName 修改分组名称
+   * @param  {[type]} group 修改的分组
+   * @param  {[type]} name  新分组名
    * @return
    */
   handleEditGroupName(group, name) {
@@ -121,73 +82,33 @@ export default class BizCardGroupManagePage extends React.Component {
       return;
     }
 
-    this.refs.loading.show('请求中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/rename_card_group',
-        type: 'POST',
-        data: {
-          gid: group.id,
-          groupname: name
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success('修改群组名成功');
-
-        this.getGroups();
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.error(`修改群组名出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
+    let exist = find(this.state.groups, (group) => {
+      return group.groupname === name;
     });
+
+    if (exist) {
+      this.refs.toast.warn('分组名称不能重复');
+
+      return;
+    }
+
+    this.ajaxHelper.one(RenameBizCardGroup, res => {
+      this.refs.toast.success('修改分组名成功');
+
+      this.getGroups();
+    }, group.id, name);
   }
 
   /**
-   * handleRemoveGroup 删除群组
-   * @param  {[type]} group 待删除的群组
+   * handleRemoveGroup 删除分组
+   * @param  {[type]} group 待删除的分组
    * @return
    */
   handleRemoveGroup(group) {
-    this.refs.loading.show('删除中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/del_my_card_group',
-        type: 'POST',
-        data: {
-          gid: group.id
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.refs.toast.success(`删除群组${group.groupname}成功`);
-
-        this.getGroups();
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        this.refs.toast.error(`删除群组${group.groupname}出错,${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    this.ajaxHelper.one(DelBizCardGroup, res => {
+      this.refs.toast.success(`删除分组${group.groupname}成功`);
+      this.getGroups();
+    }, group.id);
   }
 
   renderGroupList() {
@@ -207,7 +128,7 @@ export default class BizCardGroupManagePage extends React.Component {
   render() {
     return (
       <section className="group-manage-page">
-        <ModalHeader title="管理群组" />
+        <ModalHeader title="管理分组" />
         <div className="group-manage">
           <a
             href="javascript:void(0)"
@@ -215,7 +136,7 @@ export default class BizCardGroupManagePage extends React.Component {
             onClick={this.handleClickAdd.bind(this)}
           >
             <i className="icon s15 icon-round-plus"></i>
-            <span>新建群组</span>
+            <span>新建分组</span>
           </a>
           <div className="list">
             {this.renderGroupList()}
