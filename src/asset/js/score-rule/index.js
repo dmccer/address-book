@@ -65,7 +65,7 @@ export default class ScoreRulePage extends React.Component {
     this.ajaxHelper.one(MyVerifyInfo, res => {
       let page;
 
-      switch (res.verifyFlag) {
+      switch (res.verifyflag) {
         case 0:
           page = '/biz-card-certify.html';
           break;
@@ -104,8 +104,8 @@ export default class ScoreRulePage extends React.Component {
         let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
 
         this.refs.share.toAll({
-          title: card.share_title,
-          desc: card.share_desc,
+          title: card.def_share_title,
+          desc: card.def_share_desc,
           link: url,
           imgUrl: user.photo
         });
@@ -155,10 +155,12 @@ export default class ScoreRulePage extends React.Component {
               <i className="icon s12 icon-li"></i>
               <p><span>每日签到可获 3 积分 / 天</span></p>
             </li>
-            <li>
-              <i className="icon s12 icon-li"></i>
-              <p><span>分享通讯录组，被分享的人加入此通讯录组可获得 1 积分/人，每天最多 10 积分</span></p>
-            </li>
+            {
+              // <li>
+              //   <i className="icon s12 icon-li"></i>
+              //   <p><span>分享通讯录组，被分享的人加入此通讯录组可获得 1 积分/人，每天最多 10 积分</span></p>
+              // </li>
+            }
             <li>
               <i className="icon s12 icon-li"></i>
               <p>
