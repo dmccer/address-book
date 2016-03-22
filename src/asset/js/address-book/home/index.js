@@ -13,14 +13,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise';
 
-import AjaxError from '../../ajax-err/';
+import AjaxHelper from '../../ajax-helper/';
 import Header from '../../header/';
 import Nav from '../../nav/';
 import ABMiniItem from '../mini-item/';
 import ABList from '../list/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
-import Log from '../../log/';
+import {MainABList} from '../model/';
 
 export default class ABPage extends React.Component {
   state = {
@@ -33,41 +33,17 @@ export default class ABPage extends React.Component {
   }
 
   componentDidMount() {
-    AjaxError.init(this.refs.toast);
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
 
     this.fetch();
   }
 
   fetch() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/main_addlist_info',
-        type: 'GET',
-        cache: false,
-        success: resolve.bind(this),
-        error: reject.bind(this)
+    this.ajaxHelper.one(MainABList, res => {
+      this.setState({
+        recommendList: res.recommend_addlist,
+        joinedList: res.join_addlist
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          createdList: res.create_addlist,
-          joinedList: res.join_addlist
-        });
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      if (err && err instanceof Error) {
-        Log.error(err);
-
-        this.refs.toast.warn(`加载通讯录数据出错，${err.message}`);
-      }
-    }).done(() => {
-      this.refs.loading.close();
     });
   }
 
@@ -81,8 +57,8 @@ export default class ABPage extends React.Component {
             <span>点击开始搜索</span>
           </a>
           <div className="divide"></div>
-          <h2 className="subtitle">我发起的</h2>
-          <ABList items={this.state.createdList} />
+          <h2 className="subtitle">推荐通讯录</h2>
+          <ABList items={this.state.recommendList} />
           <h2 className="subtitle">我加入的</h2>
           <ABList items={this.state.joinedList} />
         </section>
