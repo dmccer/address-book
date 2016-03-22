@@ -6,17 +6,12 @@ import cx from 'classnames';
 import ReactIScroll from 'react-iscroll';
 import IScroll from 'iscroll/build/iscroll';
 import Promise from 'promise';
-// import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import find from 'lodash/collection/find';
 import Loading from '../loading/';
 import Popover from '../popover/';
-import Log from '../log/';
-
-// 因为 iscroll 禁用了 click 事件，
-// 若启用 iscroll click, 会对其他默认滚动列表，滚动时触发 click
-// 启用 tap 事件
-// injectTapEventPlugin();
+import AjaxHelper from '../ajax-helper/';
+import {Cities} from './model';
 
 const ALL = '不限';
 
@@ -47,16 +42,6 @@ export default class AddressSelector extends React.Component {
     areas: []
   };
 
-  // state = {
-  //   provinces: [
-  //     '不限', '北京', '天津', '河北',
-  //     '山西', '内蒙古', '辽宁', '吉林',
-  //     '黑龙江', '上海'
-  //   ],
-  //   cities: [],
-  //   areas: []
-  // };
-
   constructor() {
     super();
   }
@@ -70,6 +55,8 @@ export default class AddressSelector extends React.Component {
   }
 
   componentDidMount() {
+    this.ajaxHelper = new AjaxHelper(this.refs.loading);
+
     // 若获取过省份列表，则直接展示，无须再次请求
     if (this.state.provinces && this.state.provinces.length) {
       return;
@@ -91,26 +78,10 @@ export default class AddressSelector extends React.Component {
    * 获取省份列表
    */
   fetchProvinces() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/getCitys',
-        type: 'GET',
-        cache: false,
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
+    this.ajaxHelper.one(Cities, res => {
       this.setState({
         provinces: res.resultList
       });
-    }).catch((err) => {
-      Log.error(err);
-
-      this.refs.popover.error('加载省份失败,请重试');
-    }).done(() => {
-      this.refs.loading.close();
     });
   }
 
@@ -118,64 +89,22 @@ export default class AddressSelector extends React.Component {
    * 获取城市列表
    */
   fetchCities() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      let provinces = this.state.provinces;
-      let index = provinces.indexOf(this.state.province);
-
-      $.ajax({
-        url: '/pim/getCitys',
-        type: 'GET',
-        cache: false,
-        data: {
-          cityIndex: this.getIndex('province', 'provinces')
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
+    this.ajaxHelper.one(Cities, res => {
       this.setState({
         cities: res.resultList
       });
-    }).catch((err) => {
-      Log.error(err);
-
-      this.refs.popover.error('加载城市失败,请重试');
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    }, this.getIndex('province', 'provinces'));
   }
 
   /**
    * 获取地区列表
    */
   fetchAreas() {
-    this.refs.loading.show('加载中...');
-
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/getCitys',
-        type: 'GET',
-        cache: false,
-        data: {
-          cityIndex: this.getIndex('province', 'provinces'),
-          districtIndex: this.getIndex('city', 'cities')
-        },
-        success: resolve,
-        error: reject
-      });
-    }).then((res) => {
+    this.ajaxHelper.one(Cities, res => {
       this.setState({
         areas: res.resultList
       });
-    }).catch((err) => {
-      Log.error(err);
-
-      this.refs.popover.error('加载地区失败,请重试');
-    }).done(() => {
-      this.refs.loading.close();
-    });
+    }, this.getIndex('province', 'provinces'), this.getIndex('city', 'cities'));
   }
 
   /**
