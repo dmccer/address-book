@@ -54,6 +54,11 @@ const ASK_URL = {
   }
 };
 
+const ROUTE_TITLES = {
+  1: '常跑',
+  2: '优势'
+};
+
 export default class BizCardDetailPage extends React.Component {
   state = {
     selectorData: [],
@@ -65,26 +70,8 @@ export default class BizCardDetailPage extends React.Component {
 
   constructor() {
     super();
-  }
 
-  componentDidMount() {
-    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
-
-    this.fetch();
-  }
-
-  verifyWX() {
-    return new Promise((resolve, reject) => {
-      const OK = {
-        retcode: 0
-      };
-
-      resolve(OK);
-
-      if (this.state.wxReady) {
-        resolve(OK);
-      }
-
+    this.verifyWX = new Promise((resolve, reject) => {
       WXVerify({
         appId: Config.wxAppId,
         url: Config.wxSignatureUrl,
@@ -95,15 +82,25 @@ export default class BizCardDetailPage extends React.Component {
           return;
         }
 
-        resolve(OK);
+        this.setState({
+          wxReady: true
+        }, () => {
+          resolve();
+        });
       });
     });
   }
 
+  componentDidMount() {
+    this.ajaxHelper = new AjaxHelper(this.refs.loading, this.refs.toast);
+
+    this.fetch();
+  }
+
   fetch() {
     let qs = this.state.qs;
-    let reqs = [MainBizCard, BizCardDetail, AllTrucks, this.verifyWX.bind(this)];
-    let params = [[qs.uid], [qs.cid], [], []];
+    let reqs = [MainBizCard, BizCardDetail, AllTrucks];
+    let params = [[qs.uid], [qs.cid], []];
 
     // 消息审核状态
     if (qs.askid) {
@@ -122,27 +119,28 @@ export default class BizCardDetailPage extends React.Component {
 
       let r = {
         account: account,
-        bizCard: card,
-        wxReady: true
+        bizCard: card
       };
 
-      if (res[4] && res[4].ask_for) {
-        r.askfor = res[4].ask_for;
+      if (res[3] && res[3].ask_for) {
+        r.askfor = res[3].ask_for;
       }
 
       this.setState(r);
 
-      let qs = querystring.stringify({
-        cid: card.id,
-        uid: card.uid
-      });
-      let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
+      this.verifyWX.then(() => {
+        let qs = querystring.stringify({
+          cid: card.id,
+          uid: card.uid
+        });
+        let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
 
-      this.refs.share.toAll({
-        title: card.share_title,
-        desc: card.share_desc,
-        link: url,
-        imgUrl: account.photo
+        this.refs.share.toAll({
+          title: card.def_share_title,
+          desc: card.def_share_desc,
+          link: url,
+          imgUrl: account.photo
+        });
       });
     }, ...params);
   }
@@ -219,6 +217,10 @@ export default class BizCardDetailPage extends React.Component {
   handleRemoveFriend() {
     this.ajaxHelper.one(RemoveFriendBizCard, res => {
       this.refs.popover.success(`删除名片好友成功`);
+
+      setTimeout(() => {
+        history.back();
+      }, 1500);
     }, this.state.qs.uid);
   }
 
@@ -314,7 +316,7 @@ export default class BizCardDetailPage extends React.Component {
         <div className="group">
           <h2>
             <i className="icon icon-route s15"></i>
-            <span>专线路线</span>
+            <span>{`${ROUTE_TITLES[bizCard.ctype]}路线`}</span>
           </h2>
           <dl className={cx('info-list private-route', fromCities.length ? '' : 'off')}>
             <dt>出发地:</dt>
