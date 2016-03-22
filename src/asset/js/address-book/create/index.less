@@ -74,12 +74,17 @@
   li {
     position: relative;
     float: left;
-    padding: 10px 13px;
-    color: @white;
-    background-color: @c_green;
+    padding: 6px 6px;
     border-radius: 2px;
     margin-right: 8px;
     margin-bottom: 8px;
+    color: @c_green;
+    border: 2px solid @c_green;
+
+    &.selected {
+      background-color: @c_green;
+      color: @white;
+    }
 
     .icon-ok {
       display: block;

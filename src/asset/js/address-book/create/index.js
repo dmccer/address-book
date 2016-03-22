@@ -93,6 +93,11 @@ export default class ABCreatePage extends React.Component {
       return false;
     }
 
+    if (Validator.empty(this.props.adesc)) {
+      this.refs.toast.wanr('通讯录描述不能为空');
+      return false;
+    }
+
     return true;
   }
 
@@ -171,6 +176,7 @@ export default class ABCreatePage extends React.Component {
       let icon = field.selected ? <i className="icon icon-ok"></i> : null;
       return (
         <li
+          className={field.selected ? 'selected' : ''}
           key={`biz-card-field-item_${index}`}
           onClick={this.handleToggleSelectBizCardField.bind(this, field)}>
           <span>{field.name}</span>
@@ -228,7 +234,7 @@ export default class ABCreatePage extends React.Component {
                 />
               </div>
             </div>
-            <button type="submit" className="btn block lightBlue submit">确定发起</button>
+            <button type="submit" className="btn block green submit">保存通讯录</button>
           </form>
         </div>
         <Private />
