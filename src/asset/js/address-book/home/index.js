@@ -41,6 +41,7 @@ export default class ABPage extends React.Component {
   fetch() {
     this.ajaxHelper.one(MainABList, res => {
       this.setState({
+        createdList: res.created_addlist,
         recommendList: res.recommend_addlist,
         joinedList: res.join_addlist
       });
@@ -59,6 +60,8 @@ export default class ABPage extends React.Component {
           <div className="divide"></div>
           <h2 className="subtitle">推荐通讯录</h2>
           <ABList items={this.state.recommendList} />
+          <h2 className="subtitle">我创建的</h2>
+          <ABList items={this.state.createdList} />
           <h2 className="subtitle">我加入的</h2>
           <ABList items={this.state.joinedList} />
         </section>
