@@ -25,22 +25,26 @@ import Log from '../log/';
 
 export default class AjaxHelper {
   constructor(loading, toast) {
-    if (!loading && !toast) {
-      this.silent = true;
-
-      return;
-    }
-
     this.loading = loading;
     this.toast = toast;
 
-    AjaxError.init(this.toast);
+    this.loadingState = !!loading;
+    this.toastState = !!toast;
+
+    this.toastState && AjaxError.init(this.toast);
   }
 
-  all(models: Array<Object>, cb: Function, ...args) {
-    if (!this.silent) {
-      this.loading.show('请求中...');
+  all(models: Array<Object>, cb: Object, ...args) {
+    let ok, fail;
+
+    if (typeof cb === 'function') {
+      ok = cb;
+    } else {
+      ok = cb.success;
+      fail = cb.error;
     }
+
+    this.loadingState && this.loading.show('请求中...');
 
     let ps = models.map((model, index) => {
       return model.apply(this, args[index]).then(res => {
@@ -48,58 +52,55 @@ export default class AjaxHelper {
           return res;
         }
 
-        if (!this.silent) {
-          this.toast.warn(res.msg);
-        }
+        this.toastState && this.toast.warn(res.msg);
       });
     });
 
     Promise
       .all(ps)
-      .then(cb)
+      .then(ok, fail)
       .catch(err => {
         if (err && err instanceof Error) {
           Log.error(err);
 
-          if (!this.silent) {
-            this.toast.warn(`有点不对劲,${err.message}`);
-          }
+          this.toastState && this.toast.warn(`有点不对劲,${err.message}`);
         }
       })
       .done(() => {
-        if (!this.silent) {
-          this.loading.close();
-        }
+        this.loadingState && this.loading.close();
       });
   }
 
-  one(model: Object, cb: Function, ...args) {
-    if (!this.silent) {
-      this.loading.show('请求中...');
+  one(model: Object, cb: Object, ...args) {
+    let ok, fail;
+
+    if (typeof cb === 'function') {
+      ok = cb;
+    } else {
+      ok = cb.success;
+      fail = cb.error;
     }
+
+    this.loadingState && this.loading.show('请求中...');
 
     model.apply(this, args)
       .then(res => {
         if (res.retcode === 0) {
-          return cb(res);
+          return ok(res);
         }
 
-        if (!this.silent) {
-          this.toast.warn(res.msg);
-        }
-      })
+        this.toastState && this.toast.warn(res.msg);
+        fail(res);
+      }, fail)
       .catch(err => {
         if (err && err instanceof Error) {
           Log.error(err);
-          if (!this.silent) {
-            this.toast.warn(`有点不对劲,${err.message}`);
-          }
+
+          this.toastState && this.toast.warn(`有点不对劲,${err.message}`);
         }
       })
       .done(() => {
-        if (!this.silent) {
-          this.loading.close();
-        }
+        this.loadingState && this.loading.close();
       });
   }
 }
