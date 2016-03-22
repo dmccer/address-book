@@ -14,8 +14,10 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise';
 import debounce from 'lodash/function/debounce';
 
+import AjaxHelper from '../../ajax-helper/';
 import TinyHeader from '../../tiny-header/';
 import MiniCardList from '../mini-card-list/';
+import {SearchMyCardFriends} from '../model/';
 
 export default class SearchBizCardPage extends React.Component {
   state = {
@@ -24,6 +26,10 @@ export default class SearchBizCardPage extends React.Component {
 
   constructor() {
     super();
+  }
+
+  componentDidMount() {
+    this.ajaxHelper = new AjaxHelper();
   }
 
   /**
@@ -51,32 +57,11 @@ export default class SearchBizCardPage extends React.Component {
    * @return
    */
   query() {
-    new Promise((resolve, reject) => {
-      $.ajax({
-        url: '/pim/search_my_card_friends',
-        type: 'GET',
-        cache: false,
-        data: {
-          keyword: this.state.keyword
-        },
-        success: resolve.bind(this),
-        error: reject.bind(this)
+    this.ajaxHelper.one(SearchMyCardFriends, res => {
+      this.setState({
+        bizCards: res.cardFriends
       });
-    }).then((res) => {
-      if (res.retcode === 0) {
-        this.setState({
-          bizCards: res.cardFriends
-        });
-
-        return;
-      }
-
-      this.refs.toast.warn(res.msg);
-    }).catch((err) => {
-      Log.error(err);
-
-      this.refs.toast.warn(`搜索名片好友出错，${err.message}`);
-    });
+    }, this.state.keyword);
   }
 
   /**

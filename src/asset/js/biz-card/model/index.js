@@ -148,6 +148,46 @@ export var SetMainBizCard = (cid) => {
 }
 
 /**
+ * 搜索我的名片好友
+ * @param  {String} keyword 关键字
+ * @return {Promise}
+ */
+export var SearchMyCardFriends = (keyword) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/search_my_card_friends',
+      type: 'GET',
+      cache: false,
+      data: {
+        keyword: keyword
+      },
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
+ * 某一分组下的好友名片
+ * @param  {String} gid 名片分组 ID
+ * @return {Promise}
+ */
+export var BizCardFriendsOfGroup = (gid) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/query_card_friends',
+      type: 'GET',
+      cache: false,
+      data: {
+        gid: gid
+      },
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
  * 获取我的名片分组
  * @return {Promise}
  */
@@ -157,6 +197,65 @@ export var BizCardGroups = () => {
       url: '/pim/query_my_card_groups',
       type: 'GET',
       cache: false,
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
+ * 新建名片分组
+ * @param  {String} gname 名片分组名称
+ * @return {Promise}
+ */
+export var CreateBizCardGroup = (gname) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/create_card_group',
+      type: 'POST',
+      data: {
+        groupname: gname
+      },
+      success: resolve,
+      error: reject
+    });
+  })
+}
+
+/**
+ * 修改名片分组名称
+ * @param  {String} gid 名片分组 ID
+ * @param  {String} gname 名片分组名称
+ * @return {Promise}
+ */
+export var RenameBizCardGroup = (gid, gname) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/rename_card_group',
+      type: 'POST',
+      data: {
+        gid: gid,
+        groupname: gname
+      },
+      success: resolve,
+      error: reject
+    });
+  });
+}
+
+/**
+ * 删除名片分组
+ * @param  {String} gid 需要删除的名片分组 ID
+ * @return {Promise}
+ */
+export var DelBizCardGroup = (gid) => {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/pim/del_my_card_group',
+      type: 'POST',
+      data: {
+        gid: gid
+      },
       success: resolve,
       error: reject
     });

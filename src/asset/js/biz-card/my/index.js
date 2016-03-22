@@ -70,7 +70,7 @@ export default class BizCardMyPage extends React.Component {
       this.calcFriendsCount(groups);
 
       groups.push({
-        groupname: '管理群组',
+        groupname: '管理分组',
         extra: true
       });
 
@@ -153,7 +153,7 @@ export default class BizCardMyPage extends React.Component {
   render() {
     return (
       <section className="biz-card-my-page">
-        <Header title="我的名片" />
+        <Header title="名片" />
         <div className="biz-card-my">
           {this.renderMyBizCard()}
           <ul className="menu grid">
