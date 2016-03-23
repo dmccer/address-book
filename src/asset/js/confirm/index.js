@@ -23,6 +23,11 @@ import {ConfirmEnhance} from '../enhance/confirm';
 
 @ConfirmEnhance
 export default class Confirm extends React.Component {
+  static defaultProps = {
+    rightBtnText: '确定',
+    leftBtnText: '取消'
+  };
+
   state = {};
 
   constructor(props) {
@@ -42,8 +47,8 @@ export default class Confirm extends React.Component {
         <div className="confirm-panel">
           <div className="tip">{props.msg}</div>
           <div className="btns grid">
-            <div className="btn block lightBlack" onClick={props.cancel}>取消</div>
-            <div className="btn block lightBlack" onClick={props.confirm}>确定</div>
+            <div className="btn block lightBlack" onClick={props.cancel}>{props.leftBtnText}</div>
+            <div className="btn block lightBlack" onClick={props.confirm}>{props.rightBtnText}</div>
           </div>
         </div>
       </div>
