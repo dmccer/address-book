@@ -19,7 +19,7 @@ let AjaxErrorHandler = {
             ref: location.href
           });
 
-          location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/login.html?${qs}`);
+          location.href = location.protocol + '//' + location.host + '/pim/wxpim/authorize';
         }, 2000);
 
         return;
