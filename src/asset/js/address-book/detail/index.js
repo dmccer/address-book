@@ -218,6 +218,7 @@ export default class ABDetailPage extends React.Component {
 
     this.verifyWX.then(() => {
       wx.chooseImage({
+        count: 1,
         success: (res) => {
           let localIds = res.localIds;
           let len = localIds.length;
