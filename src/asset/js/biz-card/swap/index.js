@@ -17,14 +17,14 @@ import Header from '../../header/';
 import Nav from '../../nav/';
 import Config from '../../config';
 import WXVerify from '../../wx-verify/';
-import MiniCard from '../mini-card/';
+import MainMiniCard from '../mini-card/main/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
 import {MainBizCard, SwapBizCard} from '../model/';
 
 export default class BizCardSwapPage extends React.Component {
   state = {
-    bizCard: {}
+    bizCard: null
   };
 
   constructor() {
@@ -61,10 +61,11 @@ export default class BizCardSwapPage extends React.Component {
   getMyBizCard() {
     this.ajaxHelper.one(MainBizCard, res => {
       this.setState({
-        bizCard: res.card
+        bizCard: res.card,
+        loaded: true
       });
 
-      if (!res.card.qr_code) {
+      if (!res.card || !res.card.qr_code) {
         this.refs.toast.warn('您还没有名片');
       }
     });
@@ -93,12 +94,33 @@ export default class BizCardSwapPage extends React.Component {
     }, uid);
   }
 
+  renderMyBizCard() {
+    let bizCard = this.state.bizCard;
+    let loaded = this.state.loaded;
+
+    if (loaded && bizCard) {
+      return <MainMiniCard wxReady={this.state.wxReady} {...bizCard} />;
+    }
+
+    if (loaded && bizCard.cid == null) {
+      return (
+        <a href="./biz-card-create.html" className="btn block green add-btn">
+          <i className="icon s12 icon-plus"></i>
+          <span>新建名片</span>
+        </a>
+      );
+    }
+  }
+
   render() {
+    let bizCard = this.state.bizCard;
+    let qrCode = bizCard && bizCard.qr_code ? <img src={`${bizCard.qr_code}!small`} /> : null;
+
     return (
       <section className="biz-card-swap-page">
         <Header title="我的名片" />
         <div className="biz-card-swap">
-          <MiniCard {...this.state.bizCard} />
+          {this.renderMyBizCard()}
           <ul className="menu grid">
             <li><a href="./my-biz-card.html">名片好友</a></li>
             <li className="on">名片交换</li>
@@ -106,7 +128,7 @@ export default class BizCardSwapPage extends React.Component {
           <div className="swap">
             <h2>我的名片二维码</h2>
           		<div className="qrcode">
-          		  <img src={this.state.bizCard.qr_code} />
+          		  {qrCode}
           		</div>
           		<p>扫描二维码，自动加入到我的货运通讯录</p>
           		<div className="swap-btn">

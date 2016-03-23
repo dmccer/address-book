@@ -118,7 +118,7 @@ export default class BizCardMyPage extends React.Component {
       return <MainMiniCard wxReady={this.state.wxReady} {...myBizCard} />;
     }
 
-    if (loaded) {
+    if (loaded && myBizCard.cid == null) {
       return (
         <a href="./biz-card-create.html" className="btn block green add-btn">
           <i className="icon s12 icon-plus"></i>

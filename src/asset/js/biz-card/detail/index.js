@@ -34,7 +34,8 @@ import {
   SetMainBizCard,
   RemoveFriendBizCard,
   DelMyBizCard,
-  AllTrucks
+  AllTrucks,
+  SwapBizCard
 } from '../model/';
 import {MyVerifyInfo} from '../../my/model/';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -296,6 +297,18 @@ export default class BizCardDetailPage extends React.Component {
     this.refs.share.show();
   }
 
+  handleClickSwapBizCard() {
+    this.refs.handleSwapBizCard.show({
+      msg: '确认交换名片?'
+    });
+  }
+
+  handleSwapBizCard() {
+    this.ajaxHelper.one(SwapBizCard, res => {
+      this.refs.toast.success(res.msg);
+    }, this.state.qs.uid);
+  }
+
   renderRoutes(routes) {
     if (routes && routes.length) {
       return routes.map((route, index) => {
@@ -354,7 +367,9 @@ export default class BizCardDetailPage extends React.Component {
     }
 
     if (!bizCard.is_my_friend) {
-      return;
+      return (
+        <div className="btn block lightBlue" onClick={this.handleClickSwapBizCard.bind(this)}>名片交换</div>
+      );
     }
 
     let qs = querystring.stringify({
@@ -454,7 +469,7 @@ export default class BizCardDetailPage extends React.Component {
           </dl>
           {this.renderRoutesPanel()}
 
-          <div className={cx('group', bizCard.truckTypeStr || bizCard.trucklength || bizCard.loadlimit || bizCard.licenseplate ? '' : 'off')}>
+          <div className={cx('group', (bizCard.ctype === 1 && (bizCard.truckTypeStr || bizCard.trucklength || bizCard.loadlimit || bizCard.licenseplate)) ? '' : 'off')}>
             <h2>
               <i className="icon icon-truck-info s15"></i>
               <span>车辆信息</span>
@@ -508,6 +523,10 @@ export default class BizCardDetailPage extends React.Component {
         <Confirm
           ref="confirm"
           confirm={this.handleRemoveFriend.bind(this)}
+        />
+        <Confirm
+          ref="handleSwapBizCard"
+          confirm={this.handleSwapBizCard.bind(this)}
         />
         <Confirm
           ref="removeMyBizCardConfirm"

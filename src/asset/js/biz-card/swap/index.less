@@ -15,11 +15,16 @@ body {
 .biz-card-swap {
   padding: 10px 15px;
 
+  > .item:first-child {
+    margin-bottom: 10px;
+  }
+
   .add-btn {
     display: block;
     font-size: 16/12rem;
     text-align: center;
     margin-bottom: 10px;
+    line-height: 40px;
   }
 
   .menu {
@@ -35,7 +40,7 @@ body {
       a {
         color: @c_lightGrey_8;
       }
-      
+
       &.on {
         border-bottom: 4px solid @c_lightBlack_4;
         color: @c_blue_3;

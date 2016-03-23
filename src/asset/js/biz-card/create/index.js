@@ -228,8 +228,13 @@ export default class CreateBizCardPage extends React.Component {
         let qs = querystring.stringify({
           cid: res.cid
         });
+        let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
 
-        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-detail.html?${qs}`);
+        if (this.state.qs.ref) {
+          url = this.state.qs.ref;
+        }
+
+        location.href = url;
       });
     }, params);
   }
