@@ -5,12 +5,6 @@ import React from 'react';
 import cx from 'classnames';
 import ReactIScroll from 'react-iscroll';
 import IScroll from 'iscroll/build/iscroll';
-// import injectTapEventPlugin from 'react-tap-event-plugin';
-
-// 因为 iscroll 禁用了 click 事件，
-// 若启用 iscroll click, 会对其他默认滚动列表，滚动时触发 click
-// 启用 tap 事件
-// injectTapEventPlugin();
 
 export default class Selector extends React.Component {
   static defaultProps = {

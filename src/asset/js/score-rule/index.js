@@ -15,6 +15,7 @@ import Config from '../config';
 import Loading from '../loading/';
 import Toast from '../toast/';
 import Log from '../log/';
+import Confirm from '../confirm/';
 import Share from '../share/';
 import AjaxHelper from '../ajax-helper/';
 import {MyRecentScoreActionList, MyVerifyInfo} from '../my/model/';
@@ -95,6 +96,14 @@ export default class ScoreRulePage extends React.Component {
     this.ajaxHelper.one(MainBizCard, res => {
       let user = res.card;
 
+      if (!user.cid) {
+        this.refs.noneMainBizCard.show({
+          msg: '您还没有默认名片，请先新建名片'
+        });
+
+        return;
+      }
+
       this.ajaxHelper.one(BizCardDetail, res => {
         let card = res.card;
         let qs = querystring.stringify({
@@ -113,6 +122,10 @@ export default class ScoreRulePage extends React.Component {
         this.refs.share.show();
       }, user.cid)
     });
+  }
+
+  handleCreateMainBizCard() {
+    location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-create.html?ref=${location.href}`);
   }
 
   zero(n) {
@@ -164,7 +177,7 @@ export default class ScoreRulePage extends React.Component {
             <li>
               <i className="icon s12 icon-li"></i>
               <p>
-                <a href="javascript:;" onClick={this.share.bind(this)}>分享主名片</a>
+                <a href="javascript:;" onClick={this.share.bind(this)}>分享默认名片</a>
                 <span>，可获得 1 积分，每天最多 10 积分</span>
               </p>
             </li>
@@ -238,6 +251,12 @@ export default class ScoreRulePage extends React.Component {
           </table>
         </section>
         <Private />
+        <Confirm
+          ref="noneMainBizCard"
+          confirm={this.handleCreateMainBizCard.bind(this)}
+          rightBtnText={'新建名片'}
+          leftBtnText={'关闭'}
+        />
         <Share ref="share" wxReady={this.state.wxReady} />
         <Loading ref="loading" />
         <Toast ref="toast" />

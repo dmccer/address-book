@@ -48,10 +48,8 @@ let WXVerify = (conf, cb) => {
 
     wx.ready(cb);
     wx.error((...args) => {
-      alert(JSON.stringify(args));
-      alert('微信验证失败');
+      console.warn(JSON.stringify(args));
       args.unshift(new Error('微信验证失败'));
-
       cb && cb.apply(this, args);
     });
   });

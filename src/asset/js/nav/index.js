@@ -28,14 +28,14 @@ export default class Nav extends React.Component {
     if (menu.id === this.props.on) {
       e.stopPropagation();
       e.preventDefault();
-      
+
       return;
     }
   }
 
   render() {
     let menuList = MENUS.map((menu, index) => {
-      let on = menu.id === this.props.on ? 'on' : '';
+      let on = menu.id === this.props.on ? 'on' : 'off';
       let iconClassNames = cx('icon s22', `icon-${menu.id}`, on);
       let menuClassNames = cx('menu', on);
 
