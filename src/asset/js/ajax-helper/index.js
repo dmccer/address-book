@@ -23,6 +23,8 @@ import Promise from 'promise';
 import AjaxError from '../ajax-err/';
 import Log from '../log/';
 
+const noop = () => {};
+
 export default class AjaxHelper {
   constructor(loading, toast) {
     this.loading = loading;
@@ -35,7 +37,7 @@ export default class AjaxHelper {
   }
 
   all(models: Array<Object>, cb: Object, ...args) {
-    let ok, fail;
+    let ok, fail = noop;
 
     if (typeof cb === 'function') {
       ok = cb;
@@ -72,7 +74,7 @@ export default class AjaxHelper {
   }
 
   one(model: Object, cb: Object, ...args) {
-    let ok, fail;
+    let ok, fail = noop;
 
     if (typeof cb === 'function') {
       ok = cb;
