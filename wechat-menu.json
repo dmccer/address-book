@@ -1,0 +1,32 @@
+// GET ACCESS_TOKEN http://m.yqkyun.com/pim/data_info/get_at
+// POST https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN
+// body 如下:
+{
+  "button": [{
+    "name": "新建",
+    "sub_button": [{
+      "type": "view",
+      "name": "新建通讯录",
+      "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48b7e83a544df6ff&redirect_uri=http%3A%2F%2Fm.yqkyun.com%2Fpim%2Fwx_menu%3Fmenu_type%3DCREATE_ADDLIST&response_type=code&scope=snsapi_base&state=pim001#wechat_redirect"
+    }, {
+      "type": "view",
+      "name": "新建名片",
+      "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48b7e83a544df6ff&redirect_uri=http%3A%2F%2Fm.yqkyun.com%2Fpim%2Fwx_menu%3Fmenu_type%3DCREATE_CARD&response_type=code&scope=snsapi_base&state=pim001#wechat_redirect"
+    }]
+  }, {
+    "name": "管理",
+    "sub_button": [{
+      "type": "view",
+      "name": "我的通讯录",
+      "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48b7e83a544df6ff&redirect_uri=http%3A%2F%2Fm.yqkyun.com%2Fpim%2Fwx_menu%3Fmenu_type%3DMY_ADDLIST&response_type=code&scope=snsapi_base&state=pim001#wechat_redirect"
+    }, {
+      "type": "view",
+      "name": "我的名片",
+      "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48b7e83a544df6ff&redirect_uri=http%3A%2F%2Fm.yqkyun.com%2Fpim%2Fwx_menu%3Fmenu_type%3DMY_CARD&response_type=code&scope=snsapi_base&state=pim001#wechat_redirect"
+    }]
+  }, {
+    "type": "view",
+    "name": "签到",
+    "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48b7e83a544df6ff&redirect_uri=http%3A%2F%2Fm.yqkyun.com%2Fpim%2Fwx_menu%3Fmenu_type%3DINDEX&response_type=code&scope=snsapi_base&state=pim001#wechat_redirect"
+  }]
+}
