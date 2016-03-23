@@ -97,6 +97,9 @@ export default class ABDetailPage extends React.Component {
       let abInfo = res[0].addlist_card;
       let memberList = res[1].addlist_cards;
 
+      abInfo.no_requires = res[0].no_requires;
+      abInfo.my_main_card_id = res[0].my_main_card_id;
+
       let abType = find(AB_TYPES, (abType) => {
         return abType.id === abInfo.atype;
       });
@@ -138,13 +141,43 @@ export default class ABDetailPage extends React.Component {
       this.refs.toast.success('删除通讯录成功');
 
       setTimeout(() => {
-        location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, '/address-book.html');
+        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, '/address-book.html');
       }, 1000);
     }, this.state.qs.id);
   }
 
+  handleCreateMainBizCard() {
+    location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-create.html?ref=${location.href}`);
+  }
+
+  handleMissRequiredBizCardFields() {
+    let qs = querystring.stringify({
+      cid: this.state.abInfo.my_main_card_id,
+      ref: location.href
+    });
+
+    location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/biz-card-create.html?${qs}`);
+  }
+
   handleClickJoinAB() {
-    let question = this.state.abInfo.aquestion;
+    let abInfo = this.state.abInfo;
+
+    if (!abInfo.has_maincard) {
+      this.refs.noneMainBizCard.show({
+        msg: '您还没有名片，请先新建名片'
+      });
+      return;
+    }
+
+    if (abInfo.no_requires) {
+      this.refs.missRequiredBizCardFields.show({
+        msg: `您的默认名片缺少${abInfo.no_requires}信息，请您完善`
+      });
+
+      return;
+    }
+
+    let question = abInfo.aquestion;
 
     if (question) {
       this.refs.prompt.show({
@@ -171,15 +204,8 @@ export default class ABDetailPage extends React.Component {
       answer = arg;
     }
 
-    this.ajaxHelper.one(JoinAB, {
-      success: res => {
-        this.refs.toast.success(res.msg);
-      },
-      error: res => {
-        if (res.retcode === 1007) {
-          location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, '/biz-card-create.html');
-        }
-      }
+    this.ajaxHelper.one(JoinAB, res => {
+      this.refs.toast.success(res.msg);
     }, this.state.qs.id, answer);
   }
 
@@ -272,9 +298,23 @@ export default class ABDetailPage extends React.Component {
             confirm={this.handleJoinAB.bind(this)}
           />
           <Confirm
+            ref="missRequiredBizCardFields"
+            confirm={this.handleMissRequiredBizCardFields.bind(this)}
+            rightBtnText={'完善名片'}
+            leftBtnText={'关闭'}
+          />
+          <Confirm
+            ref="noneMainBizCard"
+            confirm={this.handleCreateMainBizCard.bind(this)}
+            rightBtnText={'新建名片'}
+            leftBtnText={'关闭'}
+          />
+          <Confirm
             ref="swapBizCard"
             confirm={this.handleSwapBizCard.bind(this)}
             cancel={this.handleCancelSwapBizCard.bind(this)}
+            rightBtnText={'交换名片'}
+            leftBtnText={'关闭'}
           />
           <Confirm
             ref="removeMember"
