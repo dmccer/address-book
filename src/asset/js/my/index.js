@@ -101,6 +101,7 @@ export default class MyPage extends React.Component {
     }
 
     wx.chooseImage({
+      count: 1,
       success: (res) => {
         let localIds = res.localIds;
         let len = localIds.length;
