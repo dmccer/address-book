@@ -46,8 +46,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      react: path.resolve(__dirname, './node_modules/react/'),
-      'react-dom': path.resolve(__dirname, './node_modules/react-dom/dist/react-dom.min.js'),
+      // react: path.resolve(__dirname, './node_modules/react/'),
+      // 'react-dom': path.resolve(__dirname, './node_modules/react-dom/dist/react-dom.min.js'),
       zepto: path.resolve(__dirname, './node_modules/zepto/dist/zepto.min.js')
     }
   },
