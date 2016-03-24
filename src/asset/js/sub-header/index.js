@@ -20,6 +20,12 @@ export default class SubHeader extends React.Component {
 
   back() {
     history.back();
+
+    try {
+      WeixinJSBridge.invoke('closeWindow');
+    } catch(e) {
+      window.close();
+    }
   }
 
   render() {

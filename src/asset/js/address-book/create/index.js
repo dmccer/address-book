@@ -94,7 +94,7 @@ export default class ABCreatePage extends React.Component {
     }
 
     if (Validator.empty(this.props.adesc)) {
-      this.refs.toast.wanr('通讯录描述不能为空');
+      this.refs.toast.warn('通讯录描述不能为空');
       return false;
     }
 
