@@ -18,6 +18,7 @@
     "react-slick": "^0.9.3",
     "react-swipeable": "^3.1.0",
     "react-tap-event-plugin": "^0.2.2",
+    "whatwg-fetch": "^0.11.0",
     "zepto": "https://github.com/madrobby/zepto/tarball/v1.1.6"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "html-webpack-plugin": "^1.7.0",
     "img-loader": "^1.2.2",
     "imock": "^3.2.1",
+    "imports-loader": "^0.6.5",
     "less": "^2.5.3",
     "less-loader": "^2.2.2",
     "less-plugin-autoprefix": "^1.5.1",

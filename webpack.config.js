@@ -47,7 +47,8 @@ module.exports = {
     alias: {
       react: path.resolve(__dirname, './node_modules/react/'),
       'react-dom': path.resolve(__dirname, './node_modules/react-dom/index.js'),
-      zepto: path.resolve(__dirname, './node_modules/zepto/dist/zepto.js')
+      zepto: path.resolve(__dirname, './node_modules/zepto/dist/zepto.js'),
+      fetch: path.resolve(__dirname, './node_modules/whatwg-fetch/')
     }
   },
   plugins: [
@@ -60,6 +61,10 @@ module.exports = {
       name: 'zepto',
       chunks: ['zepto']
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'fetch',
+      chunks: ['fetch']
+    }),
     // new webpack.optimize.CommonsChunkPlugin({
     //   name: 'lib-react',
     //   chunks: ['react', 'react-dom']
@@ -68,7 +73,8 @@ module.exports = {
       $: 'zepto',
       zepto: 'zepto',
       'window.zepto': 'zepto',
-      'root.zepto': 'zepto'
+      'root.zepto': 'zepto',
+      'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
@@ -79,7 +85,7 @@ module.exports = {
       title: '我的 - 物流通讯录',
       template: './src/page/index.html',
       filename: 'index.html',
-      chunks: ['ved', 'zepto', 'my'],
+      chunks: ['ved', 'zepto', 'fetch', 'my'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
