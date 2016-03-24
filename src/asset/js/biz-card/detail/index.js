@@ -7,7 +7,7 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import querystring from 'querystring';
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 import cx from 'classnames';
 
 import AjaxHelper from '../../ajax-helper/';

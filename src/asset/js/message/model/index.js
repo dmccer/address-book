@@ -1,19 +1,21 @@
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 
 /**
  * 消息总量
  * @return {Promise}
  */
 export var MsgCount = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_msgs_count',
-      type: 'GET',
-      cache: false,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/query_msgs_count');
+
+  // return new Promise((resolve, reject) => {
+  //   $.ajax({
+  //     url: '/pim/query_msgs_count',
+  //     type: 'GET',
+  //     cache: false,
+  //     success: resolve,
+  //     error: reject
+  //   });
+  // });
 }
 
 /**

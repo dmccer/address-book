@@ -2,7 +2,7 @@ import './index.less';
 
 import React from 'react';
 import cx from 'classnames';
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 
 import AjaxHelper from '../../ajax-helper/';
 import ManageOtherMiniCardList from '../manage-other-list/';

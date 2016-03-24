@@ -5,7 +5,7 @@ import React from 'react';
 import cx from 'classnames';
 import ReactIScroll from 'react-iscroll';
 import IScroll from 'iscroll/build/iscroll';
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 
 import find from 'lodash/collection/find';
 import Loading from '../loading/';

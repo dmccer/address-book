@@ -7,7 +7,7 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 
 import AjaxHelper from '../../ajax-helper/';
 import SubHeader from '../../sub-header/';

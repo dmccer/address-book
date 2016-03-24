@@ -1,7 +1,7 @@
 import './index.less';
 
 import React from 'react';
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 
 import Confirm from '../../../confirm/';
 import Prompt from '../../../prompt/';

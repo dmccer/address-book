@@ -8,7 +8,7 @@ import './index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 import querystring from 'querystring';
 import find from 'lodash/collection/find';
 import cx from 'classnames';

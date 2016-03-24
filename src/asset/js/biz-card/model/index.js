@@ -1,4 +1,4 @@
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 
 /**
  * 创建名片

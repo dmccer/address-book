@@ -1,4 +1,4 @@
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 
 /**
  * 发送验证码
@@ -45,15 +45,16 @@ export var Login = (params) => {
  * @return {Promise}
  */
 export var UserInfo = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/fetch_uinfo',
-      type: 'GET',
-      cache: false,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/fetch_uinfo');
+  // return new Promise((resolve, reject) => {
+  //   $.ajax({
+  //     url: '/pim/fetch_uinfo',
+  //     type: 'GET',
+  //     cache: false,
+  //     success: resolve,
+  //     error: reject
+  //   });
+  // });
 }
 
 /**
