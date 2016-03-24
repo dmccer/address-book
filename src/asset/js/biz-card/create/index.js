@@ -234,7 +234,7 @@ export default class CreateBizCardPage extends React.Component {
           url = this.state.qs.ref;
         }
 
-        location.href = url;
+        location.replace(url);
       });
     }, params);
   }

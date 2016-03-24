@@ -22,6 +22,7 @@ import Loading from '../loading/';
 import Toast from '../toast/';
 import Config from '../config';
 import WXVerify from '../wx-verify/';
+import Detect from '../detect/';
 import {UserInfo, UpdateUserAvatar, Signin} from './model/';
 
 export default class MyPage extends React.Component {
@@ -94,6 +95,12 @@ export default class MyPage extends React.Component {
   handleUpdateAvatar(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!Detect.isWeiXin()) {
+      this.refs.toast.warn('请在[物流通讯录]微信公众号中更换头像');
+
+      return;
+    }
 
     if (!this.state.wxReady) {
       this.refs.toast.warn('等待微信验证...');

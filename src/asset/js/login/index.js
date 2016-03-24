@@ -49,18 +49,10 @@ export default class LoginPage extends React.Component {
     e.preventDefault();
     e.stopPropagation();
 
-    if (this.state.submiting) {
-      return;
-    }
-
     if (!this.validateTel() || !this.validateCode()) {
       return;
     }
-
-    this.setState({
-      submiting: true
-    });
-
+    
     this.ajaxHelper.one(Login, res => {
       let qs = querystring.stringify(this.state.qs);
       let url = this.state.qs.ref || location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/index.html?${qs}`);

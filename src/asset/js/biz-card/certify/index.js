@@ -15,6 +15,7 @@ import WXVerify from '../../wx-verify/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
 import Private from '../../private/';
+import Detect from '../../detect/';
 import {UploadMyVerify} from '../../my/model/';
 
 export default class BizCardCertifyPage extends React.Component {
@@ -50,6 +51,12 @@ export default class BizCardCertifyPage extends React.Component {
   handleUploadImage(field: String, e: Object) {
     e.stopPropagation();
     e.preventDefault();
+
+    if (!Detect.isWeiXin()) {
+      this.refs.toast.warn('请在[物流通讯录]微信公众号中上传图片');
+
+      return;
+    }
 
     if (!this.state.wxReady) {
       this.refs.toast.warn('等待微信验证...');

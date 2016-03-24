@@ -1,5 +1,6 @@
 import querystring from 'querystring';
 import Log from '../log/';
+import Detect from '../detect/';
 
 let AjaxErrorHandler = {
   init: (toast) => {
@@ -19,8 +20,18 @@ let AjaxErrorHandler = {
             ref: location.href
           });
 
-          location.href = location.protocol + '//' + location.host + '/pim/wxpim/authorize';
-        }, 2000);
+          let url;
+
+          if (Detect.isWeiXin()) {
+            url = location.protocol + '//' + location.host + `/pim/wxpim/authorize?${qs}`;
+          } else {
+            url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/login.html?${qs}`)
+          }
+
+          location.replace(url);
+
+          return;
+        }, 1500);
 
         return;
       }

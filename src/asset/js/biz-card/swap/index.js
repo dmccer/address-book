@@ -20,6 +20,7 @@ import WXVerify from '../../wx-verify/';
 import MainMiniCard from '../mini-card/main/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
+import Detect from '../../detect/';
 import {MainBizCard, SwapBizCard} from '../model/';
 
 export default class BizCardSwapPage extends React.Component {
@@ -72,6 +73,12 @@ export default class BizCardSwapPage extends React.Component {
   }
 
   handleScan() {
+    if (!Detect.isWeiXin()) {
+      this.refs.toast.warn('请在[物流通讯录]微信公众号中使用扫一扫交换名片');
+
+      return;
+    }
+
     if (!this.state.wxReady) {
       this.refs.toast.warn('等待微信验证...');
 

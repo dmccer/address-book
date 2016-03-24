@@ -16,6 +16,7 @@
  * // 验证
  * WXVerify(conf, callback);
  */
+import Detect from '../detect/';
 
 let WXVerify = (conf, cb) => {
   if (!conf) {
