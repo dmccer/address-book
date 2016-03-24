@@ -128,7 +128,8 @@ export default class ABCreatePage extends React.Component {
             id: res.aid
           });
 
-          location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
+          let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
+          location.replace(url);
         }, 2000);
       }, params);
     }
@@ -142,7 +143,8 @@ export default class ABCreatePage extends React.Component {
           create: 1
         });
 
-        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
+        let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/address-book-detail.html?${qs}`);
+        location.replace(url);
       }, 2000);
     }, params);
   }

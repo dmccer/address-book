@@ -26,6 +26,7 @@ import Config from '../../config';
 import Share from '../../share/';
 import WXVerify from '../../wx-verify/';
 import AjaxHelper from '../../ajax-helper/';
+import Detect from '../../detect/';
 import {
   ABBaseInfo,
   ABMemberList,
@@ -197,10 +198,9 @@ export default class ABDetailPage extends React.Component {
     let answer;
 
     if (this.question) {
-      if (arg == null || arg === '') {
-        return;
-      }
-
+      // if (arg == null || arg === '') {
+      //   return;
+      // }
       answer = arg;
     }
 
@@ -214,7 +214,11 @@ export default class ABDetailPage extends React.Component {
   }
 
   handleChangeLogo() {
-    this.refs.toast.warn('等待微信验证...');
+    if (!Detect.isWeiXin()) {
+      this.refs.toast.warn('请在[物流通讯录]微信公众号中更换LOGO');
+
+      return;
+    }
 
     this.verifyWX.then(() => {
       wx.chooseImage({

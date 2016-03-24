@@ -24,6 +24,11 @@ export default class SelectABTypePage extends React.Component {
     super();
   }
 
+  selected(abType) {
+    let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/create-ab.html?atype=${abType.id}`);
+    location.replace(url);
+  }
+
   renderABTypes() {
     let abTypes = this.state.abTypes;
 
@@ -33,7 +38,8 @@ export default class SelectABTypePage extends React.Component {
           <a
             key={`abType-item_${index}`}
             className="abtype-item"
-            href={`./create-ab.html?atype=${abType.id}`}>
+            onClick={this.selected.bind(this, abType)}
+            href="javascript:;">
             <i className={cx('icon s40', abType.icon)}></i>
             <h3>{abType.name}</h3>
           </a>
