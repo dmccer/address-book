@@ -12,10 +12,9 @@ import './index.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import querystring from 'querystring';
-import Promise from 'promise';
+import Promise from 'promise/lib/es6-extensions';
 
 import {FieldChangeEnhance} from '../enhance/field-change';
-
 import Validator from '../validator/';
 import TinyHeader from '../tiny-header/';
 import Loading from '../loading/';
@@ -52,7 +51,7 @@ export default class LoginPage extends React.Component {
     if (!this.validateTel() || !this.validateCode()) {
       return;
     }
-    
+
     this.ajaxHelper.one(Login, res => {
       let qs = querystring.stringify(this.state.qs);
       let url = this.state.qs.ref || location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/index.html?${qs}`);
