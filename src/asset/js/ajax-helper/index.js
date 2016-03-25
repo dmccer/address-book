@@ -36,9 +36,7 @@ export default class AjaxHelper {
   }
 
   r403(res: Object) {
-    this.toast.warn('未登录,进入登录页面中...');
-
-    console.log(res);
+    this.toastState && this.toast.warn('未登录,进入登录页面中...');
 
     setTimeout(() => {
       let qs = querystring.stringify({
@@ -65,7 +63,7 @@ export default class AjaxHelper {
   }
 
   r50x(res: Object) {
-    this.toast.warn(`请求服务器出错, ${res.statusText}`);
+    this.toastState && this.toast.warn(`请求服务器出错, ${res.statusText}`);
 
     let err = new Error(res.statusText);
     err.res = res;
@@ -78,7 +76,7 @@ export default class AjaxHelper {
     }
 
     if (res.status === 403) {
-      return this.r403(err);
+      return this.r403(res);
     }
 
     return this.r50x(res);
@@ -98,7 +96,7 @@ export default class AjaxHelper {
 
     let ps = models.map((model, index) => {
       return model.apply(this, args[index])
-        .then(ckStatus)
+        .then(this.ckStatus.bind(this))
         .then(res => {
           this.loadingState && this.loading.close();
 
@@ -120,6 +118,8 @@ export default class AjaxHelper {
       .all(ps)
       .then(ok)
       .catch(err => {
+        this.loadingState && this.loading.close();
+
         // 50x err 和 运行时错误
         Log.error(err);
       });
@@ -138,7 +138,7 @@ export default class AjaxHelper {
     this.loadingState && this.loading.show('请求中...');
 
     model.apply(this, args)
-      .then(this.ckStatus)
+      .then(this.ckStatus.bind(this))
       .then(res => {
         this.loadingState && this.loading.close();
 
@@ -153,6 +153,8 @@ export default class AjaxHelper {
         fail(res);
       })
       .catch(err => {
+        this.loadingState && this.loading.close();
+
         // 50x err 和 运行时错误
         Log.error(err);
       });

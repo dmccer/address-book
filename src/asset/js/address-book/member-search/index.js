@@ -9,6 +9,7 @@ import querystring from 'querystring';
 import Promise from 'promise/lib/es6-extensions';
 import debounce from 'lodash/function/debounce';
 
+import $ from '../../lib/z';
 import AjaxHelper from '../../ajax-helper/';
 import {SearchABMember} from '../model/';
 import SubHeader from '../../sub-header/';

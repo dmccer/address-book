@@ -1,4 +1,7 @@
 import Promise from 'promise/lib/es6-extensions';
+import querystring from 'querystring';
+import assign from 'lodash/object/assign';
+import {POST_OPT, GET_OPT} from '../../const/fetch';
 
 /**
  * 创建名片
@@ -6,15 +9,9 @@ import Promise from 'promise/lib/es6-extensions';
  * @return {Promise}
  */
 export var CreateBizCard = (params) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/create_card',
-      type: 'POST',
-      data: params,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/create_card', assign({
+    body: querystring.stringify(params)
+  }, POST_OPT));
 }
 
 /**
@@ -23,15 +20,9 @@ export var CreateBizCard = (params) => {
  * @return {Promise}
  */
 export var UpdateBizCard = (params) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/edit_card',
-      type: 'POST',
-      data: params,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/edit_card', assign({
+    body: querystring.stringify(params)
+  }, POST_OPT));
 }
 
 /**
@@ -39,15 +30,7 @@ export var UpdateBizCard = (params) => {
  * @return {Promise}
  */
 export var AllTrucks = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/all_trucks',
-      type: 'GET',
-      cache: false,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/all_trucks', GET_OPT);
 }
 
 /**
@@ -56,21 +39,13 @@ export var AllTrucks = () => {
  * @return {Promise}
  */
 export var MainBizCard = (uid) => {
-  return new Promise((resolve, reject) => {
-    let data = {};
-    if (uid) {
-      data.uid = uid;
-    }
+  let data = {};
+  if (uid) {
+    data.uid = uid;
+  }
 
-    $.ajax({
-      url: '/pim/query_user_card_desc',
-      type: 'GET',
-      cache: false,
-      data: data,
-      success: resolve,
-      error: reject
-    });
-  });
+  let qs = querystring.stringify(data);
+  return fetch(`/pim/query_user_card_desc?${qs}`, GET_OPT);
 }
 
 /**
@@ -79,18 +54,10 @@ export var MainBizCard = (uid) => {
  * @return {Promise}
  */
 export var BizCardDetail = (cid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_card_desc',
-      type: 'GET',
-      cache: false,
-      data: {
-        cid: cid
-      },
-      success: resolve,
-      error: reject
-    });
+  let qs = querystring.stringify({
+    cid: cid
   });
+  return fetch(`/pim/query_card_desc?${qs}`, GET_OPT);
 }
 
 /**
@@ -98,15 +65,7 @@ export var BizCardDetail = (cid) => {
  * @return {Promise}
  */
 export var MyBizCardList = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_user_cards',
-      type: 'GET',
-      cache: false,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/query_user_cards', GET_OPT);
 }
 
 /**
@@ -115,17 +74,11 @@ export var MyBizCardList = () => {
  * @return {Promise}
  */
 export var DelMyBizCard = (cid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/del_my_card',
-      type: 'POST',
-      data: {
-        cid: cid
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/del_my_card', assign({
+    body: querystring.stringify({
+      cid: cid
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -134,17 +87,11 @@ export var DelMyBizCard = (cid) => {
  * @return {Promise}
  */
 export var SetMainBizCard = (cid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/set_main_card',
-      type: 'POST',
-      data: {
-        cid: cid
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/set_main_card', assign({
+    body: querystring.stringify({
+      cid: cid
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -153,18 +100,11 @@ export var SetMainBizCard = (cid) => {
  * @return {Promise}
  */
 export var SearchMyCardFriends = (keyword) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/search_my_card_friends',
-      type: 'GET',
-      cache: false,
-      data: {
-        keyword: keyword
-      },
-      success: resolve,
-      error: reject
-    });
+  let qs = querystring.stringify({
+    keyword: keyword
   });
+
+  return fetch(`/pim/search_my_card_friends?${qs}`, GET_OPT);
 }
 
 /**
@@ -173,18 +113,10 @@ export var SearchMyCardFriends = (keyword) => {
  * @return {Promise}
  */
 export var BizCardFriendsOfGroup = (gid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_card_friends',
-      type: 'GET',
-      cache: false,
-      data: {
-        gid: gid
-      },
-      success: resolve,
-      error: reject
-    });
+  let qs = querystring.stringify({
+    gid: gid
   });
+  return fetch(`/pim/query_card_friends?${qs}`, GET_OPT);
 }
 
 /**
@@ -192,15 +124,7 @@ export var BizCardFriendsOfGroup = (gid) => {
  * @return {Promise}
  */
 export var BizCardGroups = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_my_card_groups',
-      type: 'GET',
-      cache: false,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/query_my_card_groups', GET_OPT);
 }
 
 /**
@@ -209,17 +133,11 @@ export var BizCardGroups = () => {
  * @return {Promise}
  */
 export var CreateBizCardGroup = (gname) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/create_card_group',
-      type: 'POST',
-      data: {
-        groupname: gname
-      },
-      success: resolve,
-      error: reject
-    });
-  })
+  return fetch('/pim/create_card_group', assign({
+    body: querystring.stringify({
+      groupname: gname
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -229,18 +147,12 @@ export var CreateBizCardGroup = (gname) => {
  * @return {Promise}
  */
 export var RenameBizCardGroup = (gid, gname) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/rename_card_group',
-      type: 'POST',
-      data: {
-        gid: gid,
-        groupname: gname
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/rename_card_group', assign({
+    body: querystring.stringify({
+      gid: gid,
+      groupname: gname
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -249,17 +161,11 @@ export var RenameBizCardGroup = (gid, gname) => {
  * @return {Promise}
  */
 export var DelBizCardGroup = (gid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/del_my_card_group',
-      type: 'POST',
-      data: {
-        gid: gid
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/del_my_card_group', assign({
+    body: querystring.stringify({
+      gid: gid
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -269,18 +175,12 @@ export var DelBizCardGroup = (gid) => {
  * @return {Promise}
  */
 export var ChangeGroupOfFriend = (fid, gid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/move_my_card_friend',
-      type: 'POST',
-      data: {
-        friendly_uid: fid,
-        gid: gid
-      },
-      success: resolve,
-      error: reject
-    });
-  })
+  return fetch('/pim/move_my_card_friend', assign({
+    body: querystring.stringify({
+      gid: gid,
+      friendly_uid: fid,
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -289,17 +189,11 @@ export var ChangeGroupOfFriend = (fid, gid) => {
  * @return {Promise}
  */
 export var RemoveFriendBizCard = (fid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/del_my_card_friend',
-      type: 'POST',
-      data: {
-        friendly_uid: fid
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/del_my_card_friend', assign({
+    body: querystring.stringify({
+      friendly_uid: fid,
+    })
+  }, POST_OPT));
 }
 
 const ASK_URL = {
@@ -320,18 +214,10 @@ const ASK_URL = {
  * @return {Promise}
  */
 export var BizCardAskStatus = (asktype, askfor) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: ASK_URL[asktype].get,
-      type: 'GET',
-      cache: false,
-      data: {
-        askfor: askfor
-      },
-      success: resolve,
-      error: reject
-    });
+  let qs = querystring.stringify({
+    askfor: askfor
   });
+  return fetch(`${ASK_URL[asktype].get}?${qs}`, GET_OPT);
 }
 
 /**
@@ -342,18 +228,12 @@ export var BizCardAskStatus = (asktype, askfor) => {
  * @return {Promise}
  */
 export var HandleBizCardAsk = (asktype, askfor, status) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: ASK_URL[asktype].handle,
-      type: 'POST',
-      data: {
-        askfor: askfor,
-        status: status
-      },
-      success: resolve,
-      error: reject
-    });
-  })
+  return fetch(ASK_URL[asktype].handle, assign({
+    body: querystring.stringify({
+      askfor: askfor,
+      status: status
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -362,15 +242,9 @@ export var HandleBizCardAsk = (asktype, askfor, status) => {
  * @return {Promise}
  */
 export var SwapBizCard = (fid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/swap_card',
-      type: 'POST',
-      data: {
-        friendly_uid: fid
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/swap_card', assign({
+    body: querystring.stringify({
+      friendly_uid: fid
+    })
+  }, POST_OPT));
 }

@@ -1,3 +1,5 @@
+import $ from '../lib/z';
+
 let Validator = {
   config: (toast) => {
     Validator.toast = toast;

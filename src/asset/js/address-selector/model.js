@@ -1,24 +1,18 @@
 import Promise from 'promise/lib/es6-extensions';
+import querystring from 'querystring';
+import {GET_OPT} from '../const/fetch';
 
 export var Cities = (city, district) => {
-  return new Promise((resolve, reject) => {
-    let data = {};
+  let data = {};
 
-    if (city) {
-      data.cityIndex = city;
-    }
+  if (city) {
+    data.cityIndex = city;
+  }
 
-    if (district) {
-      data.districtIndex = district;
-    }
+  if (district) {
+    data.districtIndex = district;
+  }
 
-    $.ajax({
-      url: '/pim/getCitys',
-      type: 'GET',
-      cache: false,
-      data: data,
-      success: resolve,
-      error: reject
-    });
-  });
+  let qs = querystring.stringify(data);
+  return fetch(`/pim/getCitys?${qs}`, GET_OPT);
 }

@@ -1,21 +1,14 @@
 import Promise from 'promise/lib/es6-extensions';
+import querystring from 'querystring';
+import assign from 'lodash/object/assign';
+import {POST_OPT, GET_OPT} from '../../const/fetch';
 
 /**
  * 消息总量
  * @return {Promise}
  */
 export var MsgCount = () => {
-  return fetch('/pim/query_msgs_count');
-
-  // return new Promise((resolve, reject) => {
-  //   $.ajax({
-  //     url: '/pim/query_msgs_count',
-  //     type: 'GET',
-  //     cache: false,
-  //     success: resolve,
-  //     error: reject
-  //   });
-  // });
+  return fetch('/pim/query_msgs_count', GET_OPT);
 }
 
 /**
@@ -30,18 +23,10 @@ export var MsgCount = () => {
  * @return {Promise}
  */
 export var NoticeList = (ntype) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_notice_list',
-      type: 'GET',
-      cache: false,
-      data: {
-        ntype: ntype
-      },
-      success: resolve,
-      error: reject
-    });
+  let qs = querystring.stringify({
+    ntype: ntype
   });
+  return fetch(`/pim/query_notice_list?${qs}`, GET_OPT);
 }
 
 /**
@@ -49,15 +34,7 @@ export var NoticeList = (ntype) => {
  * @return {Promise}
  */
 export var PrivateMsgList = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_pivmsg_list',
-      type: 'GET',
-      cache: false,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/query_pivmsg_list', GET_OPT);
 }
 
 /**
@@ -66,18 +43,10 @@ export var PrivateMsgList = () => {
  * @return {Promise}
  */
 export var PrivateMsgWithFriend = (fid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_piv_msg',
-      type: 'GET',
-      cache: false,
-      data: {
-        friendly_uid: fid
-      },
-      success: resolve,
-      error: reject
-    });
+  let qs = querystring.stringify({
+    friendly_uid: fid
   });
+  return fetch(`/pim/query_piv_msg?${qs}`, GET_OPT);
 }
 
 /**
@@ -87,16 +56,10 @@ export var PrivateMsgWithFriend = (fid) => {
  * @return {Promise}
  */
 export var SendPrivateMsg = (fid, msg) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/send_piv_msg',
-      type: 'POST',
-      data: {
-        friendly_uid: fid,
-        msg: msg
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/send_piv_msg', assign({
+    body: querystring.stringify({
+      friendly_uid: fid,
+      msg: msg
+    })
+  }, POST_OPT));
 }

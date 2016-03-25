@@ -156,6 +156,9 @@ export default class MyPage extends React.Component {
       case 2:
         url = './biz-card-certified-ok.html';
         break;
+      case 3:
+        url = './biz-card-certified-fail.html';
+        break;
       default:
         url = './biz-card-certify.html';
     }

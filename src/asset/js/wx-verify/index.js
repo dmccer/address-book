@@ -17,6 +17,8 @@
  * WXVerify(conf, callback);
  */
 import Detect from '../detect/';
+import {GET_OPT} from '../const/fetch';
+import Log from '../log/';
 
 let WXVerify = (conf, cb) => {
   if (!conf) {
@@ -33,27 +35,40 @@ let WXVerify = (conf, cb) => {
 
   let url = encodeURIComponent(location.href.split('#')[0]);
 
-  $.getJSON(`${conf.url}?url=${url}`, null, (data) => {
-    if (!data) {
-      throw new Error('获取签名失败');
-    }
+  fetch(`${conf.url}?url=${url}`, GET_OPT)
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
 
-    wx.config({
-      debug: false,
-      appId: conf.appId,
-      timestamp: data.timestamp,
-      nonceStr: data.noncestr,
-      signature: data.signature,
-      jsApiList: conf.jsApiList
-    });
+      let err = new Error(res.statusText);
+      err.res = res;
+      throw err;
+    })
+    .then(data => {
+      if (!data) {
+        throw new Error('获取签名失败');
+      }
 
-    wx.ready(cb);
-    wx.error((...args) => {
-      console.warn(JSON.stringify(args));
-      args.unshift(new Error('微信验证失败'));
-      cb && cb.apply(this, args);
+      wx.config({
+        debug: false,
+        appId: conf.appId,
+        timestamp: data.timestamp,
+        nonceStr: data.noncestr,
+        signature: data.signature,
+        jsApiList: conf.jsApiList
+      });
+
+      wx.ready(cb);
+      wx.error((...args) => {
+        console.warn(JSON.stringify(args));
+        args.unshift(new Error('微信验证失败'));
+        cb && cb.apply(this, args);
+      });
+    })
+    .catch(err => {
+      Log.error(err);
     });
-  });
 }
 
 export default WXVerify;

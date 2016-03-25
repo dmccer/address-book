@@ -1,4 +1,7 @@
 import Promise from 'promise/lib/es6-extensions';
+import querystring from 'querystring';
+import assign from 'lodash/object/assign';
+import {POST_OPT, GET_OPT} from '../../const/fetch';
 
 /**
  * 发送验证码
@@ -6,17 +9,11 @@ import Promise from 'promise/lib/es6-extensions';
  * @return {Promise}
  */
 export var SendVerifyCode = (tel) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/send_verify_code',
-      type: 'POST',
-      data: {
-        tel: tel
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/send_verify_code', assign({
+    body: querystring.stringify({
+      tel: tel
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -29,15 +26,9 @@ export var SendVerifyCode = (tel) => {
  * @return {Promise}
  */
 export var Login = (params) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/login',
-      type: 'POST',
-      data: params,
-      success: resolve.bind(this),
-      error: reject.bind(this)
-    });
-  });
+  return fetch('/pim/login', assign({
+    body: querystring.stringify(params)
+  }, POST_OPT));
 }
 
 /**
@@ -45,16 +36,7 @@ export var Login = (params) => {
  * @return {Promise}
  */
 export var UserInfo = () => {
-  return fetch('/pim/fetch_uinfo');
-  // return new Promise((resolve, reject) => {
-  //   $.ajax({
-  //     url: '/pim/fetch_uinfo',
-  //     type: 'GET',
-  //     cache: false,
-  //     success: resolve,
-  //     error: reject
-  //   });
-  // });
+  return fetch('/pim/fetch_uinfo', GET_OPT);
 }
 
 /**
@@ -63,17 +45,11 @@ export var UserInfo = () => {
  * @return {Promise}
  */
 export var UpdateUserAvatar = (avatar) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/upload_user_photo',
-      type: 'POST',
-      data: {
-        uphoto_mid: avatar
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/upload_user_photo', assign({
+    body: querystring.stringify({
+      uphoto_mid: avatar
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -81,14 +57,7 @@ export var UpdateUserAvatar = (avatar) => {
  * @return {Promise}
  */
 export var Signin = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/book_in',
-      type: 'POST',
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/book_in', POST_OPT);
 }
 
 /**
@@ -96,15 +65,7 @@ export var Signin = () => {
  * @return {Promise}
  */
 export var MyRecentScoreActionList = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/pim_score_list',
-      type: 'GET',
-      cache: false,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/pim_score_list', GET_OPT);
 }
 
 /**
@@ -112,15 +73,7 @@ export var MyRecentScoreActionList = () => {
  * @return {Promise}
  */
 export var MyVerifyInfo = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_user_verify',
-      type: 'GET',
-      cache: false,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/query_user_verify', GET_OPT);
 }
 
 /**
@@ -128,14 +81,7 @@ export var MyVerifyInfo = () => {
  * @return {Promise}
  */
 export var RevokeMyVerify = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/revoke_user_verify',
-      type: 'POST',
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/revoke_user_verify', POST_OPT);
 }
 
 /**
@@ -145,16 +91,10 @@ export var RevokeMyVerify = () => {
  * @return {Promise}
  */
 export var UploadMyVerify = (bizCard, IDCard) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/upload_user_verify',
-      type: 'POST',
-      data: {
-        namecard_mid: bizCard,
-        idcard_mid: IDCard
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/upload_user_verify', assign({
+    body: querystring.stringify({
+      namecard_mid: bizCard,
+      idcard_mid: IDCard
+    })
+  }, POST_OPT));
 }

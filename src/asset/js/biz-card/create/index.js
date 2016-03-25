@@ -15,6 +15,7 @@ import querystring from 'querystring';
 import find from 'lodash/collection/find';
 import keys from 'lodash/object/keys';
 
+import $ from '../../lib/z';
 import AjaxHelper from '../../ajax-helper/';
 import SubHeader from '../../sub-header/';
 import {FieldChangeEnhance} from '../../enhance/field-change';
@@ -257,7 +258,7 @@ export default class CreateBizCardPage extends React.Component {
       dropListData: this.state[`${field}List`]
     });
 
-    let offset = $(e.currentTarget).offset();
+    let offset = $.offset(e.currentTarget);
     this.refs.droplist.show(offset.top + offset.height + 1, this.state[field]);
   }
 

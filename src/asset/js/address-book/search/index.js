@@ -14,6 +14,7 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise/lib/es6-extensions';
 import debounce from 'lodash/function/debounce';
 
+import $ from '../../lib/z';
 import TinyHeader from '../../tiny-header/';
 import ABList from '../list/';
 import AjaxHelper from '../../ajax-helper/';

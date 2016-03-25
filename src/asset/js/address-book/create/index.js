@@ -14,6 +14,7 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise/lib/es6-extensions';
 import querystring from 'querystring';
 
+import $ from '../../lib/z';
 import AjaxHelper from '../../ajax-helper/';
 import {FieldChangeEnhance} from '../../enhance/field-change';
 import Validator from '../../validator/';

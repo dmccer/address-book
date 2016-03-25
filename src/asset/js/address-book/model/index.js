@@ -1,4 +1,7 @@
 import Promise from 'promise/lib/es6-extensions';
+import querystring from 'querystring';
+import assign from 'lodash/object/assign';
+import {POST_OPT, GET_OPT} from '../../const/fetch';
 
 /**
  * 搜索通讯录
@@ -6,18 +9,10 @@ import Promise from 'promise/lib/es6-extensions';
  * @return {Promise}
  */
 export var SearchAB = (keyword) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/search_addlist',
-      type: 'GET',
-      cache: false,
-      data: {
-        keyword: keyword
-      },
-      success: resolve,
-      error: reject
-    });
+  let qs = querystring.stringify({
+    keyword: keyword
   });
+  return fetch(`/pim/search_addlist?${qs}`, GET_OPT);
 }
 
 /**
@@ -27,19 +22,11 @@ export var SearchAB = (keyword) => {
  * @return {Promise}
  */
 export var SearchABMember = (aid, keyword) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/search_addlist_member',
-      type: 'GET',
-      cache: false,
-      data: {
-        aid: aid,
-        keyword: keyword
-      },
-      success: resolve,
-      error: reject
-    });
+  let qs = querystring.stringify({
+    aid: aid,
+    keyword: keyword
   });
+  return fetch(`/pim/search_addlist_member?${qs}`, GET_OPT);
 }
 
 /**

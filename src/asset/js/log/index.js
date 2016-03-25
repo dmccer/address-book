@@ -8,9 +8,9 @@ let log = {
     console.info(`${new Date().toLocaleString()} ${msg}`);
   },
   error: (err) => {
-    console.error(`${new Date().toLocaleString()} - 错误日志 start`);
-    console.error(err);
-    console.error(`-- 错误日志 end --`);
+    throw err;
+    console.error(`${new Date().toLocaleString()}`, err);
+
   },
   success: (msg) => {
     console.info(`${new Date().toLocaleString()} ${msg}`);

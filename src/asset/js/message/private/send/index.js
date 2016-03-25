@@ -14,6 +14,7 @@ import Promise from 'promise/lib/es6-extensions';
 import querystring from 'querystring';
 import cx from 'classnames';
 
+import $ from '../../../lib/z';
 import AjaxHelper from '../../../ajax-helper/';
 import SubHeader from '../../../sub-header/';
 import Loading from '../../../loading/';
@@ -41,10 +42,10 @@ export default class PrivateMsgSendPage extends React.Component {
   }
 
   bottom() {
-    let winH = $(window).height();
-    let docH = $(document).height();
+    let winH = $.height(window);
+    let docH = $.height(document);
 
-    $(window).scrollTop(docH - winH);
+    $.scrollTop(window, docH - winH);
   }
 
   fetch() {
