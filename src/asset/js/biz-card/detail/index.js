@@ -11,7 +11,6 @@ import Promise from 'promise/lib/es6-extensions';
 import cx from 'classnames';
 
 import AjaxHelper from '../../ajax-helper/';
-import AjaxError from '../../ajax-err/';
 import Config from '../../config';
 import WXVerify from '../../wx-verify/';
 import SubHeader from '../../sub-header/';

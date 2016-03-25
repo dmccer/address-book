@@ -11,8 +11,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Promise from 'promise/lib/es6-extensions';
 
+import AjaxHelper from '../../ajax-helper/';
+import {MainBizCard, BizCardGroups, RemoveFriendBizCard} from '../model/';
 import Config from '../../config';
-import AjaxError from '../../ajax-err/';
 import Header from '../../header/';
 import Nav from '../../nav/';
 import MainMiniCard from '../mini-card/main/';
@@ -22,8 +23,6 @@ import WXVerify from '../../wx-verify/';
 import Loading from '../../loading/';
 import Toast from '../../toast/';
 import Log from '../../log/';
-import AjaxHelper from '../../ajax-helper/';
-import {MainBizCard, BizCardGroups, RemoveFriendBizCard} from '../model/';
 
 export default class BizCardMyPage extends React.Component {
   state = {

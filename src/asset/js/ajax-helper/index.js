@@ -51,7 +51,7 @@ export default class AjaxHelper {
         url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, `/login.html?${qs}`)
       }
 
-      // location.replace(url);
+      location.replace(url);
 
       return;
     }, 1500);

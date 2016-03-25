@@ -35,15 +35,9 @@ export var SearchABMember = (aid, keyword) => {
  * @return {Promise}
  */
 export var UpdateAB = (ab) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/edit_addlist',
-      type: 'POST',
-      data: ab,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/edit_addlist', assign({
+    body: querystring.stringify(ab)
+  }, POST_OPT));
 }
 
 /**
@@ -57,15 +51,9 @@ export var UpdateAB = (ab) => {
  * @return {Promise}
  */
 export var CreateAB = (ab) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/create_addlist',
-      type: 'POST',
-      data: ab,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/create_addlist', assign({
+    body: querystring.stringify(ab)
+  }, POST_OPT));
 }
 
 /**
@@ -74,18 +62,12 @@ export var CreateAB = (ab) => {
  * @return {Promise}
  */
 export var UpdateABLogo = (aid, logo) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/upload_addlist_photo',
-      type: 'POST',
-      data: {
-        aid: aid,
-        aphoto_mid: logo
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/upload_addlist_photo', assign({
+    body: querystring.stringify({
+      aid: aid,
+      aphoto_mid: logo
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -94,18 +76,10 @@ export var UpdateABLogo = (aid, logo) => {
  * @return {Promise}
  */
 export var ABBaseInfo = (aid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/addlist_cards_baseinfo',
-      type: 'GET',
-      cache: false,
-      data: {
-        aid: aid
-      },
-      success: resolve,
-      error: reject
-    });
-  })
+  let qs = querystring.stringify({
+    aid: aid
+  });
+  return fetch(`/pim/addlist_cards_baseinfo?${qs}`, GET_OPT);
 }
 
 /**
@@ -114,18 +88,10 @@ export var ABBaseInfo = (aid) => {
  * @return {Promise}
  */
 export var ABMemberList = (aid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/query_addlist_cards',
-      type: 'GET',
-      cache: false,
-      data: {
-        aid: aid
-      },
-      success: resolve,
-      error: reject
-    });
+  let qs = querystring.stringify({
+    aid: aid
   });
+  return fetch(`/pim/query_addlist_cards?${qs}`, GET_OPT);
 }
 
 /**
@@ -134,17 +100,11 @@ export var ABMemberList = (aid) => {
  * @return {Promise}
  */
 export var DelAB = (aid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/del_addlist',
-      type: 'POST',
-      data: {
-        aid: aid
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/del_addlist', assign({
+    body: querystring.stringify({
+      aid: aid
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -154,18 +114,12 @@ export var DelAB = (aid) => {
  * @return {Promise}
  */
 export var JoinAB = (aid, answer) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/join_addlist',
-      type: 'POST',
-      data: {
-        aid: aid,
-        answer: answer
-      },
-      success: resolve,
-      error: reject
-    });
-  })
+  return fetch('/pim/join_addlist', assign({
+    body: querystring.stringify({
+      aid: aid,
+      answer: answer
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -175,18 +129,12 @@ export var JoinAB = (aid, answer) => {
  * @return {Promise}
  */
 export var DelABMember = (aid, uid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/del_addlist_card',
-      type: 'POST',
-      data: {
-        aid: aid,
-        uid: uid
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/del_addlist_card', assign({
+    body: querystring.stringify({
+      aid: aid,
+      uid: uid
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -195,17 +143,11 @@ export var DelABMember = (aid, uid) => {
  * @return {Promise}
  */
 export var QuitAB = (aid) => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/quit_addlist',
-      type: 'POST',
-      data: {
-        aid: aid
-      },
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/quit_addlist', assign({
+    body: querystring.stringify({
+      aid: aid
+    })
+  }, POST_OPT));
 }
 
 /**
@@ -213,13 +155,5 @@ export var QuitAB = (aid) => {
  * @return {Promise}
  */
 export var MainABList = () => {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: '/pim/main_addlist_info',
-      type: 'GET',
-      cache: false,
-      success: resolve,
-      error: reject
-    });
-  });
+  return fetch('/pim/main_addlist_info', GET_OPT);
 }

@@ -19,8 +19,7 @@
     "react-slick": "^0.9.3",
     "react-swipeable": "^3.1.0",
     "react-tap-event-plugin": "^0.2.2",
-    "whatwg-fetch": "^0.11.0",
-    "zepto": "https://github.com/madrobby/zepto/tarball/v1.1.6"
+    "whatwg-fetch": "^0.11.0"
   },
   "devDependencies": {
     "babel-core": "^6.3.26",
@@ -51,7 +50,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prestart": "npm install; cd ./node_modules/zepto; npm install; MODULES='zepto event ajax form ie fx' npm run dist; cd ../../",
+    "prestart": "npm install",
     "start": "rm -rf ./assets; NODE_ENV=production ./node_modules/.bin/webpack -p --config ./webpack.prd.config.js --progress --profile --colors",
     "dev": "npm run prestart; ./node_modules/.bin/imock -j mock -w assets & ./node_modules/.bin/webpack-dev-server --hot --inline"
   },
