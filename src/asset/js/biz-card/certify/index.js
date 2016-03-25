@@ -104,7 +104,8 @@ export default class BizCardCertifyPage extends React.Component {
     this.ajaxHelper.one(UploadMyVerify, res => {
       this.refs.toast.success('已提交认证');
       setTimeout(() => {
-        location.href = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, '/biz-card-certified.html');
+        let url = location.protocol + '//' + location.host + location.pathname.replace(/\/[^\/]+$/, '/biz-card-certified.html');
+        location.replace(url);
       }, 1500);
     }, this.state.bizCard, this.state.IDCard)
   }
