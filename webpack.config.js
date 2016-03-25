@@ -6,6 +6,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var pkg = require('./package.json');
 
 module.exports = {
+  debug: true,
   watch: true,
   entry: {
     'score-rule': './src/asset/js/score-rule/index.js',
@@ -47,7 +48,7 @@ module.exports = {
     alias: {
       react: path.resolve(__dirname, './node_modules/react/'),
       'react-dom': path.resolve(__dirname, './node_modules/react-dom/index.js'),
-      zepto: path.resolve(__dirname, './node_modules/zepto/dist/zepto.js'),
+      // zepto: path.resolve(__dirname, './node_modules/zepto/dist/zepto.js'),
       fetch: path.resolve(__dirname, './node_modules/whatwg-fetch/')
     }
   },
@@ -57,10 +58,10 @@ module.exports = {
       name: 'ved',
       chunks: ['ved']
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'zepto',
-      chunks: ['zepto']
-    }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'zepto',
+    //   chunks: ['zepto']
+    // }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'fetch',
       chunks: ['fetch']
@@ -70,10 +71,10 @@ module.exports = {
     //   chunks: ['react', 'react-dom']
     // }),
     new webpack.ProvidePlugin({
-      $: 'zepto',
-      zepto: 'zepto',
-      'window.zepto': 'zepto',
-      'root.zepto': 'zepto',
+      // $: 'zepto',
+      // zepto: 'zepto',
+      // 'window.zepto': 'zepto',
+      // 'root.zepto': 'zepto',
       'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     }),
     new webpack.optimize.UglifyJsPlugin({
@@ -83,191 +84,191 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       title: '我的 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'index.html',
-      chunks: ['ved', 'zepto', 'fetch', 'my'],
+      chunks: ['ved', 'fetch', 'my'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '积分规则 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'score-rule.html',
-      chunks: ['ved', 'zepto', 'score-rule'],
+      chunks: ['ved', 'score-rule'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '登录 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'login.html',
-      chunks: ['ved', 'zepto', 'login'],
+      chunks: ['ved', 'login'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '实名认证 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-certify.html',
-      chunks: ['ved', 'zepto', 'biz-card-certify'],
+      chunks: ['ved', 'biz-card-certify'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片认证成功 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-certified-ok.html',
-      chunks: ['ved', 'zepto', 'biz-card-certified-ok'],
+      chunks: ['ved', 'biz-card-certified-ok'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片认证失败 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-certified-fail.html',
-      chunks: ['ved', 'zepto', 'biz-card-certified-fail'],
+      chunks: ['ved', 'biz-card-certified-fail'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片认证申请已提交 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-certified.html',
-      chunks: ['ved', 'zepto', 'biz-card-certified'],
+      chunks: ['ved', 'biz-card-certified'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '通讯录 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'address-book.html',
-      chunks: ['ved', 'zepto', 'address-book'],
+      chunks: ['ved', 'address-book'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '通讯录详情 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'address-book-detail.html',
-      chunks: ['ved', 'zepto', 'address-book-detail'],
+      chunks: ['ved', 'address-book-detail'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'my-biz-card.html',
-      chunks: ['ved', 'zepto', 'my-biz-card'],
+      chunks: ['ved', 'my-biz-card'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片交换 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-swap.html',
-      chunks: ['ved', 'zepto', 'biz-card-swap'],
+      chunks: ['ved', 'biz-card-swap'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片管理 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-manage.html',
-      chunks: ['ved', 'zepto', 'biz-card-manage'],
+      chunks: ['ved', 'biz-card-manage'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片搜索 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'search-biz-card.html',
-      chunks: ['ved', 'zepto', 'search-biz-card'],
+      chunks: ['ved', 'search-biz-card'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '管理分组 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'group-manage.html',
-      chunks: ['ved', 'zepto', 'group-manage'],
+      chunks: ['ved', 'group-manage'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '新建名片 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-create.html',
-      chunks: ['ved', 'zepto', 'biz-card-create'],
+      chunks: ['ved', 'biz-card-create'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片详情 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-detail.html',
-      chunks: ['ved', 'zepto', 'biz-card-detail'],
+      chunks: ['ved', 'biz-card-detail'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '消息 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'message.html',
-      chunks: ['ved', 'zepto', 'message'],
+      chunks: ['ved', 'message'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '私信列表 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'private-msg-list.html',
-      chunks: ['ved', 'zepto', 'private-msg-list'],
+      chunks: ['ved', 'private-msg-list'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '选择通讯录类型 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'select-ab-type.html',
-      chunks: ['ved', 'zepto', 'select-ab-type'],
+      chunks: ['ved', 'select-ab-type'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '新建通讯录 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'create-ab.html',
-      chunks: ['ved', 'zepto', 'create-ab'],
+      chunks: ['ved', 'create-ab'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '成员搜索 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'ab-member-search.html',
-      chunks: ['ved', 'zepto', 'ab-member-search'],
+      chunks: ['ved', 'ab-member-search'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片交换申请消息 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-application-msg.html',
-      chunks: ['ved', 'zepto', 'biz-card-application-msg'],
+      chunks: ['ved', 'biz-card-application-msg'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '名片交换回复消息 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'biz-card-reply-msg.html',
-      chunks: ['ved', 'zepto', 'biz-card-reply-msg'],
+      chunks: ['ved', 'biz-card-reply-msg'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '通讯录申请审核消息 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'ab-application-msg-list.html',
-      chunks: ['ved', 'zepto', 'ab-application-msg-list'],
+      chunks: ['ved', 'ab-application-msg-list'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '通讯录申请回复消息 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'ab-reply-msg-list.html',
-      chunks: ['ved', 'zepto', 'ab-reply-msg-list'],
+      chunks: ['ved', 'ab-reply-msg-list'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '搜索通讯录 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'search-ab.html',
-      chunks: ['ved', 'zepto', 'search-ab'],
+      chunks: ['ved', 'search-ab'],
       inject: 'body'
     }),
     new HtmlWebpackPlugin({
       title: '发送私信 - 物流通讯录',
-      template: './src/page/index.html',
+      template: './src/page/index.ejs',
       filename: 'private-msg-send.html',
-      chunks: ['ved', 'zepto', 'private-msg-send'],
+      chunks: ['ved', 'private-msg-send'],
       inject: 'body'
     })
   ],
