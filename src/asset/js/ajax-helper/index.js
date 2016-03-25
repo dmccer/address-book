@@ -65,7 +65,7 @@ export default class AjaxHelper {
         if (err && err instanceof Error) {
           Log.error(err);
 
-          this.toastState && this.toast.warn(`有点不对劲,${err.message}`);
+          // this.toastState && this.toast.warn(`有点不对劲,${err.message}`);
         }
       })
       .done(() => {
@@ -98,7 +98,7 @@ export default class AjaxHelper {
         if (err && err instanceof Error) {
           Log.error(err);
 
-          this.toastState && this.toast.warn(`有点不对劲,${err.message}`);
+          // this.toastState && this.toast.warn(`有点不对劲,${err.message}`);
         }
       })
       .done(() => {
