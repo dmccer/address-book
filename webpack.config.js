@@ -297,9 +297,6 @@ module.exports = {
         'react-hot',
         'babel-loader'
       ]
-    }, {
-      test: /zepto(\.min)?\.js$/,
-      loader: "exports?Zepto; delete window.$; delete window.Zepto;"
     }]
   },
   lessLoader: {
@@ -313,21 +310,9 @@ module.exports = {
     hot: true,
     inline: true,
     proxy: {
-      '/api/*': {
-        target: 'http://localhost:3000',
-        secure: false
-      },
       '/pim/*': {
         target: 'http://m.yqkyun.com/',
         // target: 'http://api.ttyhuo.com:83/mvc/',
-        secure: false
-      },
-      '/mvc/pim/*': {
-        target: 'http://api.ttyhuo.com:83',
-        secure: false
-      },
-      '/mvc/v2/*': {
-        target: 'http://api.ttyhuo.com:85',
         secure: false
       }
     }
